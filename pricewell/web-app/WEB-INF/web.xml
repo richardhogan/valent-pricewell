@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listener>
+    <description>sessionListener</description>
+    <listener-class>
+        com.valent.pricewell.MyHttpSessionListener
+    </listener-class>
+</listener>

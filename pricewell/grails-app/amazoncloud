@@ -1,0 +1,49 @@
+ssh -i /Users/smistry/.ssh/cloudfoundry.pem root@ec2-184-169-192-111.us-west-1.compute.amazonaws.com
+
+ssh -i /Users/smistry/.ssh/cloudfoundry.pem root@ec2-184-169-192-111.us-west-1.compute.amazonaws.com
+
+ssh -i /Users/smistry/.ssh/ratantest.pem root@ec2-54-245-158-1.us-west-2.compute.amazonaws.com
+
+find / -name "*.war"
+
+cd /var/lib/tcServer-6.0.20.C-GA-solaris-x86-node/tcServer-6.0/tomcat-6.0.20.C/webapps/pricewell
+
+
+ production {
+        dataSource {
+            driverClassName = 'com.mysql.jdbc.Driver'
+            dbCreate = "update"
+            url = "jdbc:mysql://${System.getProperty('dbHostName', 'localhost')}/pricewell"
+            dialect = 'org.hibernate.dialect.MySQLDialect'
+            username = "usr"
+            password = "sa"
+        }
+
+Just Data
+mysqldump -u usr -p --no-create-info pricewell > justData.sql
+
+Create And Data
+mysqldump -u usr -p  pricewell > all.sql
+
+Password: sa
+
+Copying file from amazon
+scp -i /Users/smistry/.ssh/cloudfoundry.pem root@ec2-50-18-140-123.us-west-1.compute.amazonaws.com:/root/justData.sql .
+
+scp -i /Users/smistry/.ssh/cloudfoundry.pem root@ec2-184-169-192-111.us-west-1.compute.amazonaws.com:/root/all.sql .
+
+Copying file to amazon
+cd /Users/smistry/Documents/Valent\ Soft/workspace4/pricewell/web-app/WEB-INF/classes/com/valent/pricewell/
+scp -i /Users/smistry/.ssh/cloudfoundry.pem /Users/smistry/.ssh/cloudfoundry.pem QuotationController*.class root@ec2-184-169-192-111.us-west-1.compute.amazonaws.com:/var/lib/tcServer-6.0.20.C-GA-solaris-x86-node/tcServer-6.0/tomcat-6.0.20.C/webapps/pricewell/WEB-INF/classes/com/valent/pricewell
+
+scp -i /Users/smistry/.ssh/cloudfoundry.pem /Users/smistry/.ivy2/cache/xalan/serializer/jars/serializer-2.7.1.jar root@ec2-50-18-140-123.us-west-1.compute.amazonaws.com:/var/lib/tcServer-6.0.20.C-GA-solaris-x86-node/tcServer-6.0/tomcat-6.0.20.C/webapps/pricewell/WEB-INF/lib/
+
+cd /Users/smistry/Documents/Valent\ Soft/workspace3/pricewell/web-app/WEB-INF/classes/com/valent/pricewell/
+
+/var/lib/tcServer-6.0.20.C-GA-solaris-x86-node/tcServer-6.0/tomcat-6.0.20.C/webapps/pricewell/WEB-INF/classes/com/valent/pricewell
+
+
+/root/sample.sql
+
+
+UPDATE `Service_profile` SET definition='Customer has selected the Mobile Inventory Workshop for up to [@@units@@] participants to be hosted on customer’s premises.  Customer agrees to provide a meeting room with adequate communications, lighting, network and presentation facilities for conducting the workshop for such number of participants and up to two Subject Matter Experts provided by Vendor for leading the workshop.  In satisfaction of its obligations to customer for this service, Customer shall acknowledge that the workshop has been delivered and they have received the following items:[@@deliverables@@]'

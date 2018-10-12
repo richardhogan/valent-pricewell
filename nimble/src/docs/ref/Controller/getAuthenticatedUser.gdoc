@@ -1,0 +1,20 @@
+
+h1. getAuthenticatedUser
+
+h2. Purpose
+
+
+
+h2. Examples
+
+{code:java}
+foo.getAuthenticatedUser()
+{code}
+
+h2. Description
+
+
+
+Arguments:
+
+[]

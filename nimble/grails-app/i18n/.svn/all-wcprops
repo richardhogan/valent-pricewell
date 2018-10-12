@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/valent/pricewell/svn/!svn/ver/1280/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n
+END
+shiro.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n/shiro.properties
+END
+messages.properties
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n/messages.properties
+END
+messages-nimble.properties
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/valent/pricewell/svn/!svn/ver/1311/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n/messages-nimble.properties
+END
+messages-nimble_pt.properties
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n/messages-nimble_pt.properties
+END
+messages-nimble_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/i18n/messages-nimble_de.properties
+END

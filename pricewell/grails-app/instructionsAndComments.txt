@@ -1,0 +1,17 @@
+====Plugins to install ===========
+installPlugin nimble
+installPlugin modalbox
+installPlugin grails-ui
+installPlugin navigation
+installPlugin remote-pagination
+===============================
+
+
+
+========Steps to setup Demo==================
+Admin username/password: admin/admiN123!
+1. Go to Access Control, Look at roles: there are default roles: SYSTEM ADMINISTRATOR, PORTFOLIO MANAGER, PRODUCT MANAGER, SERVICE DESIGNER, SALES PERSON
+2. Create users and assign particular roles afterwards
+3. Go to Delivery Role and define Delivery roles and GEOs.
+4. Define new service
+======================================

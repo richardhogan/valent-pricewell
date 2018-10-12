@@ -1,0 +1,216 @@
+	
+	<script>
+			 
+		jQuery(document).ready(function()
+	 	{
+	 		jQuery( "#assignsalesManager" ).dialog(
+		 	{
+				modal: true,
+				height: 200,
+				width: 300,
+				autoOpen: false,
+				buttons: 
+				{
+					"Assign": function() 
+					{
+						//alert(jQuery( "#territories" ).val());
+						var dataString = 'id=' + jQuery( "#ownerID" ).val() + '&roleID=' + jQuery( "#salesManagerRoleID" ).val()+ '&territories='+jQuery( "#territories" ).val();//+'&salesPresidentId='+jQuery( "#salesPresidentId" ).val();
+						jQuery.ajax({
+							type: "POST",
+							url: nimble.endpoints.role.grant,
+							data: dataString,
+							success: function(res) {
+							  nimble.listRoles(jQuery( "#ownerID" ).val());
+							  nimble.searchRoles(jQuery( "#ownerID" ).val());
+							  nimble.growl('success', res);
+							},
+							error: function (xhr) {
+							  nimble.growl('error', xhr.responseText);
+							}
+						});
+						jQuery( "#assignsalesManager" ).dialog( "close" );
+						//alert(dataString);
+						return false;
+					},
+					Cancel: function() 
+					{
+						jQuery( "#assignsalesManager" ).dialog( "close" );
+						return false;
+					}
+				}
+			});
+			
+			jQuery( "#assignsalesPerson" ).dialog(
+		 	{
+				modal: true,
+				height: 200,
+				width: 300,
+				autoOpen: false,
+				buttons: 
+				{
+					"Assign": function() 
+					{
+						var dataString = 'id=' + jQuery( "#ownerID" ).val() + '&roleID=' + jQuery( "#salesPersonRoleID" ).val()+'&territoryID='+jQuery( "#territoryID" ).val();//+ '&salesManagerId='+jQuery( "#salesManagerId" ).val();
+						jQuery.ajax({
+							type: "POST",
+							url: nimble.endpoints.role.grant,
+							data: dataString,
+							success: function(res) {
+							  nimble.listRoles(jQuery( "#ownerID" ).val());
+							  nimble.searchRoles(jQuery( "#ownerID" ).val());
+							  nimble.growl('success', res);
+							},
+							error: function (xhr) {
+							  nimble.growl('error', xhr.responseText);
+							}
+						});
+						jQuery( "#assignsalesPerson" ).dialog( "close" );
+						//alert(dataString);
+						return false;
+					},
+					Cancel: function() 
+					{
+						jQuery( "#assignsalesPerson" ).dialog( "close" );
+						return false;
+					}
+				}
+			});
+			
+			jQuery( "#assigngeneralManager" ).dialog(
+		 	{
+				modal: true,
+				height: 200,
+				width: 300,
+				autoOpen: false,
+				buttons: 
+				{
+					"Assign": function() 
+					{
+						var dataString = 'id=' + jQuery( "#ownerID" ).val() + '&roleID=' + jQuery( "#generalManagerRoleID" ).val()+'&geoGroupId='+jQuery( "#geoGroupId" ).val();
+						jQuery.ajax({
+							type: "POST",
+							url: nimble.endpoints.role.grant,
+							data: dataString,
+							success: function(res) {
+							  nimble.listRoles(jQuery( "#ownerID" ).val());
+							  nimble.searchRoles(jQuery( "#ownerID" ).val());
+							  nimble.growl('success', res);
+							},
+							error: function (xhr) {
+							  nimble.growl('error', xhr.responseText);
+							}
+						});
+						//alert(dataString);
+						jQuery( "#assigngeneralManager" ).dialog( "close" );
+						return false;
+					},
+					Cancel: function() 
+					{
+						jQuery( "#assigngeneralManager" ).dialog( "close" );
+						return false;
+					}
+				}
+			});
+	 	});
+	</script>
+
+	
+<g:if test="${roles?.size() > 0}">
+	<g:each in="${roles}" status="i" var="role">
+		<g:if test="${role.name=='SALES MANAGER'}">
+			<div id="assignsalesManager" title="To Assign Sales Manager Role">
+				<form name="assignSalesManager">
+					<g:hiddenField name="ownerID"  value="${ownerID}" />
+					<g:hiddenField name="salesManagerRoleID" value="${role.id}" />
+					<table>
+						<!--<tr>
+							<th>Select Sales President</th>
+						</tr>
+						<tr>
+							<td> <g:select name="salesPresidentId" from="${salesPresidentList}" value="" optionKey="id"/></td>
+						</tr>-->
+						
+						<tr>
+							<th>Select Multiple Territories</th>
+						</tr>
+						<tr>
+							<td> <g:select name="territories" from="${com.valent.pricewell.Geo.list()}" value="" optionKey="id" multiple="multiple"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</g:if>
+		
+		<g:if test="${role.name=='SALES PERSON'}">
+			<div id="assignsalesPerson" title="To Assign Sales Person Role">
+				<form name="assignSalesPerson">
+					<g:hiddenField name="ownerID"  value="${ownerID}" />
+					<g:hiddenField name="salesPersonRoleID" value="${role.id}" />
+					<table>
+						<!--<tr>
+							<th>Select Sales Manager</th>
+						</tr>
+						<tr>
+							<td> <g:select name="salesManagerId" from="${salesManagerList}" value="" optionKey="id"/></td>
+						</tr>-->
+						
+						<tr>
+							<th>Select Territory</th>
+						</tr>
+						<tr>
+							<td> <g:select name="territoryID" from="${com.valent.pricewell.Geo.list()}" value="" optionKey="id" noSelection="['': 'Select any one']"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</g:if>
+		
+		<g:if test="${role.name=='GENERAL MANAGER'}">
+			<div id="assigngeneralManager" title="To Assign General Manager Role">
+				<form name="assignGeneralManager">
+					<g:hiddenField name="ownerID"  value="${ownerID}" />
+					<g:hiddenField name="generalManagerRoleID" value="${role.id}" />
+					
+					<table>                    
+                    	<tr>
+				          	<td valign="top" class="name">
+				          		<label for="geo">Select Geo </label>
+			          	  	</td>
+				          	<td valign="top">
+				          		<g:select name="geoGroupId" from="${com.valent.pricewell.GeoGroup.list()}" optionKey="id" value=""  class="required" noSelection="['': 'Select any one']"/>
+				          	</td>
+				        </tr>
+					        
+					</table>
+				</form>
+			</div>
+		</g:if>
+		
+	</g:each>
+  <table class="details">
+    <thead>
+    <tr>
+      <th class="first"><g:message code="nimble.label.name" /></th>
+      <th class=""><g:message code="nimble.label.description" /></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <g:each in="${roles}" status="i" var="role">
+      <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+        <td>${role.name?.encodeAsHTML()}</td>
+        <td>${role.description?.encodeAsHTML()}</td>
+        <td>
+          <g:link controller="role" action="show" id="${role.id.encodeAsHTML()}" class="button icon icon_cog_go"><g:message code="nimble.link.view" /></g:link>
+          <a onClick="nimble.grantRole('${ownerID.encodeAsHTML()}', '${role.id.encodeAsHTML()}', '${role.name.encodeAsHTML()}');" class="button icon icon_add"><g:message code="nimble.link.assign" /></a>
+        </td>
+      </tr>
+    </g:each>
+    </tbody>
+  </table>
+</g:if>
+<g:else>
+  <p>
+    <strong><g:message code="nimble.template.roles.add.noresults" /></strong>
+  </p>
+</g:else>

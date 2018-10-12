@@ -1,0 +1,834 @@
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0 Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>ratan@valent-software.com</m:username>
+   <m:password>Valent2010meSSchNimmBVGR6WPQ10sr0G</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Mon, 17 Nov 2014 14:36:52 GMT]
+Content-Length=[786]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=Kc8PBqEJQl60g_WylMlRAg;Path=/;Domain=.salesforce.com;Expires=Fri, 16-Jan-2015 14:36:52 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://ap1.salesforce.com/services/Soap/m/23.0/00D90000000yHKR</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR</serverUrl>
+            <sessionId>00D90000000yHKR!AQwAQO4TCeQ76VEDHyc4KUBuVpZMS2QRSYlVwsXX6kHyVIiBycvBVhsQ8vHNFYCNjNOtf3Io3xKojMNg.xm9LIpMboBJSBUo</sessionId>
+            <userId>005900000034X2OAAU</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol>$</currencySymbol>
+              <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+              <orgDefaultCurrencyIsoCode>USD</orgDefaultCurrencyIsoCode>
+              <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+              <orgHasPersonAccounts>false</orgHasPersonAccounts>
+              <organizationId>00D90000000yHKREA2</organizationId>
+              <organizationMultiCurrency>false</organizationMultiCurrency>
+              <organizationName>Valent Software</organizationName>
+              <profileId>00e90000001svZqAAI</profileId>
+              <roleId xsi:nil="true"/>
+                <sessionSecondsValid>43200</sessionSecondsValid>
+                <userDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <userEmail>ratan@valent-software.com</userEmail>
+                  <userFullName>Ratan Mistry</userFullName>
+                  <userId>005900000034X2OAAU</userId>
+                  <userLanguage>en_US</userLanguage>
+                  <userLocale>en_US</userLocale>
+                  <userName>ratan@valent-software.com</userName>
+                  <userTimeZone>America/Los_Angeles</userTimeZone>
+                  <userType>Standard</userType>
+                  <userUiSkin>Theme3</userUiSkin>
+              </userInfo>
+            </result>
+          </loginResponse>
+        </soapenv:Body>
+      </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00D90000000yHKR!AQwAQO4TCeQ76VEDHyc4KUBuVpZMS2QRSYlVwsXX6kHyVIiBycvBVhsQ8vHNFYCNjNOtf3Io3xKojMNg.xm9LIpMboBJSBUo</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString>SELECT Id, Name, AccountId, Amount, CloseDate, Description, ExpectedRevenue, Type, StageName, Probability, LastModifiedDate, CreatedDate FROM Opportunity</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Mon, 17 Nov 2014 14:36:53 GMT]
+Content-Length=[1537]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=J1dNQ5Y6RB-0ouc-KNMk9w;Path=/;Domain=.salesforce.com;Expires=Fri, 16-Jan-2015 14:36:53 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Opportunity</sf:type>
+                <sf:Id>0069000000NY2OyAAL</sf:Id>
+                <sf:Id>0069000000NY2OyAAL</sf:Id>
+                <sf:Name>Edge SLA</sf:Name>
+                <sf:AccountId>001900000135g2TAAQ</sf:AccountId>
+                <sf:Amount>60000.0</sf:Amount>
+                <sf:CloseDate>2012-08-23</sf:CloseDate>
+                <sf:Description xsi:nil="true"/>
+                  <sf:ExpectedRevenue>60000.0</sf:ExpectedRevenue>
+                  <sf:Type>Existing Customer - Upgrade</sf:Type>
+                  <sf:StageName>Closed Won</sf:StageName>
+                  <sf:Probability>100.0</sf:Probability>
+                  <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                  <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+              </records>
+                <records xsi:type="sf:sObject">
+                  <sf:type>Opportunity</sf:type>
+                  <sf:Id>0069000000NY2OmAAL</sf:Id>
+                  <sf:Id>0069000000NY2OmAAL</sf:Id>
+                  <sf:Name>Grand Hotels Kitchen Generator</sf:Name>
+                  <sf:AccountId>001900000135g2XAAQ</sf:AccountId>
+                  <sf:Amount>15000.0</sf:Amount>
+                  <sf:CloseDate>2012-08-23</sf:CloseDate>
+                  <sf:Description xsi:nil="true"/>
+                    <sf:ExpectedRevenue>9000.0</sf:ExpectedRevenue>
+                    <sf:Type>Existing Customer - Upgrade</sf:Type>
+                    <sf:StageName>Id. Decision Makers</sf:StageName>
+                    <sf:Probability>60.0</sf:Probability>
+                    <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                    <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                </records>
+                  <records xsi:type="sf:sObject">
+                    <sf:type>Opportunity</sf:type>
+                    <sf:Id>0069000000NY2P8AAL</sf:Id>
+                    <sf:Id>0069000000NY2P8AAL</sf:Id>
+                    <sf:Name>Grand Hotels SLA</sf:Name>
+                    <sf:AccountId>001900000135g2XAAQ</sf:AccountId>
+                    <sf:Amount>90000.0</sf:Amount>
+                    <sf:CloseDate>2012-08-23</sf:CloseDate>
+                    <sf:Description xsi:nil="true"/>
+                      <sf:ExpectedRevenue>90000.0</sf:ExpectedRevenue>
+                      <sf:Type>Existing Customer - Upgrade</sf:Type>
+                      <sf:StageName>Closed Won</sf:StageName>
+                      <sf:Probability>100.0</sf:Probability>
+                      <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                      <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                  </records>
+                    <records xsi:type="sf:sObject">
+                      <sf:type>Opportunity</sf:type>
+                      <sf:Id>0069000000NY2OtAAL</sf:Id>
+                      <sf:Id>0069000000NY2OtAAL</sf:Id>
+                      <sf:Name>Express Logistics Portable Truck Generators</sf:Name>
+                      <sf:AccountId>001900000135g2YAAQ</sf:AccountId>
+                      <sf:Amount>80000.0</sf:Amount>
+                      <sf:CloseDate>2012-08-23</sf:CloseDate>
+                      <sf:Description xsi:nil="true"/>
+                        <sf:ExpectedRevenue>40000.0</sf:ExpectedRevenue>
+                        <sf:Type>Existing Customer - Upgrade</sf:Type>
+                        <sf:StageName>Value Proposition</sf:StageName>
+                        <sf:Probability>50.0</sf:Probability>
+                        <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                        <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                    </records>
+                      <records xsi:type="sf:sObject">
+                        <sf:type>Opportunity</sf:type>
+                        <sf:Id>0069000000NY2P3AAL</sf:Id>
+                        <sf:Id>0069000000NY2P3AAL</sf:Id>
+                        <sf:Name>Express Logistics SLA</sf:Name>
+                        <sf:AccountId>001900000135g2YAAQ</sf:AccountId>
+                        <sf:Amount>120000.0</sf:Amount>
+                        <sf:CloseDate>2012-08-23</sf:CloseDate>
+                        <sf:Description xsi:nil="true"/>
+                          <sf:ExpectedRevenue>84000.0</sf:ExpectedRevenue>
+                          <sf:Type>Existing Customer - Upgrade</sf:Type>
+                          <sf:StageName>Perception Analysis</sf:StageName>
+                          <sf:Probability>70.0</sf:Probability>
+                          <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                          <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                      </records>
+                        <records xsi:type="sf:sObject">
+                          <sf:type>Opportunity</sf:type>
+                          <sf:Id>0069000000NY2OkAAL</sf:Id>
+                          <sf:Id>0069000000NY2OkAAL</sf:Id>
+                          <sf:Name>Express Logistics Standby Generator</sf:Name>
+                          <sf:AccountId>001900000135g2YAAQ</sf:AccountId>
+                          <sf:Amount>220000.0</sf:Amount>
+                          <sf:CloseDate>2012-08-23</sf:CloseDate>
+                          <sf:Description xsi:nil="true"/>
+                            <sf:ExpectedRevenue>220000.0</sf:ExpectedRevenue>
+                            <sf:Type>New Customer</sf:Type>
+                            <sf:StageName>Closed Won</sf:StageName>
+                            <sf:Probability>100.0</sf:Probability>
+                            <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                            <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                        </records>
+                          <records xsi:type="sf:sObject">
+                            <sf:type>Opportunity</sf:type>
+                            <sf:Id>0069000000NY2P2AAL</sf:Id>
+                            <sf:Id>0069000000NY2P2AAL</sf:Id>
+                            <sf:Name>University of AZ Installations</sf:Name>
+                            <sf:AccountId>001900000135g2ZAAQ</sf:AccountId>
+                            <sf:Amount>100000.0</sf:Amount>
+                            <sf:CloseDate>2012-08-23</sf:CloseDate>
+                            <sf:Description xsi:nil="true"/>
+                              <sf:ExpectedRevenue>75000.0</sf:ExpectedRevenue>
+                              <sf:Type>Existing Customer - Upgrade</sf:Type>
+                              <sf:StageName>Proposal/Price Quote</sf:StageName>
+                              <sf:Probability>75.0</sf:Probability>
+                              <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                              <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                          </records>
+                            <records xsi:type="sf:sObject">
+                              <sf:type>Opportunity</sf:type>
+                              <sf:Id>0069000000NY2OrAAL</sf:Id>
+                              <sf:Id>0069000000NY2OrAAL</sf:Id>
+                              <sf:Name>University of AZ Portable Generators</sf:Name>
+                              <sf:AccountId>001900000135g2ZAAQ</sf:AccountId>
+                              <sf:Amount>50000.0</sf:Amount>
+                              <sf:CloseDate>2012-08-23</sf:CloseDate>
+                              <sf:Description xsi:nil="true"/>
+                                <sf:ExpectedRevenue>50000.0</sf:ExpectedRevenue>
+                                <sf:Type>New Customer</sf:Type>
+                                <sf:StageName>Closed Won</sf:StageName>
+                                <sf:Probability>100.0</sf:Probability>
+                                <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                            </records>
+                              <records xsi:type="sf:sObject">
+                                <sf:type>Opportunity</sf:type>
+                                <sf:Id>0069000000NY2P4AAL</sf:Id>
+                                <sf:Id>0069000000NY2P4AAL</sf:Id>
+                                <sf:Name>University of AZ SLA</sf:Name>
+                                <sf:AccountId>001900000135g2ZAAQ</sf:AccountId>
+                                <sf:Amount>90000.0</sf:Amount>
+                                <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                <sf:Description xsi:nil="true"/>
+                                  <sf:ExpectedRevenue>90000.0</sf:ExpectedRevenue>
+                                  <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                  <sf:StageName>Closed Won</sf:StageName>
+                                  <sf:Probability>100.0</sf:Probability>
+                                  <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                  <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                              </records>
+                                <records xsi:type="sf:sObject">
+                                  <sf:type>Opportunity</sf:type>
+                                  <sf:Id>0069000000NY2P7AAL</sf:Id>
+                                  <sf:Id>0069000000NY2P7AAL</sf:Id>
+                                  <sf:Name>United Oil Emergency Generators</sf:Name>
+                                  <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                  <sf:Amount>440000.0</sf:Amount>
+                                  <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                  <sf:Description xsi:nil="true"/>
+                                    <sf:ExpectedRevenue>440000.0</sf:ExpectedRevenue>
+                                    <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                    <sf:StageName>Closed Won</sf:StageName>
+                                    <sf:Probability>100.0</sf:Probability>
+                                    <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                    <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                </records>
+                                  <records xsi:type="sf:sObject">
+                                    <sf:type>Opportunity</sf:type>
+                                    <sf:Id>0069000000NY2OzAAL</sf:Id>
+                                    <sf:Id>0069000000NY2OzAAL</sf:Id>
+                                    <sf:Name>United Oil Installations</sf:Name>
+                                    <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                    <sf:Amount>270000.0</sf:Amount>
+                                    <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                    <sf:Description xsi:nil="true"/>
+                                      <sf:ExpectedRevenue>270000.0</sf:ExpectedRevenue>
+                                      <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                      <sf:StageName>Closed Won</sf:StageName>
+                                      <sf:Probability>100.0</sf:Probability>
+                                      <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                      <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                  </records>
+                                    <records xsi:type="sf:sObject">
+                                      <sf:type>Opportunity</sf:type>
+                                      <sf:Id>0069000000NY2OwAAL</sf:Id>
+                                      <sf:Id>0069000000NY2OwAAL</sf:Id>
+                                      <sf:Name>United Oil Installations</sf:Name>
+                                      <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                      <sf:Amount>270000.0</sf:Amount>
+                                      <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                      <sf:Description xsi:nil="true"/>
+                                        <sf:ExpectedRevenue>243000.0</sf:ExpectedRevenue>
+                                        <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                        <sf:StageName>Negotiation/Review</sf:StageName>
+                                        <sf:Probability>90.0</sf:Probability>
+                                        <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                        <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                    </records>
+                                      <records xsi:type="sf:sObject">
+                                        <sf:type>Opportunity</sf:type>
+                                        <sf:Id>0069000000NY2OjAAL</sf:Id>
+                                        <sf:Id>0069000000NY2OjAAL</sf:Id>
+                                        <sf:Name>United Oil Office Portable Generators</sf:Name>
+                                        <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                        <sf:Amount>125000.0</sf:Amount>
+                                        <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                        <sf:Description xsi:nil="true"/>
+                                          <sf:ExpectedRevenue>112500.0</sf:ExpectedRevenue>
+                                          <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                          <sf:StageName>Negotiation/Review</sf:StageName>
+                                          <sf:Probability>90.0</sf:Probability>
+                                          <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                          <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                      </records>
+                                        <records xsi:type="sf:sObject">
+                                          <sf:type>Opportunity</sf:type>
+                                          <sf:Id>0069000000NY2OlAAL</sf:Id>
+                                          <sf:Id>0069000000NY2OlAAL</sf:Id>
+                                          <sf:Name>GenePoint Standby Generator</sf:Name>
+                                          <sf:AccountId>001900000135g2QAAQ</sf:AccountId>
+                                          <sf:Amount>85000.0</sf:Amount>
+                                          <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                          <sf:Description xsi:nil="true"/>
+                                            <sf:ExpectedRevenue>85000.0</sf:ExpectedRevenue>
+                                            <sf:Type>New Customer</sf:Type>
+                                            <sf:StageName>Closed Won</sf:StageName>
+                                            <sf:Probability>100.0</sf:Probability>
+                                            <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                            <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                        </records>
+                                          <records xsi:type="sf:sObject">
+                                            <sf:type>Opportunity</sf:type>
+                                            <sf:Id>0069000000NY2P5AAL</sf:Id>
+                                            <sf:Id>0069000000NY2P5AAL</sf:Id>
+                                            <sf:Name>Burlington Textiles Weaving Plant Generator</sf:Name>
+                                            <sf:AccountId>001900000135g2UAAQ</sf:AccountId>
+                                            <sf:Amount>235000.0</sf:Amount>
+                                            <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                            <sf:Description xsi:nil="true"/>
+                                              <sf:ExpectedRevenue>235000.0</sf:ExpectedRevenue>
+                                              <sf:Type>New Customer</sf:Type>
+                                              <sf:StageName>Closed Won</sf:StageName>
+                                              <sf:Probability>100.0</sf:Probability>
+                                              <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                              <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                          </records>
+                                            <records xsi:type="sf:sObject">
+                                              <sf:type>Opportunity</sf:type>
+                                              <sf:Id>0069000000NY2P6AAL</sf:Id>
+                                              <sf:Id>0069000000NY2P6AAL</sf:Id>
+                                              <sf:Name>United Oil Installations</sf:Name>
+                                              <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                              <sf:Amount>235000.0</sf:Amount>
+                                              <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                              <sf:Description xsi:nil="true"/>
+                                                <sf:ExpectedRevenue>235000.0</sf:ExpectedRevenue>
+                                                <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                <sf:StageName>Closed Won</sf:StageName>
+                                                <sf:Probability>100.0</sf:Probability>
+                                                <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                            </records>
+                                              <records xsi:type="sf:sObject">
+                                                <sf:type>Opportunity</sf:type>
+                                                <sf:Id>0069000000NY2PBAA1</sf:Id>
+                                                <sf:Id>0069000000NY2PBAA1</sf:Id>
+                                                <sf:Name>United Oil Plant Standby Generators</sf:Name>
+                                                <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                                <sf:Amount>675000.0</sf:Amount>
+                                                <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                <sf:Description xsi:nil="true"/>
+                                                  <sf:ExpectedRevenue>135000.0</sf:ExpectedRevenue>
+                                                  <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                  <sf:StageName>Needs Analysis</sf:StageName>
+                                                  <sf:Probability>20.0</sf:Probability>
+                                                  <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                  <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                              </records>
+                                                <records xsi:type="sf:sObject">
+                                                  <sf:type>Opportunity</sf:type>
+                                                  <sf:Id>0069000000NY2P1AAL</sf:Id>
+                                                  <sf:Id>0069000000NY2P1AAL</sf:Id>
+                                                  <sf:Name>United Oil Refinery Generators</sf:Name>
+                                                  <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                                  <sf:Amount>915000.0</sf:Amount>
+                                                  <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                  <sf:Description xsi:nil="true"/>
+                                                    <sf:ExpectedRevenue>915000.0</sf:ExpectedRevenue>
+                                                    <sf:Type>New Customer</sf:Type>
+                                                    <sf:StageName>Closed Won</sf:StageName>
+                                                    <sf:Probability>100.0</sf:Probability>
+                                                    <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                    <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                </records>
+                                                  <records xsi:type="sf:sObject">
+                                                    <sf:type>Opportunity</sf:type>
+                                                    <sf:Id>0069000000NY2OnAAL</sf:Id>
+                                                    <sf:Id>0069000000NY2OnAAL</sf:Id>
+                                                    <sf:Name>United Oil Refinery Generators</sf:Name>
+                                                    <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                                    <sf:Amount>270000.0</sf:Amount>
+                                                    <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                    <sf:Description xsi:nil="true"/>
+                                                      <sf:ExpectedRevenue>202500.0</sf:ExpectedRevenue>
+                                                      <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                      <sf:StageName>Proposal/Price Quote</sf:StageName>
+                                                      <sf:Probability>75.0</sf:Probability>
+                                                      <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                      <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                  </records>
+                                                    <records xsi:type="sf:sObject">
+                                                      <sf:type>Opportunity</sf:type>
+                                                      <sf:Id>0069000000NY2OoAAL</sf:Id>
+                                                      <sf:Id>0069000000NY2OoAAL</sf:Id>
+                                                      <sf:Name>United Oil SLA</sf:Name>
+                                                      <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                                      <sf:Amount>120000.0</sf:Amount>
+                                                      <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                      <sf:Description xsi:nil="true"/>
+                                                        <sf:ExpectedRevenue>120000.0</sf:ExpectedRevenue>
+                                                        <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                        <sf:StageName>Closed Won</sf:StageName>
+                                                        <sf:Probability>100.0</sf:Probability>
+                                                        <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                        <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                    </records>
+                                                      <records xsi:type="sf:sObject">
+                                                        <sf:type>Opportunity</sf:type>
+                                                        <sf:Id>0069000000NY2P9AAL</sf:Id>
+                                                        <sf:Id>0069000000NY2P9AAL</sf:Id>
+                                                        <sf:Name>United Oil Standby Generators</sf:Name>
+                                                        <sf:AccountId>001900000135g2aAAA</sf:AccountId>
+                                                        <sf:Amount>120000.0</sf:Amount>
+                                                        <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                        <sf:Description xsi:nil="true"/>
+                                                          <sf:ExpectedRevenue>120000.0</sf:ExpectedRevenue>
+                                                          <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                          <sf:StageName>Closed Won</sf:StageName>
+                                                          <sf:Probability>100.0</sf:Probability>
+                                                          <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                          <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                      </records>
+                                                        <records xsi:type="sf:sObject">
+                                                          <sf:type>Opportunity</sf:type>
+                                                          <sf:Id>0069000000NY2OuAAL</sf:Id>
+                                                          <sf:Id>0069000000NY2OuAAL</sf:Id>
+                                                          <sf:Name>GenePoint Lab Generators</sf:Name>
+                                                          <sf:AccountId>001900000135g2QAAQ</sf:AccountId>
+                                                          <sf:Amount>60000.0</sf:Amount>
+                                                          <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                          <sf:Description xsi:nil="true"/>
+                                                            <sf:ExpectedRevenue>36000.0</sf:ExpectedRevenue>
+                                                            <sf:Type xsi:nil="true"/>
+                                                              <sf:StageName>Id. Decision Makers</sf:StageName>
+                                                              <sf:Probability>60.0</sf:Probability>
+                                                              <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                              <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                          </records>
+                                                            <records xsi:type="sf:sObject">
+                                                              <sf:type>Opportunity</sf:type>
+                                                              <sf:Id>0069000000NY2OvAAL</sf:Id>
+                                                              <sf:Id>0069000000NY2OvAAL</sf:Id>
+                                                              <sf:Name>GenePoint SLA</sf:Name>
+                                                              <sf:AccountId>001900000135g2QAAQ</sf:AccountId>
+                                                              <sf:Amount>30000.0</sf:Amount>
+                                                              <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                              <sf:Description xsi:nil="true"/>
+                                                                <sf:ExpectedRevenue>30000.0</sf:ExpectedRevenue>
+                                                                <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                                <sf:StageName>Closed Won</sf:StageName>
+                                                                <sf:Probability>100.0</sf:Probability>
+                                                                <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                            </records>
+                                                              <records xsi:type="sf:sObject">
+                                                                <sf:type>Opportunity</sf:type>
+                                                                <sf:Id>0069000000NY2OqAAL</sf:Id>
+                                                                <sf:Id>0069000000NY2OqAAL</sf:Id>
+                                                                <sf:Name>Edge Emergency Generator</sf:Name>
+                                                                <sf:AccountId>001900000135g2TAAQ</sf:AccountId>
+                                                                <sf:Amount>75000.0</sf:Amount>
+                                                                <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                <sf:Description xsi:nil="true"/>
+                                                                  <sf:ExpectedRevenue>75000.0</sf:ExpectedRevenue>
+                                                                  <sf:Type>New Customer</sf:Type>
+                                                                  <sf:StageName>Closed Won</sf:StageName>
+                                                                  <sf:Probability>100.0</sf:Probability>
+                                                                  <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                  <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                              </records>
+                                                                <records xsi:type="sf:sObject">
+                                                                  <sf:type>Opportunity</sf:type>
+                                                                  <sf:Id>0069000000NY2PCAA1</sf:Id>
+                                                                  <sf:Id>0069000000NY2PCAA1</sf:Id>
+                                                                  <sf:Name>Edge Emergency Generator</sf:Name>
+                                                                  <sf:AccountId>001900000135g2TAAQ</sf:AccountId>
+                                                                  <sf:Amount>35000.0</sf:Amount>
+                                                                  <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                  <sf:Description xsi:nil="true"/>
+                                                                    <sf:ExpectedRevenue>21000.0</sf:ExpectedRevenue>
+                                                                    <sf:Type>Existing Customer - Replacement</sf:Type>
+                                                                    <sf:StageName>Id. Decision Makers</sf:StageName>
+                                                                    <sf:Probability>60.0</sf:Probability>
+                                                                    <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                    <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                </records>
+                                                                  <records xsi:type="sf:sObject">
+                                                                    <sf:type>Opportunity</sf:type>
+                                                                    <sf:Id>0069000000NY2OxAAL</sf:Id>
+                                                                    <sf:Id>0069000000NY2OxAAL</sf:Id>
+                                                                    <sf:Name>Edge Installation</sf:Name>
+                                                                    <sf:AccountId>001900000135g2TAAQ</sf:AccountId>
+                                                                    <sf:Amount>50000.0</sf:Amount>
+                                                                    <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                    <sf:Description xsi:nil="true"/>
+                                                                      <sf:ExpectedRevenue>50000.0</sf:ExpectedRevenue>
+                                                                      <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                                      <sf:StageName>Closed Won</sf:StageName>
+                                                                      <sf:Probability>100.0</sf:Probability>
+                                                                      <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                      <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                  </records>
+                                                                    <records xsi:type="sf:sObject">
+                                                                      <sf:type>Opportunity</sf:type>
+                                                                      <sf:Id>0069000000NY2OsAAL</sf:Id>
+                                                                      <sf:Id>0069000000NY2OsAAL</sf:Id>
+                                                                      <sf:Name>Pyramid Emergency Generators</sf:Name>
+                                                                      <sf:AccountId>001900000135g2VAAQ</sf:AccountId>
+                                                                      <sf:Amount>100000.0</sf:Amount>
+                                                                      <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                      <sf:Description xsi:nil="true"/>
+                                                                        <sf:ExpectedRevenue>10000.0</sf:ExpectedRevenue>
+                                                                        <sf:Type xsi:nil="true"/>
+                                                                          <sf:StageName>Prospecting</sf:StageName>
+                                                                          <sf:Probability>10.0</sf:Probability>
+                                                                          <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                          <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                      </records>
+                                                                        <records xsi:type="sf:sObject">
+                                                                          <sf:type>Opportunity</sf:type>
+                                                                          <sf:Id>0069000000NY2OiAAL</sf:Id>
+                                                                          <sf:Id>0069000000NY2OiAAL</sf:Id>
+                                                                          <sf:Name>Dickenson Mobile Generators</sf:Name>
+                                                                          <sf:AccountId>001900000135g2WAAQ</sf:AccountId>
+                                                                          <sf:Amount>15000.0</sf:Amount>
+                                                                          <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                          <sf:Description xsi:nil="true"/>
+                                                                            <sf:ExpectedRevenue>1500.0</sf:ExpectedRevenue>
+                                                                            <sf:Type>New Customer</sf:Type>
+                                                                            <sf:StageName>Qualification</sf:StageName>
+                                                                            <sf:Probability>10.0</sf:Probability>
+                                                                            <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                            <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                        </records>
+                                                                          <records xsi:type="sf:sObject">
+                                                                            <sf:type>Opportunity</sf:type>
+                                                                            <sf:Id>0069000000NY2PAAA1</sf:Id>
+                                                                            <sf:Id>0069000000NY2PAAA1</sf:Id>
+                                                                            <sf:Name>Grand Hotels Emergency Generators</sf:Name>
+                                                                            <sf:AccountId>001900000135g2XAAQ</sf:AccountId>
+                                                                            <sf:Amount>210000.0</sf:Amount>
+                                                                            <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                            <sf:Description xsi:nil="true"/>
+                                                                              <sf:ExpectedRevenue>210000.0</sf:ExpectedRevenue>
+                                                                              <sf:Type>New Customer</sf:Type>
+                                                                              <sf:StageName>Closed Won</sf:StageName>
+                                                                              <sf:Probability>100.0</sf:Probability>
+                                                                              <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                              <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                          </records>
+                                                                            <records xsi:type="sf:sObject">
+                                                                              <sf:type>Opportunity</sf:type>
+                                                                              <sf:Id>0069000000NY2P0AAL</sf:Id>
+                                                                              <sf:Id>0069000000NY2P0AAL</sf:Id>
+                                                                              <sf:Name>Grand Hotels Generator Installations</sf:Name>
+                                                                              <sf:AccountId>001900000135g2XAAQ</sf:AccountId>
+                                                                              <sf:Amount>350000.0</sf:Amount>
+                                                                              <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                              <sf:Description xsi:nil="true"/>
+                                                                                <sf:ExpectedRevenue>350000.0</sf:ExpectedRevenue>
+                                                                                <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                                                <sf:StageName>Closed Won</sf:StageName>
+                                                                                <sf:Probability>100.0</sf:Probability>
+                                                                                <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                                <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                            </records>
+                                                                              <records xsi:type="sf:sObject">
+                                                                                <sf:type>Opportunity</sf:type>
+                                                                                <sf:Id>0069000000NY2OpAAL</sf:Id>
+                                                                                <sf:Id>0069000000NY2OpAAL</sf:Id>
+                                                                                <sf:Name>Grand Hotels Guest Portable Generators</sf:Name>
+                                                                                <sf:AccountId>001900000135g2XAAQ</sf:AccountId>
+                                                                                <sf:Amount>250000.0</sf:Amount>
+                                                                                <sf:CloseDate>2012-08-23</sf:CloseDate>
+                                                                                <sf:Description xsi:nil="true"/>
+                                                                                  <sf:ExpectedRevenue>125000.0</sf:ExpectedRevenue>
+                                                                                  <sf:Type>Existing Customer - Upgrade</sf:Type>
+                                                                                  <sf:StageName>Value Proposition</sf:StageName>
+                                                                                  <sf:Probability>50.0</sf:Probability>
+                                                                                  <sf:LastModifiedDate>2014-09-13T12:55:04.000Z</sf:LastModifiedDate>
+                                                                                  <sf:CreatedDate>2014-09-13T12:55:04.000Z</sf:CreatedDate>
+                                                                              </records>
+                                                                                <size>31</size>
+                                                                            </result>
+                                                                          </queryResponse>
+                                                                        </soapenv:Body>
+                                                                      </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0 Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>ratan@valent-software.com</m:username>
+   <m:password>Valent2010meSSchNimmBVGR6WPQ10sr0G</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Tue, 18 Nov 2014 03:39:20 GMT]
+Content-Length=[788]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=3yagzd0lSjecR0H7Lq4XXA;Path=/;Domain=.salesforce.com;Expires=Sat, 17-Jan-2015 03:39:20 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://ap1.salesforce.com/services/Soap/m/23.0/00D90000000yHKR</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR</serverUrl>
+            <sessionId>00D90000000yHKR!AQwAQBfbDYGj1zctWRC8zGrQGZN1qB9yweWYI1tfDm4QpxHGR9fTQMASJ1OGfZYyBZBgDfmrbuhxwCfNv1Ld5FQpiU2Xq70K</sessionId>
+            <userId>005900000034X2OAAU</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol>$</currencySymbol>
+              <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+              <orgDefaultCurrencyIsoCode>USD</orgDefaultCurrencyIsoCode>
+              <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+              <orgHasPersonAccounts>false</orgHasPersonAccounts>
+              <organizationId>00D90000000yHKREA2</organizationId>
+              <organizationMultiCurrency>false</organizationMultiCurrency>
+              <organizationName>Valent Software</organizationName>
+              <profileId>00e90000001svZqAAI</profileId>
+              <roleId xsi:nil="true"/>
+                <sessionSecondsValid>43200</sessionSecondsValid>
+                <userDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <userEmail>ratan@valent-software.com</userEmail>
+                  <userFullName>Ratan Mistry</userFullName>
+                  <userId>005900000034X2OAAU</userId>
+                  <userLanguage>en_US</userLanguage>
+                  <userLocale>en_US</userLocale>
+                  <userName>ratan@valent-software.com</userName>
+                  <userTimeZone>America/Los_Angeles</userTimeZone>
+                  <userType>Standard</userType>
+                  <userUiSkin>Theme3</userUiSkin>
+              </userInfo>
+            </result>
+          </loginResponse>
+        </soapenv:Body>
+      </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00D90000000yHKR!AQwAQBfbDYGj1zctWRC8zGrQGZN1qB9yweWYI1tfDm4QpxHGR9fTQMASJ1OGfZYyBZBgDfmrbuhxwCfNv1Ld5FQpiU2Xq70K</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString>SELECT Fax, Id, Name, Phone, Site, BillingCity, BillingCountry, BillingState, BillingStreet, BillingPostalCode FROM Account WHERE Id = '001900000135g2QAAQ'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Tue, 18 Nov 2014 03:39:21 GMT]
+Content-Length=[470]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=JxvJ_Rx5SL-bI4-IugriuA;Path=/;Domain=.salesforce.com;Expires=Sat, 17-Jan-2015 03:39:21 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Account</sf:type>
+                <sf:Id>001900000135g2QAAQ</sf:Id>
+                <sf:Fax>(650) 867-9895</sf:Fax>
+                <sf:Id>001900000135g2QAAQ</sf:Id>
+                <sf:Name>GenePoint</sf:Name>
+                <sf:Phone>(650) 867-3450</sf:Phone>
+                <sf:Site xsi:nil="true"/>
+                  <sf:BillingCity>Mountain View</sf:BillingCity>
+                  <sf:BillingCountry xsi:nil="true"/>
+                    <sf:BillingState>CA</sf:BillingState>
+                    <sf:BillingStreet>345 Shoreline Park
+Mountain View, CA 94043
+USA</sf:BillingStreet>
+                    <sf:BillingPostalCode xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0 Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>ratan@valent-software.com</m:username>
+   <m:password>Valent2010meSSchNimmBVGR6WPQ10sr0G</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Tue, 18 Nov 2014 03:52:57 GMT]
+Content-Length=[788]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=XiNI8x0uReOjgIfTmr6z-Q;Path=/;Domain=.salesforce.com;Expires=Sat, 17-Jan-2015 03:52:58 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://ap1.salesforce.com/services/Soap/m/23.0/00D90000000yHKR</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR</serverUrl>
+            <sessionId>00D90000000yHKR!AQwAQBfbDYGj1zctWRC8zGrQGZN1qB9yweWYI1tfDm4QpxHGR9fTQMASJ1OGfZYyBZBgDfmrbuhxwCfNv1Ld5FQpiU2Xq70K</sessionId>
+            <userId>005900000034X2OAAU</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol>$</currencySymbol>
+              <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+              <orgDefaultCurrencyIsoCode>USD</orgDefaultCurrencyIsoCode>
+              <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+              <orgHasPersonAccounts>false</orgHasPersonAccounts>
+              <organizationId>00D90000000yHKREA2</organizationId>
+              <organizationMultiCurrency>false</organizationMultiCurrency>
+              <organizationName>Valent Software</organizationName>
+              <profileId>00e90000001svZqAAI</profileId>
+              <roleId xsi:nil="true"/>
+                <sessionSecondsValid>43200</sessionSecondsValid>
+                <userDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <userEmail>ratan@valent-software.com</userEmail>
+                  <userFullName>Ratan Mistry</userFullName>
+                  <userId>005900000034X2OAAU</userId>
+                  <userLanguage>en_US</userLanguage>
+                  <userLocale>en_US</userLocale>
+                  <userName>ratan@valent-software.com</userName>
+                  <userTimeZone>America/Los_Angeles</userTimeZone>
+                  <userType>Standard</userType>
+                  <userUiSkin>Theme3</userUiSkin>
+              </userInfo>
+            </result>
+          </loginResponse>
+        </soapenv:Body>
+      </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://ap1.salesforce.com/services/Soap/u/23.0/00D90000000yHKR Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00D90000000yHKR!AQwAQBfbDYGj1zctWRC8zGrQGZN1qB9yweWYI1tfDm4QpxHGR9fTQMASJ1OGfZYyBZBgDfmrbuhxwCfNv1Ld5FQpiU2Xq70K</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString>SELECT Id, FirstName, LastName, Email, MailingCity, MailingCountry, MailingState, MailingStreet, MailingPostalCode, MobilePhone FROM Contact WHERE AccountId = '001900000135g2QAAQ'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Tue, 18 Nov 2014 03:52:58 GMT]
+Content-Length=[479]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=TI3AUBJHS9ayuK7iHZwrgg;Path=/;Domain=.salesforce.com;Expires=Sat, 17-Jan-2015 03:52:58 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Contact</sf:type>
+                <sf:Id>00390000017isqQAAQ</sf:Id>
+                <sf:Id>00390000017isqQAAQ</sf:Id>
+                <sf:FirstName>Edna</sf:FirstName>
+                <sf:LastName>Frank</sf:LastName>
+                <sf:Email>efrank@genepoint.com</sf:Email>
+                <sf:MailingCity xsi:nil="true"/>
+                  <sf:MailingCountry xsi:nil="true"/>
+                    <sf:MailingState xsi:nil="true"/>
+                      <sf:MailingStreet>345 Shoreline Park
+Mountain View, CA 94043
+USA</sf:MailingStreet>
+                      <sf:MailingPostalCode xsi:nil="true"/>
+                        <sf:MobilePhone>(650) 867-7686</sf:MobilePhone>
+                    </records>
+                      <size>1</size>
+                  </result>
+                </queryResponse>
+              </soapenv:Body>
+            </soapenv:Envelope>
+------------ Response end   ----------

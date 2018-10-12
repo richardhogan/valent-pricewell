@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/valent/pricewell/svn/!svn/ver/743/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates
+END
+_errors.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/_errors.gsp
+END
+_sessionterminated.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/_sessionterminated.gsp
+END
+_flashembed.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/_flashembed.gsp
+END

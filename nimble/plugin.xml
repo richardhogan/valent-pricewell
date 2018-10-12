@@ -1,0 +1,41 @@
+<plugin name='nimble' version='0.4-SNAPSHOT' grailsVersion='1.3.6 &gt; *'>
+  <author>Bradley Beddoes, Chris Doty, Mike Wille and open source contributors</author>
+  <authorEmail>nimbleproject@googlegroups.com</authorEmail>
+  <title>Nimble</title>
+  <description>\
+    Nimble is an extensive application base environment for Grails.
+    </description>
+  <documentation>http://sites.google.com/site/nimbledoc/</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>DefaultNimbleConfig</resource>
+    <resource>UrlMappings</resource>
+    <resource>grails.plugins.nimble.core.AccountController</resource>
+    <resource>grails.plugins.nimble.core.AdminsController</resource>
+    <resource>grails.plugins.nimble.core.AuthController</resource>
+    <resource>grails.plugins.nimble.core.GroupController</resource>
+    <resource>grails.plugins.nimble.core.MainController</resource>
+    <resource>grails.plugins.nimble.core.RoleController</resource>
+    <resource>grails.plugins.nimble.core.UserController</resource>
+    <resource>grails.plugins.nimble.core.FacebookRealm</resource>
+    <resource>grails.plugins.nimble.core.LocalizedRealm</resource>
+    <resource>grails.plugins.nimble.core.OpenIDRealm</resource>
+    <resource>grails.plugins.nimble.core.AdminsService</resource>
+    <resource>grails.plugins.nimble.core.FacebookService</resource>
+    <resource>grails.plugins.nimble.core.GroupService</resource>
+    <resource>grails.plugins.nimble.core.NimbleService</resource>
+    <resource>grails.plugins.nimble.core.OpenIDService</resource>
+    <resource>grails.plugins.nimble.core.PermissionService</resource>
+    <resource>grails.plugins.nimble.core.RecaptchaService</resource>
+    <resource>grails.plugins.nimble.core.RoleService</resource>
+    <resource>grails.plugins.nimble.core.UserService</resource>
+    <resource>NimbleAuthTagLib</resource>
+    <resource>NimbleHeaderTagLib</resource>
+    <resource>NimbleInlineJSTagLib</resource>
+    <resource>NimbleTagLib</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>

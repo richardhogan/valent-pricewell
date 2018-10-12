@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype
+END
+_user.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_user.gsp
+END
+_permission.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_permission.gsp
+END
+_admin.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_admin.gsp
+END
+_group.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_group.gsp
+END
+_role.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_role.gsp
+END
+_flashgrowl.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_flashgrowl.gsp
+END
+_member.gsp
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/valent/pricewell/svn/!svn/ver/39/trunk/pricewell/customized-plugins/nimble-0.4-SNAPSHOT/grails-app/views/templates/inlinejs/prototype/_member.gsp
+END

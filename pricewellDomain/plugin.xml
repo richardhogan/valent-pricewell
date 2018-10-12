@@ -1,0 +1,71 @@
+<plugin name='pricewell-domain' version='0.1' grailsVersion='1.3.6 &gt; *'>
+  <author>Your name</author>
+  <title>Plugin summary/headline</title>
+  <description>\
+Brief description of the plugin.
+</description>
+  <documentation>http://grails.org/plugin/pricewell-domain</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+    <resource>com.valent.pricewell.Account</resource>
+    <resource>com.valent.pricewell.ActivityRoleTime</resource>
+    <resource>com.valent.pricewell.BillingAddress</resource>
+    <resource>com.valent.pricewell.CompanyInformation</resource>
+    <resource>com.valent.pricewell.Contact</resource>
+    <resource>com.valent.pricewell.DeliveryRole</resource>
+    <resource>com.valent.pricewell.EmailSetting</resource>
+    <resource>com.valent.pricewell.GeneralStagingLog</resource>
+    <resource>com.valent.pricewell.Geo</resource>
+    <resource>com.valent.pricewell.GeoGroup</resource>
+    <resource>com.valent.pricewell.InternalMap</resource>
+    <resource>com.valent.pricewell.Lead</resource>
+    <resource>com.valent.pricewell.LogoImage</resource>
+    <resource>com.valent.pricewell.Notification</resource>
+    <resource>com.valent.pricewell.Opportunity</resource>
+    <resource>com.valent.pricewell.PendingMail</resource>
+    <resource>com.valent.pricewell.Portfolio</resource>
+    <resource>com.valent.pricewell.Pricelist</resource>
+    <resource>com.valent.pricewell.Product</resource>
+    <resource>com.valent.pricewell.ProductPricelist</resource>
+    <resource>com.valent.pricewell.Profile</resource>
+    <resource>com.valent.pricewell.Quota</resource>
+    <resource>com.valent.pricewell.Quotation</resource>
+    <resource>com.valent.pricewell.QuotationMilestone</resource>
+    <resource>com.valent.pricewell.RelationDeliveryGeo</resource>
+    <resource>com.valent.pricewell.ReviewComment</resource>
+    <resource>com.valent.pricewell.ReviewRequest</resource>
+    <resource>com.valent.pricewell.RoleId</resource>
+    <resource>com.valent.pricewell.Service</resource>
+    <resource>com.valent.pricewell.ServiceActivity</resource>
+    <resource>com.valent.pricewell.ServiceDeliverable</resource>
+    <resource>com.valent.pricewell.ServiceProductItem</resource>
+    <resource>com.valent.pricewell.ServiceProfile</resource>
+    <resource>com.valent.pricewell.ServiceProfileSOWDef</resource>
+    <resource>com.valent.pricewell.ServiceQuotation</resource>
+    <resource>com.valent.pricewell.Setting</resource>
+    <resource>com.valent.pricewell.ShippingAddress</resource>
+    <resource>com.valent.pricewell.SowTag</resource>
+    <resource>com.valent.pricewell.Staging</resource>
+    <resource>com.valent.pricewell.StagingLog</resource>
+    <resource>com.valent.pricewell.TextTemplate</resource>
+    <resource>com.valent.pricewell.UploadFile</resource>
+    <resource>com.valent.pricewell.User</resource>
+    <resource>grails.plugins.nimble.core.Details</resource>
+    <resource>grails.plugins.nimble.core.FederationProvider</resource>
+    <resource>grails.plugins.nimble.core.GeoBase</resource>
+    <resource>grails.plugins.nimble.core.GeoGroupBase</resource>
+    <resource>grails.plugins.nimble.core.Group</resource>
+    <resource>grails.plugins.nimble.core.LevelPermission</resource>
+    <resource>grails.plugins.nimble.core.LoginRecord</resource>
+    <resource>grails.plugins.nimble.core.Permission</resource>
+    <resource>grails.plugins.nimble.core.ProfileBase</resource>
+    <resource>grails.plugins.nimble.core.Role</resource>
+    <resource>grails.plugins.nimble.core.Url</resource>
+    <resource>grails.plugins.nimble.core.UserBase</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>
