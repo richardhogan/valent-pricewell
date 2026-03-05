@@ -157,7 +157,15 @@
 		                                  <label for="designers"><g:message code="portfolio.designers.label" default="Designers" /></label>
 		                                </td>
 		                                <td valign="top" class="value ${hasErrors(bean: portfolioInstance, field: 'designers', 'errors')}">
-		                                    <g:select name="designers" from="${designerList}" multiple="yes" optionKey="id" size="5" value="${portfolioInstance?.designers*.id}" />
+		                                    <%--
+		                                        BUG FIX (KnownBugs.txt: "doesn't show selected properly"):
+		                                        Same fix as edit.gsp — value="${portfolioInstance?.designers*.id}"
+		                                        returned a List<Long> which never matched the String option values
+		                                        produced by optionKey="id" under Grails 1.3.x equals() comparison.
+		                                        Collecting IDs as Strings ensures pre-selection works on page load.
+		                                    --%>
+		                                    <g:select name="designers" from="${designerList}" multiple="yes" optionKey="id" size="5"
+		                                        value="${portfolioInstance?.designers?.collect { it.id.toString() } ?: []}" />
 		                                </td>
 		                            </tr>
 		                        

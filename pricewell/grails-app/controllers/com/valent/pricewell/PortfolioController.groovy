@@ -261,6 +261,46 @@ class PortfolioController {
 				previousPM = portfolioInstance.portfolioManager
 				portfolioInstance.properties = params
 				pm = portfolioInstance.portfolioManager
+
+				/*
+				 * BUG FIX (KnownBugs.txt: "doesn't show selected properly"):
+				 *
+				 * The edit form is submitted via jQuery.ajax() using .serialize(), which
+				 * encodes multi-select fields as repeated flat parameters:
+				 *   designers=1&designers=2&designers=3
+				 *
+				 * portfolioInstance.properties = params (Grails DataBinder) cannot reliably
+				 * bind hasMany associations from this flat format in Grails 1.3.x — it expects
+				 * indexed params like designers[0].id=1, designers[1].id=2. As a result,
+				 * changes to the designers or otherPortfolioManagers selections were silently
+				 * discarded on every save, and stale DB values were redisplayed on reload
+				 * (making the display bug appear worse than it was).
+				 *
+				 * Fix: After the general properties binding, explicitly re-bind both hasMany
+				 * collections. params.list() always returns a List<String> regardless of
+				 * whether 0, 1, or many values were submitted, covering all selection states.
+				 * We clear the existing collection first to ensure the persisted state matches
+				 * exactly what the user selected — not a merge with the previous value.
+				 */
+
+				// --- Rebind designers ---
+				// Clear any partial/incorrect binding that properties = params may have applied.
+				portfolioInstance.designers?.clear()
+				// params.list() returns [] when nothing selected, ["id"] for one, ["id1","id2",...]
+				// for many — handles all selection states safely.
+				params.list('designers').each { id ->
+					def designer = User.get(id.toLong())
+					if (designer) portfolioInstance.addToDesigners(designer)
+				}
+
+				// --- Rebind otherPortfolioManagers ---
+				// Same pattern as designers above.
+				portfolioInstance.otherPortfolioManagers?.clear()
+				params.list('otherPortfolioManagers').each { id ->
+					def mgr = User.get(id.toLong())
+					if (mgr) portfolioInstance.addToOtherPortfolioManagers(mgr)
+				}
+
 	            if (!portfolioInstance.hasErrors() && portfolioInstance.save(flush: true)) {
 					if(previousPM != pm)
 					{

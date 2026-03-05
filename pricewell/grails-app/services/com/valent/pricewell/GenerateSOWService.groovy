@@ -15,18 +15,24 @@ class GenerateSOWService {
 	
 	public File getTemplate(Geo territory)
 	{
-		def path = "G:/SOWFiles/my-territory.docx"//"G:/SOWFiles/"+territory?.name.toLowerCase().toString()+"-territory.docx"
+		// Changed from hard-coded Windows absolute path "G:/SOWFiles/my-territory.docx" to a
+		// relative path so the application works on any OS and deployment environment.
+		// The path resolves relative to the working directory from which the app is launched
+		// (project root in development; configure the launch directory for production deployments).
+		def path = "SOWFiles/my-territory.docx"//"SOWFiles/"+territory?.name.toLowerCase().toString()+"-territory.docx"
 		getCopiesOfMasterFile("my-territory")
 	}
-	
+
 	public void returnTemplate()
 	{
-		
+
 	}
-	
+
 	public void getCopiesOfMasterFile(String fileName)
 	{
-		def path = "G:/SOWFiles/"
+		// Changed from hard-coded Windows absolute path "G:/SOWFiles/" to a relative path.
+		// See comment in getTemplate() above for details.
+		def path = "SOWFiles/"
 		File parentFolder = new File(path+fileName+".docx").getParentFile()
 		//println parentFolder.listFiles()
 		def availableFiles = getCopies(parentFolder, fileName)

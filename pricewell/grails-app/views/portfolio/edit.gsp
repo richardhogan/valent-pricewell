@@ -105,18 +105,38 @@
                                   <label for="designers"><g:message code="portfolio.designers.label" default="Designers" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: portfolioInstance, field: 'designers', 'errors')}">
-                                    <g:select name="designers" from="${designerList}" multiple="yes" optionKey="id" size="5" value="${portfolioInstance?.designers*.id}" />
+                                    <%--
+                                        BUG FIX (KnownBugs.txt: "doesn't show selected properly"):
+                                        The original expression  value="${portfolioInstance?.designers*.id}"
+                                        returns a List<Long>. In Grails 1.3.x, g:select resolves each
+                                        option key via optionKey="id" and then checks whether the value
+                                        list *contains* that key. The comparison uses Java equals(), and
+                                        Long.equals(String) is always false — so no options were ever
+                                        marked as selected when the edit page loaded.
+                                        Fix: collect IDs as Strings so the equality check succeeds.
+                                        The Elvis operator ?: [] guards against a null designers Set
+                                        (e.g. a newly-created Portfolio with no designers yet).
+                                    --%>
+                                    <g:select name="designers" from="${designerList}" multiple="yes" optionKey="id" size="5"
+                                        value="${portfolioInstance?.designers?.collect { it.id.toString() } ?: []}" />
                                 </td>
                             </tr>
-                        
-                           <!-- <tr class="prop">
+
+                            <%--
+                                BUG FIX (KnownBugs.txt: "doesn't show selected properly"):
+                                This block was commented out because it had the same selection-display
+                                bug as the designers field above. Re-enabled now that the value
+                                expression is corrected (IDs collected as Strings).
+                            --%>
+                            <tr class="prop">
                                 <td valign="top" class="name">
                                   <label for="otherPortfolioManagers"><g:message code="portfolio.otherPortfolioManagers.label" default="Other Portfolio Managers" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: portfolioInstance, field: 'otherPortfolioManagers', 'errors')}">
-                                    <g:select name="otherPortfolioManagers" from="${portfolioManagerList}" multiple="yes" optionKey="id" size="5" value="${portfolioInstance?.otherPortfolioManagers*.id}" />
+                                    <g:select name="otherPortfolioManagers" from="${portfolioManagerList}" multiple="yes" optionKey="id" size="5"
+                                        value="${portfolioInstance?.otherPortfolioManagers?.collect { it.id.toString() } ?: []}" />
                                 </td>
-                            </tr> -->
+                            </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
