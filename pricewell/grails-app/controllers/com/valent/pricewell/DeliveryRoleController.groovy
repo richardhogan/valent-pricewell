@@ -1,6 +1,6 @@
 package com.valent.pricewell
-
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class DeliveryRoleController {
 
@@ -14,7 +14,7 @@ class DeliveryRoleController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -24,11 +24,11 @@ class DeliveryRoleController {
 		{
 			def source = (params.source == "firstsetup")?"firstsetup":"setup"
 			render(template: "listsetup", model :[deliveryRoleInstanceList: DeliveryRole.list(), source: source, deliveryRoleInstanceTotal: DeliveryRole.count(),
-													createPermission: SecurityUtils.subject.isPermitted("deliveryRole:create")])
+													createPermission: PricewellSecurity.isPermitted("deliveryRole:create")])
 		}
 		else
         	[deliveryRoleInstanceList: DeliveryRole.list(), deliveryRoleInstanceTotal: DeliveryRole.count(),
-				createPermission: SecurityUtils.subject.isPermitted("deliveryRole:create")]
+				createPermission: PricewellSecurity.isPermitted("deliveryRole:create")]
     }
 	
 	def listsetup = {
@@ -161,13 +161,13 @@ class DeliveryRoleController {
 			{
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
 				render(template: "showsetup", model: [deliveryRoleInstance: deliveryRoleInstance, source: source, relationDeliveryGeoList: relationDeliveryGeoList,
-														message: message, createPermission: SecurityUtils.subject.isPermitted("deliveryRole:create"), 
-														updatePermission: SecurityUtils.subject.isPermitted("deliveryRole:create")])
+														message: message, createPermission: PricewellSecurity.isPermitted("deliveryRole:create"), 
+														updatePermission: PricewellSecurity.isPermitted("deliveryRole:create")])
 			}
 			else
 				[deliveryRoleInstance: deliveryRoleInstance, relationDeliveryGeoList: relationDeliveryGeoList, message: message,
-					createPermission: SecurityUtils.subject.isPermitted("deliveryRole:create"), 
-					updatePermission: SecurityUtils.subject.isPermitted("deliveryRole:create")]
+					createPermission: PricewellSecurity.isPermitted("deliveryRole:create"), 
+					updatePermission: PricewellSecurity.isPermitted("deliveryRole:create")]
         }
     }
 	

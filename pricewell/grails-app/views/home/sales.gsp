@@ -1,5 +1,5 @@
 <%@ page import="grails.converters.JSON"%>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -77,7 +77,7 @@
 							 jQuery('#dvQuotaChart').html(data);
 							 quotaChartGraph.hideLoading();
 
-							 if(${!SecurityUtils.subject.hasRole('SALES PERSON')})
+							 if(${!PricewellSecurity.hasRole('SALES PERSON')})
 					    	 {
 						    	 quotaAssignedVsQuotaAchivedPerPersonChart.showLoading();
 							 	 quotaPerPersonGraphChanges(range, territoryId);
@@ -228,7 +228,7 @@
 						 {
 							// alert("In quartelt")
 							// alert("in quota chare");
-							 //if(${SecurityUtils.subject.hasRole('SALES MANAGER')} || ${SecurityUtils.subject.hasRole('SALES PERSON')})
+							 //if(${PricewellSecurity.hasRole('SALES MANAGER')} || ${PricewellSecurity.hasRole('SALES PERSON')})
 							 if(${role == 'SALES MANAGER'} || ${role == 'SALES PERSON'})
 							 {
 								 	//var startDate=jQuery("#startDate").val();
@@ -349,7 +349,7 @@
 						 jQuery('#dvQuotaChart').html(data);
 						 quotaChartGraph.hideLoading();
 
-						 //if(${!SecurityUtils.subject.hasRole('SALES PERSON')})
+						 //if(${!PricewellSecurity.hasRole('SALES PERSON')})
 						 if(${role != 'SALES PERSON'})									
 				    	 {
 					    	 quotaAssignedVsQuotaAchivedPerPersonChart.showLoading();
@@ -410,7 +410,7 @@
 					<div style="text-align: right; font-weight:bold;">
 					<div style="text-align: left;"> Charts </div>
 						<%--<g:if test="${role == 'SALES PERSON' }">--%>
-						<g:if test="${SecurityUtils.subject.hasRole('SALES PERSON')}">
+						<g:if test="${PricewellSecurity.hasRole('SALES PERSON')}">
 							<g:hiddenField name="salesTerritoryId" value="${defaultTerritory?.id}" />
 							Territory : ${defaultTerritory?.name }
 						</g:if>
@@ -451,7 +451,7 @@
 						</div>
 					</div>
 					
-					<g:if test="${!SecurityUtils.subject.hasRole('SALES PERSON')}">
+					<g:if test="${!PricewellSecurity.hasRole('SALES PERSON')}">
 						<div class="rightChartDiv">
 							<div class="chartBox oneRowChartBoxHeight">
 								<div class="chartHeader">
@@ -467,7 +467,7 @@
 						</div>
 					</g:if>
 					
-					<g:if test="${SecurityUtils.subject.hasRole('SALES PERSON')}">
+					<g:if test="${PricewellSecurity.hasRole('SALES PERSON')}">
 						<div class="rightChartDiv">
 							<div class="chartBox oneRowChartBoxHeight">
 								<div class="chartHeader">
@@ -502,7 +502,7 @@
 					</g:if>
 	 			</div>
 	 			
-	 			<g:if test="${!SecurityUtils.subject.hasRole('SALES PERSON')}">
+	 			<g:if test="${!PricewellSecurity.hasRole('SALES PERSON')}">
 					<div class="mainChartDiv" id="mainChartDivForQuotaAssignVsQuotaAchievedIncludingPerPerson">
 					
 						<div class="fullChartDiv">
@@ -615,7 +615,7 @@
 					</div>
 	 			</div>
 			
-				<g:if test="${SecurityUtils.subject.hasRole('SALES PERSON')}">
+				<g:if test="${PricewellSecurity.hasRole('SALES PERSON')}">
 					<div class="mainChartDiv">
 						<div class="leftChartDiv">
 							<div class="chartBox oneRowChartBoxHeight">

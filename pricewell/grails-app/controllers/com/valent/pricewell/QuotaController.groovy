@@ -1,6 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
-import org.apache.shiro.SecurityUtils
 class QuotaController {
 
 	def serviceCatalogService
@@ -13,7 +14,7 @@ class QuotaController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -24,7 +25,7 @@ class QuotaController {
 	
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotaInstanceList = new ArrayList(), tmpList = new ArrayList()
 		
 		tmpList = salesCatalogService.getUserQuota(user)
@@ -44,7 +45,7 @@ class QuotaController {
 		{
 			def source = (params.source == "firstsetup")?"firstsetup":"setup"
 			
-			render(template: "listsetup", model :[quotaInstanceList: quotaInstanceList, range: range, quaterList: quaterList, quotaInstanceTotal: quotaInstanceList.size(), source: source, allowCreate: isPermitted("create"), allowEdit: isPermitted("edit"), allowDelete: isPermitted("delete"), allowShow: isPermitted("show")])//SecurityUtils.subject.isPermitted("geoGroup:create")]
+			render(template: "listsetup", model :[quotaInstanceList: quotaInstanceList, range: range, quaterList: quaterList, quotaInstanceTotal: quotaInstanceList.size(), source: source, allowCreate: isPermitted("create"), allowEdit: isPermitted("edit"), allowDelete: isPermitted("delete"), allowShow: isPermitted("show")])//PricewellSecurity.isPermitted("geoGroup:create")]
 		}
 		else
 			[quotaInstanceList: quotaInstanceList, quotaInstanceTotal: quotaInstanceList.size(), range: range]
@@ -54,7 +55,7 @@ class QuotaController {
 	
 	Map filterAssignedAndSubmitedList(List quotaList)
 	{
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		List myAssigned = new ArrayList(), mySubmitted = new ArrayList()
 		
 		for(Quota quota : quotaList)
@@ -86,7 +87,7 @@ class QuotaController {
 		}
 		
 		Map quotaData = [:]
-		if(SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 			{quotaData = opportunityService.getQuotaAssignedVsQuotaAchivement(dateMap, territoryInstance)}
 			
 		if(quotaData['Greater'] != "" && quotaData['Greater'] != null)
@@ -114,7 +115,7 @@ class QuotaController {
 		}
 				
 		Map quotaPerPersons = [:]
-			if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+			if(PricewellSecurity.hasRole("SALES MANAGER"))
 				{quotaPerPersons = opportunityService.getQuotaAssignedVsQuotaAchivementPerPersons(dateMap, territoryInstance)}
 			
 		render(view: "/reports/quotaAssignedVsQuotaAchivementPerPerson", model: [quotaPerPersons: quotaPerPersons])
@@ -123,7 +124,7 @@ class QuotaController {
     def create = {
         def quotaInstance = new Quota()
         quotaInstance.properties = params
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		/*def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		def salesPersonList = new ArrayList()
@@ -183,7 +184,7 @@ class QuotaController {
 	public Map isInRangeOfCreaterForCreateQuota(Map params)
 	{
 		Geo assignedTerritory = Geo.get(params.territoryId.toLong())
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		BigDecimal assignedAmount = new BigDecimal(params.amount)
 		String message = ""
 		boolean isInRange = false
@@ -282,7 +283,7 @@ class QuotaController {
 		boolean isQuotaAvailable = isQuotaAvailableInAssignedUser(params)//check if quota is available in specified date range
 		boolean isInRange = true
 		Map checkRangeMap = [:];
-		/*if(!SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") && !SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		/*if(!PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") && !PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			checkRangeMap = isInRangeOfCreaterForCreateQuota(params)//check amount is in range of assigned amount of creater
 			isInRange = checkRangeMap['isInRange']
@@ -309,7 +310,7 @@ class QuotaController {
 			//quotaInstance.territory = Geo.get(params.territoryId.toLong())
 			quotaInstance.fromDate = dates["fromDate"]
 			quotaInstance.toDate = dates["toDate"]
-			quotaInstance.createdBy = User.get(new Long(SecurityUtils.subject.principal))
+			quotaInstance.createdBy = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			def map = [:]
 			if (quotaInstance.save(flush: true))
 			{
@@ -530,7 +531,7 @@ class QuotaController {
 	boolean isPermitted(String action)
 	{
 		boolean permit = false
-		if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole("SALES MANAGER"))
+		if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			permit = true
 		}

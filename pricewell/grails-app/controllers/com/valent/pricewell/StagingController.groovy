@@ -1,6 +1,6 @@
 package com.valent.pricewell
-
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class StagingController {
 
@@ -15,7 +15,7 @@ class StagingController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 
@@ -296,7 +296,7 @@ class StagingController {
 		{
 			NotificationGenerator gen = new NotificationGenerator(g)
 			map = gen.notifyReviewRequestUpdate(request1, NotificationGenerator.ReviewRequestUpdates.NEW,
-					User.get(new Long(SecurityUtils.subject.principal)))
+					PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
 			
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceProfile.id)
 
@@ -312,7 +312,7 @@ class StagingController {
 	private ReviewRequest createNewReviewRequest(ServiceProfile serviceProfile, String subject, String description, Staging fromStage, Staging toStage, Object params)
 	{
 		def reviewRequestInstance = new ReviewRequest()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		bindData(reviewRequestInstance, params, ['fromStage'])
 		//reviewRequestInstance.properties['assignees']  = params;
 		reviewRequestInstance.dateModified = new Date()

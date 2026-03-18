@@ -1,12 +1,12 @@
 
 <%@ page import="com.valent.pricewell.Account" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.Geo" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.SalesController" %>
 <%
 	def baseurl = request.siteUrl
-	def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+	def loginUser = PricewellSecurity.currentUser
 	def primaryTerritory = null
 	if(loginUser?.primaryTerritory!=null && loginUser?.primaryTerritory!='null' && loginUser?.primaryTerritory!='NULL')
 	{
@@ -170,7 +170,7 @@
                                     <label for="assignTo"><g:message code="account.assignto.label" default="Assign To" /></label><em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: accountInstance, field: 'assignTo', 'errors')}">
-                                    <!--<g:select name="accountAssignToId" from="${salesUsers?.sort {it.profile.fullName}}" value="${SecurityUtils.subject.principal}" optionKey="id" noSelection="['':'-Select Any One-']" class="required"/>-->
+                                    <!--<g:select name="accountAssignToId" from="${salesUsers?.sort {it.profile.fullName}}" value="${PricewellSecurity.principalId}" optionKey="id" noSelection="['':'-Select Any One-']" class="required"/>-->
                                     <g:select name="accountAssignToId" from="${new SalesController().generateAssignedToList(loginUser.id)}" value="" noSelection="['': 'Select Any One']" class="required"/>
                                 </td>
                                 

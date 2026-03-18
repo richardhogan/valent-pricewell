@@ -1,4 +1,4 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -197,7 +197,7 @@
 	
 </g:if>
 <div>
-	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 		<div class="RightDiv">
 			<span class="button">
 				<g:remoteLink action="editDefinition" controller="service" update="[success:'tbDef',failure:'tbDef']"

@@ -1,4 +1,6 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 
 import com.valent.pricewell.templater.*
@@ -10,7 +12,6 @@ import java.text.SimpleDateFormat
 
 import javax.management.RuntimeErrorException
 
-import org.apache.shiro.SecurityUtils
 import org.xhtmlrenderer.pdf.ITextRenderer
 import org.springframework.web.multipart.MultipartFile
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
@@ -43,7 +44,7 @@ class QuotationController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -76,7 +77,7 @@ class QuotationController {
 	
 	def list = {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = quotationService.findUserQuote(user)
 
 		//def serviceQuote = reviewService.findServiceQuoteList()
@@ -118,7 +119,7 @@ class QuotationController {
 	}
 	
 	def listPendingJSON = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = quotationService.findPendingUserQuotes(user)
 
 		def results = []
@@ -422,7 +423,7 @@ class QuotationController {
 			quotationInstance.status = Staging.finalAcceptStage(StagingObjectType.QUOTATION, false)
 		}
 		
-		quotationInstance.createdBy = User.get(new Long(SecurityUtils.subject.principal))
+		quotationInstance.createdBy = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		if(quotationInstance.geo){
 			quotationInstance.taxPercent = quotationInstance.geo.taxPercent;
 		}
@@ -604,9 +605,9 @@ class QuotationController {
 
 
 			if(quotationInstance.status.sequenceOrder <= 2) {
-				def user = User.get(new Long(SecurityUtils.subject.principal))
+				def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 				canModifyServices = canUserModifyService(quotationInstance)
-				/*if(quotationInstance?.opportunity?.createdBy == user || quotationInstance?.opportunity?.assignTo == user || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")) {
+				/*if(quotationInstance?.opportunity?.createdBy == user || quotationInstance?.opportunity?.assignTo == user || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")) {
 					canModifyServices = true;
 				}*/
 			}
@@ -645,14 +646,14 @@ class QuotationController {
 	public boolean canUserModifyService(Quotation quotationInstance)
 	{
 		boolean canModify =  false
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quoteGeo = quotationInstance?.geo
 		
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			canModify = true
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			for(Geo territory : user?.geoGroup?.geos)
 			{
@@ -662,7 +663,7 @@ class QuotationController {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(Geo territory : user?.territories)
 			{
@@ -672,7 +673,7 @@ class QuotationController {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			if(quotationInstance?.opportunity?.createdBy.id == user.id || quotationInstance?.opportunity?.assignTo.id == user.id)
 			{
@@ -741,7 +742,7 @@ class QuotationController {
 		Staging currentStage;
 
 		if(quotationInstance && nextStage){
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			def type
 			if(stageType == "contract"){
 				type = GeneralStagingLog.StagingLogObjectType.CONTRACT;
@@ -797,7 +798,7 @@ class QuotationController {
 
 			boolean canModifyServices = false;
 			if(quotationInstance.status.sequenceOrder <= 2) {
-				def user = User.get(new Long(SecurityUtils.subject.principal))
+				def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 				if(quotationInstance.createdBy == user) {
 					canModifyServices = true;
@@ -810,17 +811,17 @@ class QuotationController {
 
 	def checkUserForDiscount(Quotation quotationInstance) {
 		boolean moreDiscountAllowed = false;
-		if(SecurityUtils.subject.hasRole("SALES PERSON")) {
+		if(PricewellSecurity.hasRole("SALES PERSON")) {
 			if(quotationInstance.requestLevel1==false) {
 				moreDiscountAllowed = true
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER")) {
+		else if(PricewellSecurity.hasRole("SALES MANAGER")) {
 			if(quotationInstance.requestLevel2==false) {
 				moreDiscountAllowed = true
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER")) {
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER")) {
 			if(quotationInstance.requestLevel3==false) {
 				moreDiscountAllowed = true
 			}
@@ -830,17 +831,17 @@ class QuotationController {
 
 	def checkForDiscountReject(Quotation quotationInstance) {
 		boolean discountReject = false;
-		if(SecurityUtils.subject.hasRole("SALES MANAGER")) {
+		if(PricewellSecurity.hasRole("SALES MANAGER")) {
 			if(quotationInstance.requestLevel1==true) {
 				discountReject = true
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER")) {
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER")) {
 			if(quotationInstance.requestLevel2==true) {
 				discountReject = true
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PRESIDENT")) {
+		else if(PricewellSecurity.hasRole("SALES PRESIDENT")) {
 			if(quotationInstance.requestLevel3==true) {
 				discountReject = true
 			}
@@ -1137,7 +1138,7 @@ class QuotationController {
 	def showGenerateSOWStages = {
 		String source = params.source
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		//println source
 		Quotation quotationInstance = Quotation.get(params.id)
@@ -1689,22 +1690,22 @@ class QuotationController {
 	def getRange(Object quotationInstance)
 	{
 
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			quotationInstance.discountFrom = -50
 			quotationInstance.discountTo = 50
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			quotationInstance.discountFrom = -40
 			quotationInstance.discountTo = 40
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			quotationInstance.discountFrom = -30
 			quotationInstance.discountTo = 30
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			quotationInstance.discountFrom = -20
 			quotationInstance.discountTo = 20
@@ -1952,7 +1953,7 @@ class QuotationController {
 
 	def sendDiscountNotification =
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Quotation quotationInstance = Quotation.get(params.id)
 
 		def note = new Notification()
@@ -1968,15 +1969,15 @@ class QuotationController {
 		note.comment = params.comment
 		if(note.save(flush:true))
 		{
-			if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			if(PricewellSecurity.hasRole("SALES PERSON"))
 			{
 				quotationInstance.requestLevel1 = true
 			}
-			else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+			else if(PricewellSecurity.hasRole("SALES MANAGER"))
 			{
 				quotationInstance.requestLevel2 = true
 			}
-			else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+			else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 			{
 				quotationInstance.requestLevel3 = true
 			}
@@ -1994,19 +1995,19 @@ class QuotationController {
 	{
 		def receiverUsers = []
 		def territory = quotationInstance?.geo
-		def user = User.get(new Long(SecurityUtils.subject.principal))
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			receiverUsers.add(territory?.salesManager)
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(User us : territory?.geoGroup?.generalManagers)
 			{
 				receiverUsers.add(us)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			receiverUsers = serviceCatalogService.findUsersByRole("SALES PRESIDENT")
 			
@@ -2019,10 +2020,10 @@ class QuotationController {
 	{
 		def receiverUsers = []
 		def territory = quotationInstance?.geo
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		receiverUsers.add(quotationInstance.createdBy)
-		if(SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			receiverUsers.add(territory?.salesManager)
 			for(User us : territory?.geoGroup?.generalManagers)
@@ -2030,7 +2031,7 @@ class QuotationController {
 				receiverUsers.add(us)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			receiverUsers.add(territory?.salesManager)
 		}
@@ -2068,7 +2069,7 @@ class QuotationController {
 					return
 				}
 			}
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			def receiversList = new ArrayList()
 			if(quotationInstance.createdBy != user)
 			{
@@ -2130,7 +2131,7 @@ class QuotationController {
 		
 		if (quotationInstance)
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			def receiversList = new ArrayList()
 			if(quotationInstance.createdBy != user)
 			{
@@ -2253,7 +2254,7 @@ class QuotationController {
 	{
 		Date endDate = null
 		Map quoteTypesMap = [:]
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = dateFormat.parse(params.start);
 		if(params.end == null || params.end == "null")

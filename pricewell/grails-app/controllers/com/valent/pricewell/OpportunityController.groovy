@@ -1,4 +1,6 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Collection;
 
@@ -8,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
 
-import org.apache.shiro.SecurityUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 
 
@@ -26,7 +27,7 @@ class OpportunityController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
@@ -85,7 +86,7 @@ class OpportunityController {
 	def list = {
 		/*def opportunityList = [];
 		opportunityList = retrieveOpportunityList("pending",[:]);
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		List accountList = reviewService.findUserAccounts()
 		
@@ -252,7 +253,7 @@ class OpportunityController {
 	}
 
     def create = {
-        def user = User.get(new Long(SecurityUtils.subject.principal))
+        def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		
@@ -286,7 +287,7 @@ class OpportunityController {
 
 	def addOpportunityFromAccount = {
 		def opportunityInstance = new Opportunity()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		opportunityInstance.properties = params
 		def account = Account.get(params.accountId)
 		//account?.contacts
@@ -344,7 +345,7 @@ class OpportunityController {
 		opportunityInstance.properties['name','amount','discount','probability'] = params
 		opportunityInstance.geo = geoInstance
 		opportunityInstance.closeDate = closeDate
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		opportunityInstance.createdBy = user
 		opportunityInstance.assignTo = User.get(params.assignToId)
 		if(params.accountIdFromLead != null)
@@ -415,7 +416,7 @@ class OpportunityController {
 		
 		String source = params.source
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def opportunityInstance = Opportunity.get(params.id)
 		
@@ -485,7 +486,7 @@ class OpportunityController {
 			}
 		}
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		if (!opportunityInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'opportunity.label', default: 'Opportunity'), params.id])}"
 			redirect(action: "list")
@@ -564,7 +565,7 @@ class OpportunityController {
 	
     def show = {
         def opportunityInstance = Opportunity.get(params.id)
-		def loginUserId =  User.get(new Long(SecurityUtils.subject.principal))
+		def loginUserId =  PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		boolean showOpportunity = false
 		
@@ -632,7 +633,7 @@ class OpportunityController {
 
 	def addSalesforceTerritoryAndContact = 
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -641,7 +642,7 @@ class OpportunityController {
 	}
 	
 	def mapTerritory = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -726,7 +727,7 @@ class OpportunityController {
 	def refreshNotes = {
 		def opp = Opportunity.get(params.opportunityId);
 		
-		def loginUserId =  User.get(new Long(SecurityUtils.subject.principal))
+		def loginUserId =  PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		render(template: "notesList", model: [opportunityInstance: opp , loginUserId : loginUserId])
 	}
@@ -773,7 +774,7 @@ class OpportunityController {
 	}
 	
 	def addTerritory = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -838,7 +839,7 @@ class OpportunityController {
 	
     def edit = {
         def opportunityInstance = Opportunity.get(params.id)
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = salesCatalogService.findUserTerritories(opportunityInstance?.assignTo)
 		
 		def dateFormat = opportunityInstance?.geo?.dateFormat
@@ -902,7 +903,7 @@ class OpportunityController {
             }
 			def previousAssignToId = opportunityInstance.assignTo.id
 	        opportunityInstance.properties['name','probability','amount','discount'] = params
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			opportunityInstance.assignTo = User.get(params.assignToId)
 			
 			def geoInstance = Geo.get(params.territoryId)

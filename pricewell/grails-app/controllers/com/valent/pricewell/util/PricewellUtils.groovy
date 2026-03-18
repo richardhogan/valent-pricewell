@@ -1,7 +1,8 @@
 package com.valent.pricewell.util
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import com.valent.pricewell.User
-import org.apache.shiro.SecurityUtils;
 
 class PricewellUtils {
 	private static Map<String, RoleEnum> roles = new HashMap<String, RoleEnum>();
@@ -27,7 +28,7 @@ class PricewellUtils {
 	}
 	public static RoleEnum getFirstMatchingRoleEnum()
 	{
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if(user?.lastLoginRole != null && user?.lastLoginRole != "" && user?.lastLoginRole != "NULL")
 		{
@@ -37,7 +38,7 @@ class PricewellUtils {
 		RoleEnum[] s = RoleEnum.values() ;
 
 		for(RoleEnum role : s ){
-			if( SecurityUtils.getSubject().hasRole(role.value()) ){
+			if( PricewellSecurity.hasRole(role.value()) ){
 				return roles.get(role.value());
 			}
 		}
@@ -46,7 +47,7 @@ class PricewellUtils {
 	
 	public static RoleEnum getFirstMatchingRoleEnum(String[] s){
 		for(String role : s ){
-			if( SecurityUtils.subject.hasRole(role) ){
+			if( PricewellSecurity.hasRole(role) ){
 				return roles.get(role);
 			}
 		}

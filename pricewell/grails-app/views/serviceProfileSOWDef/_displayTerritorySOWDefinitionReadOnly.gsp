@@ -1,4 +1,4 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.ServiceProfileSOWDef"%>
 
 <%

@@ -1,6 +1,6 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 
-	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 		<g:if test="${sPresidents?.size() > 0}">
 			<option value="" class="disableClass" disabled>SALES PRESIDENTS</option>
 			
@@ -16,7 +16,7 @@
 		</g:if>
 	</g:if>
 	
-	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT')}">
+	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
 		<g:if test="${gManagers?.size() > 0}">
 			<option value="" class="disableClass" disabled>GENERAL MANAGERS</option>
 			
@@ -31,7 +31,7 @@
 		</g:if>
 	</g:if>
 	
-	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER')}">
+	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER')}">
 		<g:if test="${sManagers?.size() > 0}">
 			<option value="" class="disableClass" disabled>SALES MANAGERS</option>
 			
@@ -46,7 +46,7 @@
 		</g:if>
 	</g:if>
 	
-	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')}">	
+	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')}">	
 		<g:if test="${sPersons?.size() > 0}">
 			<option value="" class="disableClass" disabled>SALES PERSONS</option>
 			

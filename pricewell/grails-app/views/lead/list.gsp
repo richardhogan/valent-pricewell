@@ -1,6 +1,6 @@
 
 <%@ page import="com.valent.pricewell.Lead" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -104,7 +104,7 @@
             	<div class="list">
 					<h2>${title}</h2>
 					
-					<g:if test="${SecurityUtils.subject.hasRole('SALES PERSON')&& title == 'Pending Leads'}">
+					<g:if test="${PricewellSecurity.hasRole('SALES PERSON')&& title == 'Pending Leads'}">
 						
 						<div id="tabsDiv">
 							<ul>

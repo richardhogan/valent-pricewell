@@ -1,9 +1,9 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
 import java.text.SimpleDateFormat
-import org.apache.shiro.SecurityUtils
-
 class SalesforceController {
 
     def index = { }
@@ -13,7 +13,7 @@ class SalesforceController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -101,7 +101,7 @@ class SalesforceController {
 			def totalImported = 0
 			for(Opportunity opp : importedOpportunities)
 			{
-				def user = User.get(new Long(SecurityUtils.subject.principal))
+				def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 				def map = new NotificationGenerator(g).sendSalesforceToPricewellOpportunityImportNotification(opp, user);
 				sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/opportunity/show/"+opp.id)
 				totalImported++

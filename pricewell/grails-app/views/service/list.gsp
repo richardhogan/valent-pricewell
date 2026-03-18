@@ -3,7 +3,7 @@
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.ServiceStageFlow" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -201,7 +201,7 @@
 	            <!-- <span>&nbsp;
 					<input id="btnNewService" type="button" title="New Service" value="New Service"  class="buttons.button button" class="menuButtonStyle "/>
 				</span> --> 
-            	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+            	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 			 		<span>&nbsp;
 						<!-- <input id="btnImport" type="button" title="Import Multiple Services" value="Import Service"  class="buttons.button button" class="menuButtonStyle "/> -->
 						<g:link class="buttons.button button" action="importFile" title="Import Multiple Services" >Import Service</g:link>
@@ -288,7 +288,7 @@
 	                        			
 	                        			<%
 											def responsiblePerson = new ArrayList()
-											def user = User.get(new Long(SecurityUtils.subject.principal))
+											def user = PricewellSecurity.currentUser
 								
 											for(UserBase usr : serviceProfileInstance.responsiblePerson())
 											{

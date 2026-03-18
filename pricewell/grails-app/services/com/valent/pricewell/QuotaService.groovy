@@ -1,7 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.math.BigDecimal;
-import org.apache.shiro.SecurityUtils
 import java.util.List;
 import java.util.Map;
 
@@ -16,17 +17,17 @@ class QuotaService {
 	
 	List getUserQuotaList()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryInstance = null, currency = ""
 		def quotaList = []
 		Set territoryList = new HashSet()
 		
 		
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			quotaList = Quota.findAll("FROM Quota quota WHERE quota.person.id=:uid", [uid: user.id])
 		}
-		else //if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else //if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			quotaList = Quota.findAll("FROM Quota quota WHERE quota.createdBy.id=:uid OR quota.person.id=:pid", [uid: user.id, pid: user.id])
 		}
@@ -36,11 +37,11 @@ class QuotaService {
 	}
 	public List getQuotasPersonList(List quotaList)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Set personSet = new HashSet()
 		for(Quota qu : quotaList)
 		{
-			if(!SecurityUtils.subject.hasRole("SALES PERSON"))
+			if(!PricewellSecurity.hasRole("SALES PERSON"))
 			{
 				if(qu.person.id != user.id)
 					personSet.add(qu?.person)
@@ -68,11 +69,11 @@ class QuotaService {
 	public BigDecimal calculateQuotaAmount(List quotaList, User user)//calculate total assigned amount
 	{
 		BigDecimal assignedAmount = new BigDecimal(0), submitedAmount = new BigDecimal(0)
-		//User user = User.get(new Long(SecurityUtils.subject.principal))
+		//User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		for(Quota qu : quotaList)
 		{
-			if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			if(PricewellSecurity.hasRole("SALES PERSON"))
 			{
 				if(qu.person?.id == user?.id)
 				{

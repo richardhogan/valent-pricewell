@@ -1,5 +1,5 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
+import com.valent.pricewell.PricewellSecurity
 import java.util.Date;
 import java.util.Map;
 
@@ -61,21 +61,21 @@ class Service{
 	
 	static List listPublished(User user)
 	{
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			Service.findAll("FROM Service s WHERE s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published"])
 		}
-		else if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+		else if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
 		{
 			Service.findAll("FROM Service s WHERE s.portfolio.portfolioManager = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(SecurityUtils.subject.hasRole("PRODUCT MANAGER")){
+		else if(PricewellSecurity.hasRole("PRODUCT MANAGER")){
 			Service.findAll("FROM Service s WHERE s.productManager = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(SecurityUtils.subject.hasRole("SERVICE DESIGNER")){
+		else if(PricewellSecurity.hasRole("SERVICE DESIGNER")){
 			Service.findAll("FROM Service s WHERE s.serviceProfile.serviceDesignerLead = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			Service.findAll("FROM Service s WHERE s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published"])
 		}
@@ -114,7 +114,7 @@ class Service{
 		newService.serviceProfile = serviceProfile
 		newService.serviceDescription = this.serviceDescription
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		newService.createdBy = user
 		newService.modifiedBy = user
 		newService.active = true

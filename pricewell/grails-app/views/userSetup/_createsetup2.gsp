@@ -3,11 +3,11 @@
 <%@ page import="grails.plugins.nimble.core.*" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="grails.plugins.nimble.core.Role" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 
 <%
 	def baseurl = request.siteUrl
-	def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+	def loginUser = PricewellSecurity.currentUser
 	def country = null 
 	Role sManagerRole = Role.findByCode('SALES MANAGER')
 	Role sPersonRole = Role.findByCode('SALES PERSON')
@@ -372,7 +372,7 @@
 						  	</g:if>
 					
 			      			<!--<g:if test="${roleInstance?.name == 'SALES MANAGER' || roleInstance?.name == 'SALES PERSON'}">
-			 					<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT')}">
+			 					<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
 			 						<g:if test="${territoriesList.size()>0 }">
 						  				<tr>
 							  				<td><label>GEO</label><em>*</em></td>
@@ -394,7 +394,7 @@
 						  				<td>
 						  					<div id="primaryTerritoryList">
 						  						<g:select name="primaryTerritory" from="${territoriesList?.sort {it?.name}}" value="" optionKey="id"  noSelection="['': 'Select Any One']" class="required"/>
-						  						<g:if test="${!SecurityUtils.subject.hasRole('SALES MANAGER')}">
+						  						<g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
 						  							<g:if test="${roleInstance?.name != 'SALES MANAGER'}"> 
 						  								<button id="newPrimaryTerritory" class="roundNewButton" title="Create New Territory">+</button>
 					  								</g:if>

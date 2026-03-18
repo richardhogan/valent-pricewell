@@ -1,7 +1,7 @@
 <%@ page import="com.valent.pricewell.DeliveryRole" %>
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.Geo" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>

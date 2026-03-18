@@ -1,8 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 import java.util.List;
-
-import org.apache.shiro.SecurityUtils
 
 class SowSupportParameterController {
 
@@ -25,11 +25,11 @@ class SowSupportParameterController {
 		{
 			def source = (params.source == "firstsetup")?"firstsetup":"setup"
 			render(template: "listsetup", model :[sowSupportParameterInstanceList: SowSupportParameter.list(), source: source, sowSupportParameterInstanceTotal: SowSupportParameter.count(),
-													createPermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create")])
+													createPermission: PricewellSecurity.isPermitted("sowSupportParameter:create")])
 		}
 		else
         	[sowSupportParameterInstanceList: SowSupportParameter.list(), sowSupportParameterInstanceTotal: SowSupportParameter.count(),
-				createPermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create")]
+				createPermission: PricewellSecurity.isPermitted("sowSupportParameter:create")]
     }
 	
 	def getParameterText = {
@@ -147,13 +147,13 @@ class SowSupportParameterController {
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
 				
 				render(template: "showsetup", model: [sowSupportParameterInstance: sowSupportParameterInstance, source: source, relationSowSupportParameterList: relationSowSupportParameterList,
-														message: message, createPermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create"), 
-														updatePermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create")])
+														message: message, createPermission: PricewellSecurity.isPermitted("sowSupportParameter:create"), 
+														updatePermission: PricewellSecurity.isPermitted("sowSupportParameter:create")])
 			}
 			else
 				[sowSupportParameterInstance: sowSupportParameterInstance, relationSowSupportParameterList: relationSowSupportParameterList, message: message,
-					createPermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create"), 
-					updatePermission: SecurityUtils.subject.isPermitted("sowSupportParameter:create")]
+					createPermission: PricewellSecurity.isPermitted("sowSupportParameter:create"), 
+					updatePermission: PricewellSecurity.isPermitted("sowSupportParameter:create")]
         }
     }
 	

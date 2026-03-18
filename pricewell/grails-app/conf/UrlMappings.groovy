@@ -7,12 +7,15 @@ class UrlMappings {
 			}
 		}
 
-		"/"
-		 {
-		    controller = "home"
-		 }
-		 
-		 "500"(controller: 'errors', action: 'handle')
-		//"500"(view:'/error')
+		"/"(controller: "home")
+
+		// Auth endpoints replacing the Nimble plugin's NimbleUrlMappings.groovy.
+		// Spring Security Core intercepts POST /j_spring_security_check internally;
+		// these mappings only cover the login page render, logout, and access-denied views.
+		"/auth/login" (controller: "auth", action: "login")
+		"/auth/logout"(controller: "auth", action: "logout")
+		"/auth/denied"(controller: "auth", action: "denied")
+
+		"500"(controller: 'errors', action: 'handle')
 	}
 }

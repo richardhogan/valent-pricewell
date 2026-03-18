@@ -1,5 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils;
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 class GeneralStagingService {
 
     static transactional = true
@@ -44,7 +45,7 @@ class GeneralStagingService {
 		generalStagingLogInstance.dateModified = new Date()
 		generalStagingLogInstance.type = type
 		//stagingLogInstance.revision = serviceProfile.revision
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		generalStagingLogInstance.modifiedBy = user?.username
 		
 		object.addToGeneralStagingLogs(generalStagingLogInstance)

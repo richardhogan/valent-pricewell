@@ -68,6 +68,67 @@ environments {
 
 }
 
+// ---------------------------------------------------------------------------
+// Spring Security Core 1.2.7.3 configuration
+// Replaces the former Nimble/Apache Shiro security setup.
+// ---------------------------------------------------------------------------
+
+// Domain class pointers
+grails.plugins.springsecurity.userLookup.userDomainClassName    = 'com.valent.pricewell.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.valent.pricewell.UserRole'
+grails.plugins.springsecurity.authority.className               = 'grails.plugins.nimble.core.Role'
+// The authority field on Role holds the ROLE_-prefixed authority string.
+grails.plugins.springsecurity.authority.nameField               = 'authority'
+
+// Password encoding: BCrypt for all new/reset passwords.
+// Existing users will have passwordExpired=true so they are forced to reset
+// on first login and their hash is re-encoded as BCrypt.
+grails.plugins.springsecurity.password.algorithm                = 'bcrypt'
+
+// Auth endpoints
+grails.plugins.springsecurity.auth.loginFormUrl                 = '/auth/login'
+grails.plugins.springsecurity.auth.ajaxLoginFormUrl             = '/auth/login'
+grails.plugins.springsecurity.logout.afterLogoutUrl             = '/auth/login'
+grails.plugins.springsecurity.failureHandler.defaultFailureUrl  = '/auth/login?login_error=1'
+grails.plugins.springsecurity.adh.errorPage                     = '/auth/denied'
+
+// URL access rules (replaces NimbleSecurityFilters.groovy).
+// Rules are evaluated top-to-bottom; first match wins.
+grails.plugins.springsecurity.interceptUrlMap = [
+    // Auth and static assets are always public
+    '/auth/**'             : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    '/images/**'           : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    '/js/**'               : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    '/css/**'              : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    '/static/**'           : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    // Admin user-management UI requires SYSTEM ADMINISTRATOR
+    '/userAdmin/**'        : ['ROLE_SYSTEM_ADMINISTRATOR'],
+    // Service create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+    '/service/create'      : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/service/save'        : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/service/delete'      : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    // Portfolio create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+    '/portfolio/create'    : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/portfolio/save'      : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/portfolio/delete'    : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    // Delivery role, geo, and rate-card management require DELIVERY ROLE MANAGER
+    '/deliveryRole/**'     : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/geo/create'          : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/geo/save'            : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/geo/edit'            : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/geo/update'          : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/geo/delete'          : ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    '/relationDeliveryGeo/**': ['ROLE_DELIVERY_ROLE_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    // Reports require PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+    '/reports/**'          : ['ROLE_PORTFOLIO_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    // Quotation actions require any sales or management role
+    '/quotation/**'        : ['ROLE_SALES_PERSON', 'ROLE_SALES_MANAGER', 'ROLE_SALES_PRESIDENT',
+                               'ROLE_GENERAL_MANAGER', 'ROLE_SYSTEM_ADMINISTRATOR'],
+    // All other URLs require an authenticated session
+    '/**'                  : ['IS_AUTHENTICATED_REMEMBERED']
+]
+
+// ---------------------------------------------------------------------------
 // log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console
@@ -112,7 +173,8 @@ grails.resources.modules = {
 	   }
 	
 	coreui {
-		dependsOn 'jquery', 'jqueryui', 'nimbleui', 'wizardui', 'expandgrid', 'navigation', 'highchart', 'jqueryalert', 'daterange', 'jquerygrid', 'jqueryblink', 'qtip', 'toastmessage', 'expandp','flexbox', 'datatable', 'menu', 'loaderbox'
+		// 'nimbleui' removed — was loading JS/CSS from the Nimble plugin (now removed)
+		dependsOn 'jquery', 'jqueryui', 'wizardui', 'expandgrid', 'navigation', 'highchart', 'jqueryalert', 'daterange', 'jquerygrid', 'jqueryblink', 'qtip', 'toastmessage', 'expandp','flexbox', 'datatable', 'menu', 'loaderbox'
 		defaultBundle 'coreui'
 		
 		resource url:'/js/prototype/prototype.js', disposition: 'head'
@@ -121,19 +183,8 @@ grails.resources.modules = {
 		
 	}
 	
-	nimbleui {
-		dependsOn 'jquery'
-		defaultBundle 'nimble'
-		
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/js/jquery/jquery.url.js', disposition: 'head'
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/js/jquery/jquery.bt.custom.js', disposition: 'head'
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/js/jquery/jquery.jgrowl.js', disposition: 'head'
-		
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/css/jquery/jgrowl.css', disposition: 'head'
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/js/jquery/nimbleui.growl.js', disposition: 'head'
-		resource url:'/plugins/nimble-0.4-SNAPSHOT/dev/css/famfamfam.css', disposition: 'head'
-		
-	}
+	// REMOVED: nimbleui resource bundle (was loading JS/CSS from the Nimble plugin).
+	// Nimble has been replaced by Spring Security Core — no equivalent resource bundle needed.
 	
 	jqueryui {		
 		dependsOn 'jquery'

@@ -1,49 +1,37 @@
-/*
- *  Nimble, an extensive application base for Grails
- *  Copyright (C) 2010 Bradley Beddoes
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import com.valent.pricewell.User
+
 /**
- * Represents a system that a user logged into a Nimble based application from
+ * Audit record of a user login event.
  *
- * @author Bradley Beddoes
+ * MIGRATION NOTE (Nimble → Spring Security Core):
+ *   Nimble used ConfigurationHolder.config.nimble.tablenames.loginrecord for the
+ *   table name, which required the Nimble plugin context. That has been replaced
+ *   with an explicit table name so this class compiles without the Nimble plugin.
+ *   The belongsTo association is now against com.valent.pricewell.User directly
+ *   (previously grails.plugins.nimble.core.UserBase).
  */
-@SuppressWarnings("deprecation")
 class LoginRecord {
 
     String remoteAddr
     String remoteHost
     String userAgent
-  
+
     Date dateCreated
     Date lastUpdated
 
-    static belongsTo = [owner: UserBase]
+    static belongsTo = [owner: User]
 
     static mapping = {
-        table ConfigurationHolder.config.nimble.tablenames.loginrecord
-    } 
-    static constraints = {
-        remoteAddr(nullable: false, blank: false)
-        remoteHost(nullable: false, blank: false)
-        userAgent(nullable: false, blank: false)
-
-        dateCreated(nullable: true) // must be true to enable grails
-        lastUpdated(nullable: true) // auto-inject to be useful which occurs post validation
+        table 'login_record'
     }
 
+    static constraints = {
+        remoteAddr  blank: false
+        remoteHost  blank: false
+        userAgent   blank: false
+        dateCreated nullable: true
+        lastUpdated nullable: true
+    }
 }

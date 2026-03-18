@@ -1,9 +1,10 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.util.Map;
 
 import grails.converters.JSON
 
-import org.apache.shiro.SecurityUtils
 import org.joda.time.*;
 import org.joda.*;
 
@@ -24,7 +25,7 @@ class LeadController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -46,8 +47,8 @@ class LeadController {
 			//def tmpList2 = []
 			//def tmpList3 = []
 			tmpList = leadList; leadList = []
-			def user = User.get(new Long(SecurityUtils.subject.principal))
-			if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+			if(PricewellSecurity.hasRole("SALES PERSON"))
 			{
 				for(Lead l in tmpList)
 				{
@@ -148,7 +149,7 @@ class LeadController {
 	Collection retrieveLeadList(){
 		def accountList = Account.findAll("FROM Account ac")
 		def leadList = []
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		FilterCriteria filterCriteria = new FilterCriteria()
 		
@@ -157,7 +158,7 @@ class LeadController {
 	}
 
     def create = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		
@@ -425,7 +426,7 @@ class LeadController {
 		
 		def leadInstance = new Lead()
 		leadInstance.properties['firstname', 'lastname', 'title', 'company', 'status', 'email', 'phone', 'mobile','altEmail', 'address', 'iso', 'format'] = params
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		leadInstance.createdBy = user
 		leadInstance.modifiedBy = user
 		leadInstance.assignTo = User.get(params.assignToId)
@@ -465,7 +466,7 @@ class LeadController {
 		
 		String source = params.source
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def leadInstance = Lead.get(params.id)
 		
@@ -523,7 +524,7 @@ class LeadController {
 	{
 		def leadInstance = Lead.get(params.id)
 		Staging newStage = null
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		if (!leadInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'lead.label', default: 'Lead'), params.id])}"
 			redirect(action: "list")
@@ -658,7 +659,7 @@ class LeadController {
 			leadInstance.properties = params
 			leadInstance.phone = params.phone
 			leadInstance.mobile = params.mobile
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			leadInstance.dateModified = new Date()
 			leadInstance.modifiedBy = user;
 			leadInstance.assignTo = User.get(params.assignToId)
@@ -729,7 +730,7 @@ class LeadController {
 		def leadInstance = Lead.get(params.id)
 		if(leadInstance)
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			leadInstance.status = "Rejected"
 			leadInstance.modifiedBy = user
 			leadInstance.dateModified = new Date()
@@ -752,14 +753,14 @@ class LeadController {
 	{
 		 boolean check = false
 	 
-		 if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		 if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		 {
 			 check = true
 		 }
 		 else
 		 {
-			 def user = User.get(new Long(SecurityUtils.subject.principal))
-			 if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			 def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+			 if(PricewellSecurity.hasRole("SALES PERSON"))
 			 {
 				 if(leadInstance?.assignTo?.id == user?.id)
 				 {
@@ -783,7 +784,7 @@ class LeadController {
 		if(leadInstance)
 		{
 			def contactInstance = new Contact()
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			
 			//get Account to convert lead to contact..............................
 			def accountInstance = Account.get(params.accountId)

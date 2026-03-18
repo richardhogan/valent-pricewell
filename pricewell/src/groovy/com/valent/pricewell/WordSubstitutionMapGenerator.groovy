@@ -1,7 +1,7 @@
 package com.valent.pricewell
 
 import org.jsoup.Jsoup
-import org.apache.shiro.SecurityUtils
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +93,7 @@ class WordSubstitutionMapGenerator implements SubstituionMapGenerator, Applicati
 	@Override
 	public Map<String, List<Object>> generateSubstutionMap() 
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		//println user
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		

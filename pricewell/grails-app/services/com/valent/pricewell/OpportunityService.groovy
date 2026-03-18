@@ -1,11 +1,12 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.shiro.SecurityUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 
 class OpportunityService {
@@ -219,7 +220,7 @@ class OpportunityService {
 	   {
 		   user = User.get(dateMap['user'].id)
 	   }
-	   else user = User.get(new Long(SecurityUtils.subject.principal))
+	   else user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   
 	   
 	   FilterCriteria filterCriteria = new FilterCriteria()
@@ -395,9 +396,9 @@ class OpportunityService {
    public Map getUserCurrencyMap()
    {
 	   def currency = "", currencySymbol = ""
-	   User user = User.get(new Long(SecurityUtils.subject.principal))
+	   User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   
-	   if(SecurityUtils.subject.hasRole("SALES PERSON"))
+	   if(PricewellSecurity.hasRole("SALES PERSON"))
 	   {
 		   currencySymbol = user?.territory?.currencySymbol
 		   currency = user?.territory?.currency
@@ -446,7 +447,7 @@ class OpportunityService {
    
    public Map getQuotaAssignedVsQuotaAchivement(Map dateMap, Geo territory)
    {	
-	   User user = User.get(new Long(SecurityUtils.subject.principal))
+	   User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   BigDecimal totalAssignedValue = new BigDecimal(0), totalAchievedValue = new BigDecimal(0), percent = new BigDecimal(0)
 	   List quotaList = new ArrayList(), opportunityList = new ArrayList(), personList = new ArrayList(), data = new ArrayList()
 	   Set territoryList =  new HashSet()
@@ -466,7 +467,7 @@ class OpportunityService {
 	   
 	   /*for(User person : personList.toList())
 	   {
-		   if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		   if(PricewellSecurity.hasRole("SALES PERSON"))
 		   {*/
 			   BigDecimal achievedValue = new BigDecimal(0)
 			   achievedValue = calculateTotalQuotaAchieved(opportunityList)//ByPerson(person, opportunityList)
@@ -507,11 +508,11 @@ class OpportunityService {
 					   //println "QAsVQAc Op : "+op.name + " price : "+q.finalPrice
 					   //println "quotation id : "+q.id+" price : "+q.finalPrice+ " opportunity : "+q.opportunity.name
 					   
-					   if(SecurityUtils.subject.hasRole("SALES PERSON"))
+					   if(PricewellSecurity.hasRole("SALES PERSON"))
 					   {
 						   totalAchievedValue += q.finalPrice
 					   }
-					   else //if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+					   else //if(PricewellSecurity.hasRole("SALES MANAGER"))
 					   {
 						   totalAchievedValue += q.finalPrice.divide(op?.geo?.convert_rate, ROUNDING_MODE)//convert to base currency
 					   }
@@ -528,7 +529,7 @@ class OpportunityService {
    public Map getQuotaAssignedVsQuotaAchivementPerPersons(Map dateMap, Geo territory)
    {
 	   def assigned = new BigDecimal(0)
-	   def user = User.get(new Long(SecurityUtils.subject.principal))
+	   def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   
 	   def territoryInstance = null, currency = "", currencySymbol = ""
 	   
@@ -608,16 +609,16 @@ class OpportunityService {
    
    Map getTerritoryQuotas(Geo territory)
    {
-	   def user = User.get(new Long(SecurityUtils.subject.principal))
+	   def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   def territoryInstance = null, currency = ""
 	   def quotaList = []
 	   Set territoryList = new HashSet()
 	   
-	   if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+	   if(PricewellSecurity.hasRole("SALES MANAGER"))
 	   {
 		   quotaList = Quota.findAll("FROM Quota quota WHERE quota.createdBy.id=:uid", [uid: user.id])
 	   }
-	   else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+	   else if(PricewellSecurity.hasRole("SALES PERSON"))
 	   {
 		   quotaList = Quota.findAll("FROM Quota quota WHERE quota.person.id=:uid", [uid: user.id])
 	   }
@@ -655,11 +656,11 @@ class OpportunityService {
 				   {
 					   //println "QAsVQAc Op : "+op.name + " price : "+q.finalPrice
 					   //println "quotation id : "+q.id+" price : "+q.finalPrice+ " opportunity : "+q.opportunity.name
-					   if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+					   if(PricewellSecurity.hasRole("SALES MANAGER"))
 					   {
 						   totalAchievedValue += q.finalPrice.divide(op?.geo?.convert_rate, ROUNDING_MODE)
 					   }
-					   else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+					   else if(PricewellSecurity.hasRole("SALES PERSON"))
 					   {
 						   totalAchievedValue += q.finalPrice
 					   }
@@ -674,7 +675,7 @@ class OpportunityService {
    
    public def createNotes(String opportunityId, String comment)
    {
-	   def user = User.get(new Long(SecurityUtils.subject.principal))
+	   def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 	   
 	   def opportunityInstance = Opportunity.get(opportunityId)
 	   

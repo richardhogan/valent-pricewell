@@ -1,8 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
-import grails.plugins.nimble.core.LoginRecord
-import grails.plugins.nimble.core.Role
-import grails.plugins.nimble.core.UserBase
 import com.valent.pricewell.ServiceProfile.ServiceProfileType;
 import com.valent.pricewell.util.PricewellUtils;
 
@@ -11,14 +10,11 @@ import java.util.Date
 import java.util.List;
 import java.util.TreeMap
 
-import org.apache.shiro.SecurityUtils
-
 class ChartService {
 
 	static transactional = true
 	def serviceCatalogService
 	def dateService
-	def userService
 	public static final List types  = [
 		"LEAD",
 		"OPPORTUNITY",
@@ -158,7 +154,7 @@ class ChartService {
 	}
 	public Map getDefaultTerritory()
 	{
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Geo defaultTerritory = null
 		Set territorySet = new HashSet()
 		List territoryList = new ArrayList()
@@ -173,7 +169,7 @@ class ChartService {
 			}
 		}
 		
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			if(!defaultAvailable)
 			{
@@ -184,7 +180,7 @@ class ChartService {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(Geo territory : user?.territories?.sort{it?.name})
 			{
@@ -196,7 +192,7 @@ class ChartService {
 				territorySet.add(territory)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			for(Geo territory : user?.geoGroup?.geos?.sort{it?.name})
 			{
@@ -208,7 +204,7 @@ class ChartService {
 				territorySet.add(territory)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		else if(PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			for(GeoGroup geoGroup : GeoGroup.list()?.sort{it?.name})
 			{
@@ -446,7 +442,7 @@ class ChartService {
 	
 	public def getOpportunityFunnelGraphData(Date fromDate, Date toDate, Geo territory)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def filterCriteria = new FilterCriteria()
 		def data = [:]
@@ -488,7 +484,7 @@ class ChartService {
 	
 	public def getServiceFunnelGraphData(Date fromDate, Date toDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def filterCriteria = new FilterCriteria()
 		def data = [:]
@@ -560,14 +556,14 @@ class ChartService {
 	
 	public def getLeadFunnelGraphData(Date fromDate, Date toDate)
 	{
-		println SecurityUtils.subject.principal
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		println PricewellSecurity.principalId  // was: SecurityUtils.subject.principal
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def filterCriteria = new FilterCriteria()
 		def data = [:]
 		def leadList = [], tmpLeads = leadService.getUserLeads(user, filterCriteria)
 		leadList = listLeadsBetweenDates(tmpLeads, fromDate, toDate, "pending")
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			def tmpList = leadList
 			leadList = []
@@ -622,14 +618,14 @@ class ChartService {
 	}
 	public def getLeadFunnelGraphDataWithTerritory(Date fromDate, Date toDate)
 	{
-		println SecurityUtils.subject.principal
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		println PricewellSecurity.principalId  // was: SecurityUtils.subject.principal
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def filterCriteria = new FilterCriteria()
 		def data = [:]
 		def leadList = [], tmpLeads = leadService.getUserLeads(user, filterCriteria)
 		leadList = listLeadsBetweenDates(tmpLeads, fromDate, toDate, "pending")
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			def tmpList = leadList
 			leadList = []
@@ -685,7 +681,7 @@ class ChartService {
 	public def quarterlyTotalSalesByUser(Geo territory)
 	{
 		def categories = [], data = []
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityList = new ArrayList(), quotationList = new ArrayList()
 		def tmpList = opportunityService.retrieveOpportunityList("closedWon", [:]), tmpList2 = opportunityService.retrieveOpportunityList("pending", [:])
 		opportunityList.addAll(tmpList); opportunityList.addAll(tmpList2)
@@ -735,7 +731,7 @@ class ChartService {
 		
 		def addDays=0;
 		def categories = [], data = []
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityList = new ArrayList(), quotationList = new ArrayList()
 		def tmpList = opportunityService.retrieveOpportunityList("closedWon", [:]), tmpList2 = opportunityService.retrieveOpportunityList("pending", [:])
 		opportunityList.addAll(tmpList); opportunityList.addAll(tmpList2)
@@ -890,7 +886,7 @@ class ChartService {
 	
 	public Map generateItCostPerQuotationMap(Portfolio portfolio, Date fromDate, Date toDate,Long territory_id)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:], finalMap = [:]
@@ -1012,7 +1008,7 @@ class ChartService {
 		
 	public def generateServiceSoldPerPortfolioMap(Portfolio portfolio, Date fromDate, Date toDate,Long territory_id)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -1100,7 +1096,7 @@ class ChartService {
 	
 	public def generateSalesTotalUnitsByServiceMap(Date fromDate, Date toDate) 
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -1149,7 +1145,7 @@ class ChartService {
 	}
 	public def generateSalesTotalUnitsByServiceMapUsingPortfolio(Date fromDate, Date toDate,Long porftfolio_id,def territoryId)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -1234,7 +1230,7 @@ class ChartService {
 	}
 
 	public def generateProductsSoldByServiceMap(Date fromDate, Date toDate) {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		//Service[] services1 = Service.listPublished(user)
 		
@@ -1356,7 +1352,7 @@ class ChartService {
 		return ["categories": serviceNames, "series": series]
 	}
 	public def generateProductsSoldByServiceMapUsingPortfolio(Date fromDate, Date toDate,Long portfolioId,def territoryId) {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		//Service[] services1 = Service.listPublished(user)
 		
@@ -1501,7 +1497,7 @@ class ChartService {
 
 	public def generateSalesSoldByServicesMap(Date fromDate, Date toDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -1577,7 +1573,7 @@ class ChartService {
 	}
 	public def generateSalesSoldByServicesMapUsingPortfolio(Date fromDate, Date toDate,def portfolioId,def territoryId)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
 		/*for(Service ser in serviceList)
@@ -1665,7 +1661,7 @@ class ChartService {
 	}
 	public Map countVSOEDiscounting(Date startDate, Date endDate, Geo territory)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = []
 		float greater15 = 0//for % greater then +15
 		float less_15 = 0 // for % less then -15
@@ -1678,7 +1674,7 @@ class ChartService {
 
 		def opportunityList = opportunityService.getUserOppoertunities(user, filterCriteria)
 		opportunityList = listOpportunityBetweenDates(opportunityList, startDate, endDate, null)
-		if(!SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(!PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			opportunityList = filterOpportunityByTerritory(opportunityList, territory)
 		}
@@ -1772,7 +1768,7 @@ class ChartService {
 
 	public def buildChartDataForQuotesPendingDays(Geo territory,Date fromDate,Date toDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def tmpTypes = [
 			"LEAD",
 			"OPPORTUNITY",
@@ -2228,7 +2224,7 @@ class ChartService {
 
 		for(User user in User.list())
 		{
-			def userRoles = user.roles.code
+			def userRoles = UserRole.findAllByUser(user)*.role.code
 
 			for(roleCode in userRoles)
 			{
@@ -2312,7 +2308,7 @@ class ChartService {
 			
 		for(User user in User.list())
 		{
-			def userRoles = user.roles.code
+			def userRoles = UserRole.findAllByUser(user)*.role.code
 			Date modifiedDate = dateService.removeTime(user?.dateCreated)
 			for(roleCode in userRoles)
 			{
@@ -2377,7 +2373,7 @@ class ChartService {
 	{
 		Set serviceDesignerList = new HashSet(), list1 = new HashSet()
 		
-		def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+		def loginUser = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def serviceList = ServiceProfile.findAll("FROM ServiceProfile sp WHERE sp.service.productManager.id = :uid", [uid: loginUser.id])
 		for(ServiceProfile sp : serviceList)
 		{
@@ -2415,7 +2411,7 @@ class ChartService {
 	public def findEstimateVarianceForPMs()
 	{
 		Set productManagerIdList = new HashSet()
-		def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+		def loginUser = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def serviceList = ServiceProfile.findAll("FROM ServiceProfile sp WHERE sp.service.portfolio.portfolioManager.id = :uid", [uid: loginUser.id])
 		for(ServiceProfile sp : serviceList)
 		{
@@ -2738,16 +2734,16 @@ class ChartService {
 
 	public def findUserAccounts()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def accountList = [], tempList = []
 		def usersList = []
 		Set users = new HashSet(); Set accounts = new HashSet()
 
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			usersList.add(user)
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(Object territory in user?.territories)
 			{
@@ -2756,7 +2752,7 @@ class ChartService {
 			usersList.addAll(users.toList())
 			usersList.add(user)
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			for(Object territory in user?.geoGroup?.geos)
 			{
@@ -2766,7 +2762,7 @@ class ChartService {
 			usersList.add(user)
 		}
 
-		if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			accountList = Account.findAll("FROM Account ac")
 		}
@@ -2786,7 +2782,7 @@ class ChartService {
 	{
 		List<LoginRecord> lastLoginList = new ArrayList<LoginRecord>()
 		List tempList = new ArrayList();
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if(user?.username != "superadmin")
 		{

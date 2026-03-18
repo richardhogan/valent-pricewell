@@ -1,6 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
-import org.apache.shiro.SecurityUtils
 class ServiceExportService {
 
     static transactional = true
@@ -13,7 +14,7 @@ class ServiceExportService {
 	public String exportService(ServiceProfile sProfile)
 	{
 		CommonFunctionsUtil generateExportXML = new CommonFunctionsUtil()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		FilterCriteria filterCriteria = new FilterCriteria()
 	 
 		Service tmpService = sProfile.service

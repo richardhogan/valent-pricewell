@@ -1,7 +1,7 @@
 
 
 <%@ page import="com.valent.pricewell.Portfolio" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -144,7 +144,7 @@
                                 </td>
                                 
                                 <td valign="top" class="value ${hasErrors(bean: portfolioInstance, field: 'portfolioManager', 'errors')}">
-                                   <g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+                                   <g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
                         	            <g:select name="portfolioManager.id" from="${portfolioManagerList}" optionKey="id" value="${portfolioInstance?.portfolioManager?.id}"  />
 						    		</g:if>    
 						    		<g:else>

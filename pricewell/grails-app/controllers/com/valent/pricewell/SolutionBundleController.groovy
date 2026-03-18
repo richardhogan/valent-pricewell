@@ -1,9 +1,10 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
 import java.util.List;
 
-import org.apache.shiro.SecurityUtils
 import org.codehaus.groovy.grails.web.json.JSONObject;
 
 class SolutionBundleController {
@@ -28,7 +29,7 @@ class SolutionBundleController {
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
 		
 		render(view: "list", model :[solutionBundleInstanceList: solutionBundleInstanceList, source: source,
-			createPermission: SecurityUtils.subject.isPermitted("solutionBundle:create")])
+			createPermission: PricewellSecurity.isPermitted("solutionBundle:create")])
 	}
 	
 	def listsetup = {
@@ -249,13 +250,13 @@ class SolutionBundleController {
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
 				
 				render(view: "showsetup", model: [solutionBundleInstance: solutionBundleInstance, source: source, relationSolutionBundleList: relationSolutionBundleList,
-														message: message, createPermission: SecurityUtils.subject.isPermitted("solutionBundle:create"), 
-														updatePermission: SecurityUtils.subject.isPermitted("solutionBundle:create")])
+														message: message, createPermission: PricewellSecurity.isPermitted("solutionBundle:create"), 
+														updatePermission: PricewellSecurity.isPermitted("solutionBundle:create")])
 			}
 			else
 				[solutionBundleInstance: solutionBundleInstance, message: message,
-					createPermission: SecurityUtils.subject.isPermitted("solutionBundle:create"), 
-					updatePermission: SecurityUtils.subject.isPermitted("solutionBundle:create")]
+					createPermission: PricewellSecurity.isPermitted("solutionBundle:create"), 
+					updatePermission: PricewellSecurity.isPermitted("solutionBundle:create")]
         }
     }
 	

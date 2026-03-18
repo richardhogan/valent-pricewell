@@ -1,10 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.util.List;
-
-import grails.plugins.nimble.core.*
-import org.apache.shiro.SecurityUtils
-
-
 
 public enum SalesUserType {
 	SalesUser,
@@ -31,7 +28,7 @@ public enum SalesUserType {
 		{
 			return SalesUserType.SalesManager
 		}
-		else if(checkUserRoleCode(user, RoleId.SALES_PERSON.code))//SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(checkUserRoleCode(user, RoleId.SALES_PERSON.code))//PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			return SalesUserType.SalesUser
 		}
@@ -48,7 +45,7 @@ public enum SalesUserType {
 	public static List getUserRolesCode(User user)
 	{
 		List rolesCode = new ArrayList()
-		for(Role role : user.roles)
+		for(Role role : UserRole.findAllByUser(user)*.role)
 		{
 			rolesCode.add(role.code)
 		}

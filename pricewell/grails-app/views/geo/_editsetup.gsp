@@ -1,7 +1,7 @@
 <%@ page import="com.valent.pricewell.Geo" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.GeoGroup" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="grails.plugins.nimble.core.Role" %>
 <%
 	def baseurl = request.siteUrl
@@ -206,7 +206,7 @@
 											
 											<g:if test="${source!='setup'}">
 												<tr>
-												  	<g:if test="${!SecurityUtils.subject.hasRole('SALES MANAGER')}">
+												  	<g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
 											          
 												          <td valign="top" class="name"><label for="salesManager">Assign Sales Manager</label></td>
 												          <td valign="top">

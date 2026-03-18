@@ -1,11 +1,11 @@
 
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.Opportunity" %>
 <%@ page import="com.valent.pricewell.Geo" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%
 	def baseurl = request.siteUrl
-	def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+	def loginUser = PricewellSecurity.currentUser
 	def primaryTerritory = null
 	if(loginUser?.primaryTerritory!=null && loginUser?.primaryTerritory!='null' && loginUser?.primaryTerritory!='NULL')
 	{

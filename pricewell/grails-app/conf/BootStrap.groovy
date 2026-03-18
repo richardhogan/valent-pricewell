@@ -4,13 +4,10 @@ import java.io.File;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.Timer;
-import grails.plugins.nimble.InstanceGenerator
-import grails.plugins.nimble.core.*
 import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.ImageOutputStream
 import javax.servlet.http.HttpSession
 
-import org.apache.shiro.crypto.hash.Sha256Hash
 import grails.util.GrailsUtil
 import org.springframework.context.ApplicationContext
 import org.springframework.context.MessageSource
@@ -26,9 +23,8 @@ import com.valent.pricewell.cw15.*
 class BootStrap {
 
 	def bootstrapProcessService
-	def roleService
-	def permissionService
-	def userService
+	def userManagementService
+	def springSecurityService
 	def phoneNumberService
 	def serviceCatalogService
 	def opportunityService
@@ -58,17 +54,14 @@ class BootStrap {
 		//MyHttpSessionListener//.sessionCreated(HttpSessionEvent(se))
 		
 		//Temporary fix for previous database which doesn't have get bootstrap revision
-		if(getBootstrapRevision() == 0 && Role.findByName("SALES PRESIDENT")){
+		if(getBootstrapRevision() == 0 && Role.findByAuthority("ROLE_SALES_PRESIDENT")){
 			setBootstrapRevision(1);
 		}
 		//tmpDatabaseFixes()
 		//Adding Roles
 		initializeRoles()
+		createDefaultUsers()
 		changeAdminProtectedField()
-		
-		checkRolePermissions("SALES PRESIDENT")
-		checkRolePermissions("GENERAL MANAGER")
-		checkRolePermissions("SALES MANAGER")
 		
 		//1) Adding staging for service
 		addServiceStages();
@@ -330,7 +323,7 @@ class BootStrap {
 	
 	void changeAdminProtectedField()
 	{
-		Role adminRole = Role.findByName(AdminsService.ADMIN_ROLE)
+		Role adminRole = Role.findByAuthority('ROLE_SYSTEM_ADMINISTRATOR')
 		
 		if(adminRole && adminRole?.protect == true)
 		{
@@ -740,50 +733,8 @@ class BootStrap {
 		
 	}
 	
-	void giveAdministratorPermission()
-	{
-		for(User user : User.list())
-		{
-			List rolesCode = salesCatalogService.getUserRolesCode(user)
-			
-			if(rolesCode.contains(RoleId.ADMINISTRATOR.code))
-			{
-				String adminPerm = "grails.plugins.nimble.auth.AllPermission"
-				def permissions = Permission.findAll("FROM Permission pr WHERE pr.target = '*' AND pr.user.id = :uid", [uid: user.id])
-				for(Permission pr : permissions)
-				{
-					//println pr.type+" "+pr.target
-					
-					if(pr.type != adminPerm)
-					{
-						pr.owner = null
-						user.removeFromPermissions(pr)
-						if(pr.save() && user.save())
-						{
-							pr.delete()
-							//println "permission available in "+user.username+" so deleted"
-						}
-					}
-				}
-				// Grant administrative 'ALL' permission
-				def permission = Permission.findByUserAndTarget(user, "*")
-				if(permission != null && permission.type == adminPerm)
-				{
-					//println "permission available in "+user.username
-				}
-				else
-				{
-					//println "creating permission for "+user.username
-					Permission adminPermission = new Permission(target:'*')
-					adminPermission.managed = true
-					adminPermission.type = Permission.adminPerm
-		
-					permissionService.createPermission(adminPermission, user)
-				}
-				
-			}
-		}
-	}
+	// giveAdministratorPermission() removed — Nimble WildcardPermissions are no longer used.
+	// Role-based access is now controlled entirely by Spring Security interceptUrlMap in Config.groovy.
 	
 	void doPricelistFixis()
 	{
@@ -1859,37 +1810,6 @@ class BootStrap {
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-	void createNewRole(Object roles)
-	{
-		for(def role in roles)
-		{
-			def role1 = roleService.createRole(role.name,role.description, false, role.code)
-			if (role1.hasErrors()) {
-				role1.errors.each { log.error(it) }
-				throw new RuntimeException("Error creating role")
-			}
-
-			for(def perm in role.permissions)
-			{
-				List permList = perm.split(":")
-				String first = permList[0]
-				String second = (permList.size > 1? permList[1]: "")
-				String third = (permList.size > 2? permList[2]: "")
-				String fourth = (permList.size > 3? permList[3]: "")
-
-				LevelPermission permission = new LevelPermission()
-				permission.populate(first,second,third,fourth,"","")
-				permission.managed = false
-
-				def savedPermission = permissionService.createPermission(permission, role1)
-				if (savedPermission.hasErrors()) {
-					log.warn("Submitted permission was unable to be assigned to role [$role1.id]$role1.name")
-				}
-
-			}
-		}
-	}
-
 	void tmpDatabaseFixes()
 	{
 		//Check if expense is null and replace with 0
@@ -1920,428 +1840,71 @@ class BootStrap {
 
 	void initializeRoles()
 	{
-
 		if(getBootstrapRevision() == 0){
+			// Spring Security Core uses role authority strings with ROLE_ prefix.
+			// No Shiro WildcardPermissions needed — access is controlled by interceptUrlMap in Config.groovy.
 			def roles = [
-				[name: "PORTFOLIO MANAGER", description: "Portfolio Manager", code: RoleId.PORTFOLIO_MANAGER.code, permissions: [
-						"portfolio:update",
-						"*:read",
-						"service:create,update,design",
-						"reports:show"
-					]],
-				[name: "PRODUCT MANAGER", description: "Product Manager",code: RoleId.PRODUCT_MANAGER.code,  permissions: [
-						"service:update,design",
-						"*:read"
-					]],
-				[name: "SERVICE DESIGNER", description: "Service Designer", code: RoleId.SERVICE_DESIGNER.code, permissions: ["service:design", "*:read"]],
-				[name: "SALES PRESIDENT", description: "Sales President",code: RoleId.SALES_PRESIDENT.code,  permissions: [
-						"*:read",
-						"quotation:create",
-						"*",//for geo create edit
-						"geoGroup:*" //sales president can create, edit, delete geogroup
-					]],
-				[name: "SALES MANAGER", description: "Sales Manager",code: RoleId.SALES_MANAGER.code,  permissions: ["*:read", "quotation:create", "*"]],
-				[name: "SALES PERSON", description: "Sales Person",code: RoleId.SALES_PERSON.code,  permissions: ["*:read", "quotation:create"]],
-				[name: "DELIVERY ROLE MANAGER", description: "Delivery Role Manager", code: RoleId.DELIVERY_ROLE_MANAGER.code, permissions: [
-						"*:read",
-						"deliveryRole:create",
-						"geo:create"
-					]],
-				[name: "GENERAL MANAGER", description: "General Manager", code: RoleId.GENERAL_MANAGER.code, permissions: [
-						"*:read", 
-						"quotation:create", "*"]]
+				[authority: 'ROLE_SYSTEM_ADMINISTRATOR',  description: 'System Administrator',  code: RoleId.ADMINISTRATOR.code],
+				[authority: 'ROLE_PORTFOLIO_MANAGER',     description: 'Portfolio Manager',      code: RoleId.PORTFOLIO_MANAGER.code],
+				[authority: 'ROLE_PRODUCT_MANAGER',       description: 'Product Manager',        code: RoleId.PRODUCT_MANAGER.code],
+				[authority: 'ROLE_SERVICE_DESIGNER',      description: 'Service Designer',       code: RoleId.SERVICE_DESIGNER.code],
+				[authority: 'ROLE_SALES_PRESIDENT',       description: 'Sales President',        code: RoleId.SALES_PRESIDENT.code],
+				[authority: 'ROLE_SALES_MANAGER',         description: 'Sales Manager',          code: RoleId.SALES_MANAGER.code],
+				[authority: 'ROLE_SALES_PERSON',          description: 'Sales Person',           code: RoleId.SALES_PERSON.code],
+				[authority: 'ROLE_DELIVERY_ROLE_MANAGER', description: 'Delivery Role Manager',  code: RoleId.DELIVERY_ROLE_MANAGER.code],
+				[authority: 'ROLE_GENERAL_MANAGER',       description: 'General Manager',        code: RoleId.GENERAL_MANAGER.code],
 			]
 
-			for(def role in roles)
-			{
-				def role1 = roleService.createRole(role.name,role.description, false, role.code)
-				if (role1.hasErrors()) {
-					role1.errors.each { log.error(it) }
-					throw new RuntimeException("Error creating role")
-				}
-
-				for(def perm in role.permissions)
-				{
-					List permList = perm.split(":")
-					String first = permList[0]
-					String second = (permList.size > 1? permList[1]: "")
-					String third = (permList.size > 2? permList[2]: "")
-					String fourth = (permList.size > 3? permList[3]: "")
-
-					LevelPermission permission = new LevelPermission()
-					permission.populate(first,second,third,fourth,"","")
-					permission.managed = false
-
-					def savedPermission = permissionService.createPermission(permission, role1)
-					if (savedPermission.hasErrors()) {
-						log.warn("Submitted permission was unable to be assigned to role [$role1.id]$role1.name")
-					}
-
-				}
+			roles.each { rd ->
+				userManagementService.findOrCreateRole(rd.authority, rd.description, rd.code)
 			}
 		}
 	}
 
-	void checkRolePermissions(def roleCode)
-	{
-		def roleInstance = Role.findByCode(roleCode)
-		boolean isThere = false
-		if(roleInstance.permissions*.target.contains("*"))
-			isThere = true
-		else
-			isThere = false
-		
-		if(isThere == false)
-		{
-			String first = "*"
-			
-			LevelPermission permission = new LevelPermission()
-			permission.populate(first,"","","","","")
-			permission.managed = false
-			
-			def savedPermission = permissionService.createPermission(permission, roleInstance)
-			if (savedPermission.hasErrors()) {
-				log.warn("Submitted permission was unable to be assigned to role [$roleInstance.id]$roleInstance.name")
-			}
-		}
-	}
-	
 	void insertDemoData()
 	{
-		if(getBootstrapRevision() == 0){
-			def userService = new UserService()
-			///////////////////////////////////////////////////////////
-			def portfolioManager = Role.findByName("PORTFOLIO MANAGER")
-			def deliveryRoleManager = Role.findByName("DELIVERY ROLE MANAGER")
-			def productManager = Role.findByName("PRODUCT MANAGER")
-			def serviceDesigner = Role.findByName("SERVICE DESIGNER")
-			def salesPerson = Role.findByName("SALES PERSON")
-			def salesPresident = Role.findByName("SALES PRESIDENT")
-			def salesManager = Role.findByName("SALES MANAGER")
-			def generalManager = Role.findByName("GENERAL MANAGER")
-			//------------------Users----------------------------------//
-			///////////////////////////////////////////////////////////
-			def tbadmun = InstanceGenerator.user()
-
-			tbadmun.username = "tbadmun"
-			tbadmun.pass = 'admiN123!'
-			tbadmun.passConfirm = 'admiN123!'
-			tbadmun.enabled = true
-
-			def tbadmunProfile = InstanceGenerator.profile()
-			tbadmunProfile.fullName = "Tracy Badmun"
-			tbadmunProfile.email = 'tbadmin.valent2010@gmail.com'
-			tbadmunProfile.owner = tbadmun
-
-			tbadmun.profile = tbadmunProfile
-			tbadmun.addToRoles(deliveryRoleManager)
-			tbadmun.save(flush:true)
-			//////////////////////////////////////////////////////////////
-			def blinman = InstanceGenerator.user()
-
-			blinman.username = "blinman"
-			blinman.pass = 'admiN123!'
-			blinman.passConfirm = 'admiN123!'
-			blinman.enabled = true
-
-			def blinmanProfile = InstanceGenerator.profile()
-			blinmanProfile.fullName = "Ben Linman"
-			blinmanProfile.email = 'blinman.valent2010@gmail.com'
-			blinmanProfile.owner = blinman
-
-			blinman.profile = blinmanProfile
-
-			blinman.addToRoles(deliveryRoleManager)
-			blinman.save(flush:true)
-
-			////////////////////////////////////////////////////////////////////////////////
-
-
-			def qtuner = InstanceGenerator.user()
-
-			qtuner.username = "qturner"
-			qtuner.pass = 'admiN123!'
-			qtuner.passConfirm = 'admiN123!'
-			qtuner.enabled = true
-
-			def qtunerProfile = InstanceGenerator.profile()
-			qtunerProfile.fullName = "Queensly Turner"
-			qtunerProfile.email = 'qtuner.valent2010@gmail.com'
-			qtunerProfile.owner = qtuner
-
-			qtuner.profile = qtunerProfile
-			qtuner.addToRoles(serviceDesigner)
-			qtuner.save(flush:true)
-			/////////////////////////////////////////////////////////////////////
-			def jpodge = InstanceGenerator.user()
-
-			jpodge.username = "jpodge"
-			jpodge.pass = 'admiN123!'
-			jpodge.passConfirm = 'admiN123!'
-			jpodge.enabled = true
-
-			def jpodgeProfile = InstanceGenerator.profile()
-			jpodgeProfile.fullName = "John Podge"
-			jpodgeProfile.email = 'jpodge.valent2010@gmail.com'
-			jpodgeProfile.owner = jpodge
-			jpodge.profile = jpodgeProfile
-			jpodge.addToRoles(serviceDesigner)
-			jpodge.save(flush:true)
-			/////////////////////////////////////////////////////////////////////////////
-
-			def jsmith = InstanceGenerator.user()
-
-			jsmith.username = "jsmith"
-			jsmith.pass = 'admiN123!'
-			jsmith.passConfirm = 'admiN123!'
-			jsmith.enabled = true
-
-			def jsmithProfile = InstanceGenerator.profile()
-			jsmithProfile.fullName = "Jenn Smith"
-			jsmithProfile.email = 'jsmith.valent2010@gmail.com'
-			jsmithProfile.owner = jsmith
-			jsmith.profile = jsmithProfile
-			jsmith.addToRoles(salesPresident)
-			jsmith.save(flush:true)
-			/////////////////////////////////////////////////////////////////////////////
-			def rjonsan = InstanceGenerator.user()
-
-			rjonsan.username = "rjonsan"
-			rjonsan.pass = 'admiN123!'
-			rjonsan.passConfirm = 'admiN123!'
-			rjonsan.enabled = true
-			rjonsan.supervisor = jsmith
-
-			def rjonsanProfile = InstanceGenerator.profile()
-			rjonsanProfile.fullName = "Ricky Jonsan"
-			rjonsanProfile.email = 'rjonsan.valent2010@gmail.com'
-			rjonsanProfile.owner = rjonsan
-			rjonsan.profile = rjonsanProfile
-			rjonsan.addToRoles(salesManager)
-			rjonsan.save(flush:true)
-
-			/////////////////////////////////////////////////////////////////////////////
-
-			def mreece = InstanceGenerator.user()
-
-			mreece.username = "mreece"
-			mreece.pass = 'admiN123!'
-			mreece.passConfirm = 'admiN123!'
-			mreece.enabled = true
-			mreece.supervisor = rjonsan
-
-			def mreeceProfile = InstanceGenerator.profile()
-			mreeceProfile.fullName = "Michelle Reece"
-			mreeceProfile.email = 'mreece.valent2010@gmail.com'
-			mreeceProfile.owner = mreece
-			mreece.profile = mreeceProfile
-			mreece.addToRoles(salesPerson)
-			mreece.save(flush:true)
-			/////////////////////////////////////////////////////////////////////////////
-			def rswanson = InstanceGenerator.user()
-
-			rswanson.username = "rswanson"
-			rswanson.pass = 'admiN123!'
-			rswanson.passConfirm = 'admiN123!'
-			rswanson.enabled = true
-			rswanson.supervisor = rjonsan
-
-			def rswansonProfile = InstanceGenerator.profile()
-			rswansonProfile.fullName = "Rick Swanson"
-			rswansonProfile.email = 'rswanson.valent2010@gmail.com'
-			rswansonProfile.owner = rswanson
-			rswanson.profile = rswansonProfile
-			rswanson.addToRoles(salesPerson)
-			rswanson.save(flush:true)
-			////////////////////////////////////////////////////////////////////
-
-
-			def dlang = InstanceGenerator.user()
-
-			dlang.username = "dlang"
-			dlang.pass = 'admiN123!'
-			dlang.passConfirm = 'admiN123!'
-			dlang.enabled = true
-
-			def dlangProfile = InstanceGenerator.profile()
-			dlangProfile.fullName = "Dale Lang"
-			dlangProfile.email = 'dlang.valent2010@gmail.com'
-			dlangProfile.owner = dlang
-			dlang.profile = dlangProfile
-			dlang.addToRoles(productManager)
-			dlang.save(flush:true)
-			//////////////////////////////////////////////////////////////////////////////
-
-			def nronde = InstanceGenerator.user()
-
-			nronde.username = "nronde"
-			nronde.pass = 'admiN123!'
-			nronde.passConfirm = 'admiN123!'
-			nronde.enabled = true
-
-			def nrondeProfile = InstanceGenerator.profile()
-			nrondeProfile.fullName = "Nathaniel Ronde"
-			nrondeProfile.email = 'nronde.valent2010@gmail.com'
-			nrondeProfile.owner = nronde
-			nronde.profile = nrondeProfile
-			nronde.addToRoles(productManager)
-			nronde.save(flush:true)
-			////////////////////////////////////////////////////////////////////////////
-
-			def anot = InstanceGenerator.user()
-
-			anot.username = "anot"
-			anot.pass = 'admiN123!'
-			anot.passConfirm = 'admiN123!'
-			anot.enabled = true
-
-			def anotProfile = InstanceGenerator.profile()
-			anotProfile.fullName = "Andy Not"
-			anotProfile.email = 'anot.valent2010@gmail.com'
-			anotProfile.owner = anot
-			anot.profile = anotProfile
-
-			anot.addToRoles(portfolioManager)
-			anot.save(flush:true)
-			////////////////////////////////////////////////////////////////////////////////
-			def jcubeline = InstanceGenerator.user()
-
-			jcubeline.username = "jcubeline"
-			jcubeline.pass = 'admiN123!'
-			jcubeline.passConfirm = 'admiN123!'
-			jcubeline.enabled = true
-
-			def jcubelineProfile = InstanceGenerator.profile()
-			jcubelineProfile.fullName = "Jennifer Cubeline"
-			jcubelineProfile.email = 'jcubeline.valent2010@gmail.com'
-			jcubelineProfile.owner = jcubeline
-			jcubeline.profile = jcubelineProfile
-			jcubeline.addToRoles(portfolioManager)
-			jcubeline.save(flush:true)
-			///////////////////////////////////////////////////////////////////////////////
-			def rvorner = InstanceGenerator.user()
-
-			rvorner.username = "rvorner"
-			rvorner.pass = 'admiN123!'
-			rvorner.passConfirm = 'admiN123!'
-			rvorner.enabled = true
-
-			def rvornerProfile = InstanceGenerator.profile()
-			rvornerProfile.fullName = "Ron Vorner"
-			rvornerProfile.email = 'rvorner.valent2010@gmail.com'
-			rvornerProfile.owner = rvorner
-			rvorner.profile = rvornerProfile
-			rvorner.addToRoles(generalManager)
-			rvorner.save(flush:true)
-
-			///////////////////////////////////////////////////////////////////////////////
-			//------------------Portfolio----------------------------------//
-			/////////////////////////////////////////////////////////////////////////////////
-			def pmAnot = User.findByUsername("anot")
-			def pvDesktop = new Portfolio(portfolioName: "vDesktop", dateModified: new Date(), stagingStatus: "published", portfolioManager: pmAnot).save(flush:true)
-
-			def pmJcubeline = User.findByUsername("jcubeline")
-			def pvCloud = new Portfolio(portfolioName: "vCloud", dateModified: new Date(), stagingStatus: "published", portfolioManager: pmJcubeline).save(flush:true)
-			/////////////////////////////////////////////////////////////////////////////////
-			def geoUSA = new GeoBase(name: "UNITED STATES", description: "United States of America", currency: "USD").save(flush:true)
-			def geoUK = new GeoBase(name: "UK", description: "United Kingdom", currency: "GBP").save(flush:true)
-			def geoGERMANY = new GeoBase(name: "GERMANY", description: "Germany", currency: "EUR").save(flush:true)
-			def geoJAPAN = new GeoBase(name: "JAPAN", description: "Japan", currency: "JPY").save(flush:true)
-			def geoINDIA = new GeoBase(name: "INDIA", description: "India", currency: "RS").save(flush:true)
-			///////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////
-			def territoriesUs = GeoBase.findByName("UNITED STATES")
-			def territoriesIndia = GeoBase.findByName("INDIA")
-			def geoGroupAsia = new GeoGroup(name: "Asia", description: "Geo Asia").save(flush:true)
-			def geoGroupNorthAmerica = new GeoGroup(name: "North America", description: "Geo North America").save(flush:true)
-
-			geoGroupAsia = GeoGroup.findByName("Asia")
-			geoGroupAsia.addToGeos(territoriesIndia)
-			geoGroupAsia.save()
-
-			geoGroupNorthAmerica = GeoGroup.findByName("North America")
-			geoGroupNorthAmerica.addToGeos(territoriesUs)
-			geoGroupNorthAmerica.save()
-			/////////////////////////////////////////////////////////////////////////////////////
-			//------------------GEOs----------------------------------//
-			///////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////
-
-			//------------------Delivery Role----------------------------------//
-			///////////defined DeliveryRole....................
-
-
-			def deliveryRoleProjectManager = new DeliveryRole(name: "PROJECT MANAGER", description: "Project Manager").save(flush:true)
-			def deliveryRoleArchtect = new DeliveryRole(name: "ARCHITECT", description: "Solution Architect").save(flush:true)
-			def deliveryRoleProductSpecialist = new DeliveryRole(name: "PRODUCT SPECIALIST", description: "Product Specialist").save(flush:true)
-
-			//////////////////////////////////////////////////////////////////////////////
-
-			//------------------GEO-DEliveryRole Relation----------------------------------//
-			//////////////////////////////////////////////////////////////////////////////////////////
-			def findGeoUSA = GeoBase.findByName("UNITED STATES")
-			def findGeoUK = GeoBase.findByName("UK")
-			def findGeoJAPAN = GeoBase.findByName("JAPAN")
-			def findGeoGERMANY= GeoBase.findByName("GERMANY")
-
-
-			def findDeliveryRoleProjectManager = DeliveryRole.findByName("PROJECT MANAGER")
-			def findDeliveryRoleArchtect= DeliveryRole.findByName("ARCHITECT")
-			def findDeliveryRoleProductSpecialist= DeliveryRole.findByName("PRODUCT SPECIALIST")
-
-
-			def relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "400", ratePerDay: "600", geo: findGeoUSA, deliveryRole: findDeliveryRoleProjectManager)
-			relationDeliveryGeoUSA.save(flush:true)
-
-			relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "1000", ratePerDay: "1500", geo: findGeoUSA, deliveryRole: findDeliveryRoleArchtect)
-			relationDeliveryGeoUSA.save(flush:true)
-
-			relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "700", ratePerDay: "900", geo: findGeoUSA, deliveryRole: findDeliveryRoleProductSpecialist)
-			relationDeliveryGeoUSA.save(flush:true)
-
-			def relationDeliveryGeoUK = new RelationDeliveryGeo(costPerDay: "350", ratePerDay: "500", geo: findGeoUK, deliveryRole: findDeliveryRoleProjectManager)
-			relationDeliveryGeoUK.save(flush:true)
-
-			def relationDeliveryGeoJAPAN = new RelationDeliveryGeo(costPerDay: "30000", ratePerDay: "55000", geo: findGeoJAPAN, deliveryRole: findDeliveryRoleProductSpecialist)
-			relationDeliveryGeoJAPAN.save(flush:true)
-
-			def relationDeliveryGeoGERMANY = new RelationDeliveryGeo(costPerDay: "375", ratePerDay: "550", geo: findGeoGERMANY, deliveryRole: findDeliveryRoleProductSpecialist)
-			relationDeliveryGeoGERMANY.save(flush:true)
-
-			/*
-			 def relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "400", ratePerDay: "600")
-			 findGeoUSA.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 findDeliveryRoleProjectManager.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "1000", ratePerDay: "1500")
-			 findGeoUSA.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 findDeliveryRoleArchtect.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 relationDeliveryGeoUSA = new RelationDeliveryGeo(costPerDay: "700", ratePerDay: "900")
-			 findGeoUSA.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 findDeliveryRoleProductSpecialist.addToRelationDeliveryGeos(relationDeliveryGeoUSA)
-			 def relationDeliveryGeoUK = new RelationDeliveryGeo(costPerDay: "350", ratePerDay: "500")
-			 findGeoUK.addToRelationDeliveryGeos(relationDeliveryGeoUK)
-			 findDeliveryRoleProductSpecialist.addToRelationDeliveryGeos(relationDeliveryGeoUK)
-			 def relationDeliveryGeoJAPAN = new RelationDeliveryGeo(costPerDay: "30000", ratePerDay: "55000")
-			 findGeoJAPAN.addToRelationDeliveryGeos(relationDeliveryGeoJAPAN)
-			 findDeliveryRoleProductSpecialist.addToRelationDeliveryGeos(relationDeliveryGeoJAPAN)
-			 def relationDeliveryGeoGERMANY = new RelationDeliveryGeo(costPerDay: "375", ratePerDay: "550")
-			 findGeoGERMANY.addToRelationDeliveryGeos(relationDeliveryGeoGERMANY)
-			 findDeliveryRoleProductSpecialist.addToRelationDeliveryGeos(relationDeliveryGeoGERMANY)*/
-
-			for(user in User.list())
-			{
-				user.pass = "Valent2010!"
-				user.passConfirm = "Valent2010!"
-				def pwEnc = new Sha256Hash(user.pass)
-				def crypt = pwEnc.toHex()
-				user.passwordHash = crypt
-				user.save(flush:true)
-			}
-
-		}
-
+		// Demo data insertion is disabled (isDemo = false).
+		// If demo mode is re-enabled, this method needs to be rewritten using
+		// UserManagementService and UserRole.create() instead of Nimble InstanceGenerator.
 	}
 
+
+	/**
+	 * Creates the default admin users on first startup if they do not already exist.
+	 * Replaces the user creation that was previously handled by NimbleBootStrap.groovy.
+	 */
+	void createDefaultUsers()
+	{
+		Role adminRole = Role.findByAuthority('ROLE_SYSTEM_ADMINISTRATOR')
+		if (!adminRole) {
+			log.warn("ROLE_SYSTEM_ADMINISTRATOR not found — skipping default user creation")
+			return
+		}
+
+		[
+			[username: 'admin',      password: 'admiN123!', fullName: 'Administrator',       email: 'rlsar.valent2010@gmail.com'],
+			[username: 'superadmin', password: 'admiN123!', fullName: 'Super Administrator',  email: null],
+		].each { ud ->
+			if (!User.findByUsername(ud.username)) {
+				User u = userManagementService.createUser(ud.username, ud.password, ud.fullName, ud.email)
+				if (u.hasErrors()) {
+					u.errors.each { log.error(it) }
+					throw new RuntimeException("Error creating default user: ${ud.username}")
+				}
+				userManagementService.assignRole(u, adminRole)
+			}
+		}
+
+		// 'nobody' user gets all roles — used as a catch-all in internal queries.
+		if (!User.findByUsername('nobody')) {
+			User nobody = userManagementService.createUser('nobody', 'admiN123!', 'No Body', null)
+			if (nobody.hasErrors()) {
+				nobody.errors.each { log.error(it) }
+				throw new RuntimeException("Error creating nobody user")
+			}
+			Role.list().each { role -> userManagementService.assignRole(nobody, role) }
+		}
+	}
 
 	int getBootstrapRevision(){
 		InternalMap map = InternalMap.findByTypeAndInternalKey("bootstrap", "revision")

@@ -1,6 +1,5 @@
 package com.valent.pricewell
 
-import grails.plugins.nimble.core.*
 
 //import org.hibernate.collection.PersistentSet;
 

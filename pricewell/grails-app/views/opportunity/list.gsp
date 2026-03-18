@@ -1,7 +1,7 @@
 
 <%@ page import="com.valent.pricewell.Opportunity" %>
 <%@ page import="com.valent.pricewell.Quotation" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.SalesController"%>
 
 <%
@@ -144,13 +144,13 @@
             
             <span><g:link class="buttons.button button" title="Create Opportunity" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
             <g:if test="${new SalesController().isConnectwiseIncluded()}">
-            	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT')}">
+            	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
             		<span><button id="importBtn" title="From Connectwise to Pricewell" class="buttons.button button">Import</button></span>
            		</g:if>
            	</g:if>
            	
            	<g:if test="${new SalesController().isSalesforceIncluded()}">
-            	<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT')}">
+            	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
             		<span><button id="salesforceImportBtn" title="From Salesforce to Pricewell" class="buttons.button button">Import</button></span>
            		</g:if>
            	</g:if>
@@ -187,7 +187,7 @@
 	                        	
 	                        	<th><g:message property="closeDate" code="opportunity.closeDate.label" default="Close Date" /></th>
 	                        	
-	                        	<g:if test="${!SecurityUtils.subject.hasRole('SALES PERSON')}">
+	                        	<g:if test="${!PricewellSecurity.hasRole('SALES PERSON')}">
 	                        	
 	                        		<th><g:message property="assignTo" code="opportunity.assignTo.label" default="Assign To" /></th>
 	                        		
@@ -232,7 +232,7 @@
 	                        	
 	                        	<td><g:formatDate format="MMMMM d, yyyy" date="${opportunityInstance.closeDate}" /></td>
 	                        	
-	                        	<g:if test="${!SecurityUtils.subject.hasRole('SALES PERSON')}">
+	                        	<g:if test="${!PricewellSecurity.hasRole('SALES PERSON')}">
 	                            	<td>${fieldValue(bean: opportunityInstance, field: "assignTo")}</td>
 	                            </g:if>
 	                            <td>${fieldValue(bean: opportunityInstance, field: "stagingStatus.displayName")}</td>

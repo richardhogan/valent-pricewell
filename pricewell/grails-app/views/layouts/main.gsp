@@ -2,7 +2,7 @@
 <%@page import="com.valent.pricewell.util.PricewellUtils"%>
 <%@page import="com.valent.pricewell.HomeController"%>
 <%@ page import="NimbleTagLib" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 
 <%
 	def baseurl = request.siteUrl

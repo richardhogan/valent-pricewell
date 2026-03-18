@@ -1,21 +1,20 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.util.List;
 
-import grails.plugins.nimble.core.*
 import grails.converters.JSON
 
 class SetupController {
 	def serviceCatalogService
 	def salesCatalogService
 	def fileUploadService
-	def userService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -49,7 +48,7 @@ class SetupController {
 
 	private void reloadValues()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def quotaInstanceList = salesCatalogService.getUserQuota(user)//Quota.findAll("FROM Quota quota WHERE quota.createdBy.id=:uid", [uid: user.id])
 		
@@ -67,14 +66,14 @@ class SetupController {
 		}
 		//for geo*************************************************************************
 		def geoGroupInstanceList = new ArrayList()
-		if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			if(user?.geoGroup != null)
 			{
 				geoGroupInstanceList.add(user?.geoGroup)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		else if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			geoGroupInstanceList = GeoGroup.list(params)
 		}
@@ -129,7 +128,7 @@ class SetupController {
 
 	public int countUser()
 	{
-		def userList = userService.filterUserList(User.list())//User.findAll("FROM User user WHERE user.username!='superadmin' AND user.username!='user'")
+		def userList = (User.list().findAll { it.username != 'superadmin' && it.username != 'user' })//User.findAll("FROM User user WHERE user.username!='superadmin' AND user.username!='user'")
 		return userList.size()
 	}
 	
@@ -148,7 +147,7 @@ class SetupController {
 	def firstsetup = {
 
 		boolean displayUsersCount = true
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			displayUsersCount = false
 		}
@@ -297,7 +296,7 @@ class SetupController {
 
 	public boolean isVisible(def string)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if(string == "instanceInfo")
 		{
@@ -305,78 +304,78 @@ class SetupController {
 		}
 		else if(string == "companyInfo")
 		{
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 		}
 
 		else if(string == "users")
 		{
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') || SecurityUtils.subject.hasRole('PRODUCT MANAGER') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('PRODUCT MANAGER') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
 		else if(string == "geos")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER')){return true}else {return false}
 		}
 		else if(string == "territories")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
 		else if(string == "sowSettings")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
 		else if(string == "sowTemplates")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
 		else if(string == "sowDiscounts")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES MANAGER')){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
 		else if(string == "deliveryRoles")
 		{
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("DELIVERY ROLE MANAGER")){return true}else {return false}
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("DELIVERY ROLE MANAGER")){return true}else {return false}
 		}
 		else if(string == "portfolios")
 		{
-			if(SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') || SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')){return true}else {return false}
+			if(PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')){return true}else {return false}
 		}
 		else if(string == "workflowSettings")
 		{
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 		}
 		else if(string == "quota")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON")){return true}else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON")){return true}else {return false}
 		}
 		else if(string == "connectwiseCredentials")
 		{
 			boolean isForConnectwise = salesCatalogService.isClass("com.connectwise.integration.ConnectwiseExporterService", grailsApplication)
 			
-			if(isForConnectwise && (SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))){return true}else {return false}
-		}// || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PRESIDENT")
+			if(isForConnectwise && (PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))){return true}else {return false}
+		}// || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PRESIDENT")
 		else if(string == "salesforceCredentials")
 		{
 			boolean isForSalesforce = salesCatalogService.isClass("com.salesforce.integration.SalesforceExportService", grailsApplication)
 			
 
-			if(isForSalesforce && (SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))){return true}else {return false}
+			if(isForSalesforce && (PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))){return true}else {return false}
 		}
 		else if(string == "clarizenCredentials")
 		{
 //			boolean isForClarizen = salesCatalogService.isClass("com.clarizen.integration.ClarizenExportService", grailsApplication)
 //			
 //
-//			if(isForClarizen && (SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))){return true}else {return false}
+//			if(isForClarizen && (PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))){return true}else {return false}
 			return true
 			}
 		else if(string == "defaultEntities")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')){return true} else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')){return true} else {return false}
 		}
 		//Ankit Start
 		else if(string == "sowIntroduction")
 		{
-			if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')){return true} else {return false}
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')){return true} else {return false}
 		}
 		//Ankit End
 
@@ -480,7 +479,7 @@ class SetupController {
 	}
 
 	private String displayCountsSow(int i, boolean isBoolean){
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		if(isBoolean){
 			return (i == 0? "": "")
 		} else {
@@ -506,7 +505,7 @@ class SetupController {
 		String roleName = ServiceStageFlow.findUserRole("addUsers", currentStepNo);
 		def roleInstance = Role.findByName(roleName)
 		
-		if(roleInstance?.users.size() > 0)
+		if(UserRole.countByRole(roleInstance) > 0)
 		{
 			render "true"
 		}
@@ -563,7 +562,7 @@ class SetupController {
 					def territoriesList = new ArrayList(), geoGroupList = new ArrayList()
 					def roleUserList = []
 					//roleUserList = roleInstance?.users
-					roleUserList = userService.filterUserList(roleInstance?.users.toList())
+					roleUserList = ( UserRole.findAllByRole(roleInstance)*.user.findAll { it.username != 'superadmin' && it.username != 'user' })
 					
 					def userInstance = new User()
 					userInstance.properties = params
@@ -572,7 +571,7 @@ class SetupController {
 					{
 						
 						roleUserList = new ArrayList()
-						for(User user : roleInstance?.users)
+						for(User user : UserRole.findAllByRole(roleInstance)*.user)
 						{
 							if(user.username != "superadmin")
 							{
@@ -672,7 +671,7 @@ class SetupController {
 	public int countDefinedSOWTemplates()
 	{
 		def definedSOWTemplates = 0
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		

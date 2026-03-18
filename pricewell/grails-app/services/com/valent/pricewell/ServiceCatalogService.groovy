@@ -1,6 +1,6 @@
 package com.valent.pricewell
-import grails.plugins.nimble.core.*
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import com.valent.pricewell.Service
 import java.util.*
 
@@ -8,7 +8,7 @@ import com.valent.pricewell.ServiceProfile.ServiceProfileType;
 class ServiceCatalogService {
 
     static transactional = true
-	def priceCalculationService, userService
+	def priceCalculationService
 	
 	List getMyServices(User user)
 	{
@@ -101,7 +101,7 @@ class ServiceCatalogService {
 	
 	public Map getServiceExceptionReport()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = findUserPortfolios(user, [:])
 		def serviceList = [], newServiceList = [], deliveryRoleList = [], territoryList = []
 		Set tmpSet = new HashSet()
@@ -142,7 +142,7 @@ class ServiceCatalogService {
 	
 	public Map getProductExceptionReport()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = findUserPortfolios(user, [:])
 		def serviceList = [], newServiceList = [], productList = [], territoryList = [], finalServices = []
 		Set tmpSet = new HashSet(), productSet = new HashSet()
@@ -342,7 +342,7 @@ class ServiceCatalogService {
 			}
 			
 		}
-		def user1 = User.get(new Long(SecurityUtils.subject.principal))
+		def user1 = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def us = user1.id
 		
 		List map = new ArrayList()
@@ -355,7 +355,7 @@ class ServiceCatalogService {
 		
 		if(!map.contains("SYSTEM ADMINISTRATOR"))
 		{
-			//if(SecurityUtils.subject.hasRole("PRODUCT MANAGER"))
+			//if(PricewellSecurity.hasRole("PRODUCT MANAGER"))
 			//{
 				if(isFirst)
 				{
@@ -368,7 +368,7 @@ class ServiceCatalogService {
 				}
 				
 			/*}
-			if(SecurityUtils.subject.hasRole("SERVICE DESIGNER"))
+			if(PricewellSecurity.hasRole("SERVICE DESIGNER"))
 			{
 				if(isFirst)
 				{
@@ -380,7 +380,7 @@ class ServiceCatalogService {
 					queryString += " AND (ser.serviceDesignerLead.id = ${us} )"//OR ser.service.portfolio.portfolioManager.id = ${us}) "
 				}
 			}
-			if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+			if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
 			{
 				if(isFirst)
 				{
@@ -448,7 +448,7 @@ class ServiceCatalogService {
 			queryString += " AND s.serviceProfile.stagingStatus.name = '"+searchFields?.publishedFlag+"'"
 		}
 		
-		def user1 = User.get(new Long(SecurityUtils.subject.principal))
+		def user1 = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def us = user1.id
 		
 		List map = new ArrayList()
@@ -478,7 +478,7 @@ class ServiceCatalogService {
 	
 	List findUserPortfolios(User user, Map params)
 	{
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			return Portfolio.list([max:params.max, offset: params.offset?:0,sort: (params.sort?:"dateModified"), order: (params.order?: "desc")] )
 		}
@@ -497,7 +497,7 @@ class ServiceCatalogService {
 		
 		def c = ServiceProfile.createCriteria()
 					
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			if(type)
 				retList = ServiceProfile.findAll("from ServiceProfile sp where sp.type=:type order by dateModified desc", [type: type] )
@@ -542,14 +542,14 @@ class ServiceCatalogService {
 		List tmpList = new ArrayList()
 		for(Role role : roles)
 		{
-			for(UserBase user in role?.users)//Role.findByCode(roleName)?.users)
+			for(User user in UserRole.findAllByRole(role)*.user)//Role.findByCode(roleName)?.users)
 			{
 				tmpList.add(User.get(user.id))
 			}
 		}
 		
 		
-		return userService.filterUserList(tmpList)
+		return (tmpList).findAll { it.username != 'superadmin' && it.username != 'user' }
 	}
 	
 	public int countAssignedPortfolios(User user)
@@ -609,7 +609,7 @@ class ServiceCatalogService {
 	
 	public void updatePricelistForGeo(Geo geo)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def services = Service.listPublished(user)
 		
 		for(Service service : services)
@@ -701,14 +701,14 @@ class ServiceCatalogService {
 		boolean permit
 		for(Service ser in serviceList)
 		{
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 			{
 				//user.addToPermissions("Service:*:${ser.serviceProfile.id}")
-					if(SecurityUtils.subject.isPermitted("service:create"))
+					if(PricewellSecurity.isPermitted("service:create"))
 						{println "create"}
-					if(SecurityUtils.subject.isPermitted("service:read"))
+					if(PricewellSecurity.isPermitted("service:read"))
 						{println "read"}
-					if(SecurityUtils.subject.isPermitted("service:update"))
+					if(PricewellSecurity.isPermitted("service:update"))
 						{println "update"}
 			}
 			else
@@ -717,22 +717,22 @@ class ServiceCatalogService {
 				{
 					//user.addToPermissions("Service:*:${ser.serviceProfile.id}")
 					
-					if(SecurityUtils.subject.isPermitted("service:create"))
+					if(PricewellSecurity.isPermitted("service:create"))
 						{println "create"}
-					if(SecurityUtils.subject.isPermitted("service:read"))
+					if(PricewellSecurity.isPermitted("service:read"))
 						{println "read"}
-					if(SecurityUtils.subject.isPermitted("service:update"))
+					if(PricewellSecurity.isPermitted("service:update"))
 						{println "update"}
 				}
 				else
 				{
 					//user.addToPermissions("Service:read:${ser.serviceProfile.id}")
 					
-					if(SecurityUtils.subject.isPermitted("service:create"))
+					if(PricewellSecurity.isPermitted("service:create"))
 						{println "create"}
-					if(SecurityUtils.subject.isPermitted("service:read"))
+					if(PricewellSecurity.isPermitted("service:read"))
 						{println "read"}
-					if(SecurityUtils.subject.isPermitted("service:update"))
+					if(PricewellSecurity.isPermitted("service:update"))
 						{println "update"}
 				}
 			}

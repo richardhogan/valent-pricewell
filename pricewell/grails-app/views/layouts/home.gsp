@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%@ page import="NimbleTagLib" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -155,7 +155,7 @@
 					<n:isLoggedIn>
 						<div id="userops">  
 							 <n:principalName /> | <g:link controller="auth" action="logout" class=""><g:message code="nimble.link.logout.basic" /></g:link>
-							 <!--<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+							 <!--<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 							  |  <a href="${baseurl}/navigation/administration" class="">Admin Menu</a>
 							  | <a href="${baseurl}/setting/settings" class="">Settings</a>
 							  </g:if>-->

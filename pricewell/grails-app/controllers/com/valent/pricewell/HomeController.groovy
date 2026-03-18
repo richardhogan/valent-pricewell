@@ -1,14 +1,13 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.shiro.SecurityUtils
-
 import grails.converters.JSON
-import grails.plugins.nimble.core.*
 import com.valent.pricewell.ServiceProfile.ServiceProfileType
 import com.valent.pricewell.util.*
 
@@ -30,7 +29,7 @@ class HomeController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -42,7 +41,7 @@ class HomeController {
 	
 	def index = {	
 		
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if( session.getAttribute(DEFAULTUSERROLE) != null ){
 			session.setAttribute("PARAMETERROLE", session.getAttribute(DEFAULTUSERROLE).value());
@@ -118,7 +117,7 @@ class HomeController {
 			}*/
 			
 			
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 			{
 				//createPriceList(user)
 				/*if(CompanyInformation.list().size()!=0) {
@@ -236,7 +235,7 @@ class HomeController {
 		user.lastLoginRole = defaultUserRole.value()
 		user.save()
 		
-		//if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		//if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		if(defaultUserRole.value().equals("SYSTEM ADMINISTRATOR"))
 		{
 			
@@ -259,7 +258,7 @@ class HomeController {
 			render(view: "admin", model: [unassignException: unassignedExceptionReport, serviceVarianceMap: serviceVarianceMap, currency: currency, assignedPortfolios: assignedPortfolioList,  totaldiscount: totaldiscount, notificationList: notifications, accountStatusByRoleData: accountStatusByRoleData, recentLoginList: recentLoginList])
 
 		}
-		//else if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER") || SecurityUtils.subject.hasRole("PRODUCT MANAGER") || SecurityUtils.subject.hasRole("SERVICE DESIGNER") || SecurityUtils.subject.hasRole("DELIVERY ROLE MANAGER")) // || SecurityUtils.subject.hasRole("USER")
+		//else if(PricewellSecurity.hasRole("PORTFOLIO MANAGER") || PricewellSecurity.hasRole("PRODUCT MANAGER") || PricewellSecurity.hasRole("SERVICE DESIGNER") || PricewellSecurity.hasRole("DELIVERY ROLE MANAGER")) // || PricewellSecurity.hasRole("USER")
 		else if(defaultUserRole.value().equals("PORTFOLIO MANAGER") || defaultUserRole.value().equals("PRODUCT MANAGER") || defaultUserRole.value().equals("SERVICE DESIGNER") || defaultUserRole.value().equals("DELIVERY ROLE MANAGER"))
 		{
 			Map productManagerEstimatedVeriance = [:]
@@ -276,7 +275,7 @@ class HomeController {
 			def serviceSoldPerPortfolioMap = [:], itCostPerQuotationMap = [:]
 			
 			Map serviceDesignerEstimatedVeriance = [:]
-			//if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+			//if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
 			if(defaultUserRole.value().equals("PORTFOLIO MANAGER"))
 			{
 				productManagerEstimatedVeriance = chartService.findEstimateVarianceForPMs()
@@ -304,7 +303,7 @@ class HomeController {
 				//println productsSoldByServiceMap
 			}
 			
-			else if(defaultUserRole.value().equals("PRODUCT MANAGER"))//if(SecurityUtils.subject.hasRole("PRODUCT MANAGER"))
+			else if(defaultUserRole.value().equals("PRODUCT MANAGER"))//if(PricewellSecurity.hasRole("PRODUCT MANAGER"))
 			{
 				assignedPortfolio = serviceCatalogService.productManagerPortfolios(user)
 				//println assignedPortfolio
@@ -313,7 +312,7 @@ class HomeController {
 			}
 			
 			
-			else if(defaultUserRole.value().equals("SERVICE DESIGNER"))//if(SecurityUtils.subject.hasRole("SERVICE DESIGNER"))
+			else if(defaultUserRole.value().equals("SERVICE DESIGNER"))//if(PricewellSecurity.hasRole("SERVICE DESIGNER"))
 			{
 				
 				listForServiceDesigner = serviceCatalogService.findUserServicesByStaging(user, ServiceProfileType.DEVELOP)
@@ -329,7 +328,7 @@ class HomeController {
 			
 			render(view: "all",  model: [itCostPerQuotationMap: itCostPerQuotationMap, serviceSoldPerPortfolioMap: serviceSoldPerPortfolioMap, serviceFunnelData: serviceFunnelData, user: user, serviceList: serviceException["serviceList"], productList: productException["productList"], salesTotalUnitsByServiceMap: salesTotalUnitsByServiceMap, salesSoldByServicesMap: salesSoldByServicesMap, quote: quote, totaldiscount: totaldiscount, assignedPortfolio: assignedPortfolio, notificationList: notifications,productManagerEstimatedVeriance: productManagerEstimatedVeriance, serviceDesignerEstimatedVeriance: serviceDesignerEstimatedVeriance, serviceQuoteList: serviceQuoteList, productsSoldByServiceMap: productsSoldByServiceMap, currency: currency, listForServiceDesigner: listForServiceDesigner, serviceInstanceTotal: listForServiceDesigner.size(), title: "My Services In Development"])
 		}
-		//else if(SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		//else if(PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		else if(defaultUserRole.value().equals("SALES PRESIDENT") || defaultUserRole.value().equals("GENERAL MANAGER") || defaultUserRole.value().equals("SALES MANAGER") || defaultUserRole.value().equals("SALES PERSON"))
 		{
 			//session.setAttribute(DEFAULTUSERROLE, PricewellUtils.getFirstMatchingRoleEnum((String[])["SALES PRESIDENT", "GENERAL MANAGER", "SALES MANAGER", "SALES PERSON"]));
@@ -350,14 +349,14 @@ class HomeController {
 			Map map = chartService.buildSalesQuotesChartData(user, startDate, dateService.getDate(quarterDates['from']), defaultTerritory)
 			def pendingDaysMap = chartService.buildChartDataForQuotesPendingDays(defaultTerritory,null,null)
 			Map quotaData = [:]
-			if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+			if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 				{	
 					quotaData = opportunityService.getQuotaAssignedVsQuotaAchivement(dateMap, defaultTerritory)
 					
 					}
 			
 			Map quotaPerPersons = [:]
-			if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER"))
+			if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER"))
 			{
 				quotaPerPersons = opportunityService.getQuotaAssignedVsQuotaAchivementPerPersons(dateMap, defaultTerritory)//quotaData['territory'])
 			}
@@ -399,7 +398,7 @@ class HomeController {
 	{
 		List<LoginRecord> lastLoginList = new ArrayList<LoginRecord>()
 		List tempList = new ArrayList();
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if(user?.username != "superadmin")
 		{
@@ -509,11 +508,11 @@ class HomeController {
 	
 	public boolean isSuperAdmin()
 	{
-		def cred = SecurityUtils.subject.principal
+		def cred = PricewellSecurity.principalId  // was: SecurityUtils.subject.principal
 		
 		if(cred != null)
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			if(user.username == "superadmin")
 			{
 				return true
@@ -531,7 +530,7 @@ class HomeController {
 	
 	def updaterole = {
 		
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		String previousRole = "DEFAULT";
 		

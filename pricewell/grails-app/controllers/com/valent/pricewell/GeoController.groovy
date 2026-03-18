@@ -1,9 +1,9 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.util.List;
 
 import grails.converters.JSON
-import org.apache.shiro.SecurityUtils
-import grails.plugins.nimble.core.*
 class GeoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -20,7 +20,7 @@ class GeoController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -56,7 +56,7 @@ class GeoController {
 		
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def territoryList = new ArrayList()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		territoryList = salesCatalogService.findUserTerritories(user)
 		
 		/*if(user.primaryTerritory != null && user.primaryTerritory != "null" && user.primaryTerritory != "NULL")
@@ -110,13 +110,13 @@ class GeoController {
 	
 	public def countGeos()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def counts = 0
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("PRODUCT MANAGER"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("PRODUCT MANAGER"))
 		{
 			counts = Geo.list().size()
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			if(user?.geoGroup != null)
 				counts = 1
@@ -231,15 +231,15 @@ class GeoController {
 			
 			if(params.sourceFrom != "geoGroup" && params.sourceFrom != "user")
 			{
-				if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+				if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 				{
-					def user = User.get(new Long(SecurityUtils.subject.principal))
+					def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 					geoInstance.geoGroup = user?.geoGroup
 					
 				}
 			}
 			
-			if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 			{
 				if(params.geoGroupId)
 				{
@@ -673,7 +673,7 @@ class GeoController {
 	{
 		if(type == "create")
 	 	{
-			 if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+			 if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER"))
 			 {
 				 return true
 			 }
@@ -683,7 +683,7 @@ class GeoController {
 	 
 		 else if(type == "update")
 		 {
-			 if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER"))
+			 if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER"))
 			 {
 				 return true
 			 }
@@ -695,18 +695,18 @@ class GeoController {
 	boolean isPermitted(String action)
 	{
 		boolean permit = false
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			permit = true
 		}
 		else
 		{
-			if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+			if(PricewellSecurity.hasRole("SALES MANAGER"))
 			{
 				if(action == "show" || action == "edit")
 					{permit = true}
 			}
-			else if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+			else if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
 			{
 				if(action == "show")
 					{permit = true}

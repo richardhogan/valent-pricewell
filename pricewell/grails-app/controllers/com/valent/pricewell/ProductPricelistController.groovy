@@ -1,6 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
-import org.apache.shiro.SecurityUtils
 import grails.converters.JSON
 import java.util.Set
 import java.util.TreeSet
@@ -12,7 +13,7 @@ class ProductPricelistController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -38,7 +39,7 @@ class ProductPricelistController {
 
     def save = {
         def productPricelistInstance = new ProductPricelist(params)
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		productPricelistInstance.modifiedBy = user;
 		productPricelistInstance.dateModified = new Date();
         if (productPricelistInstance.save(flush: true)) {
@@ -84,7 +85,7 @@ class ProductPricelistController {
                 }
             }
             productPricelistInstance.properties = params
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			productPricelistInstance.modifiedBy = user;
 			productPricelistInstance.dateModified = new Date();
             if (!productPricelistInstance.hasErrors() && productPricelistInstance.save(flush: true)) {

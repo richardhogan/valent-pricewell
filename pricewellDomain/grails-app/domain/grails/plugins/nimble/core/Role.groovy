@@ -1,67 +1,66 @@
-/*
- *  Nimble, an extensive application base for Grails
- *  Copyright (C) 2010 Bradley Beddoes
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-
 /**
- * Represents a role within a Nimble application
+ * Application role / authority domain class.
  *
- * @author Bradley Beddoes
+ * MIGRATION NOTE (Nimble → Spring Security Core):
+ *   The package name is intentionally kept as grails.plugins.nimble.core so that
+ *   the many existing references throughout the codebase (controllers, services,
+ *   BootStrap) do not need to be updated for this class alone.
+ *   The Nimble plugin dependency and ConfigurationHolder have been removed.
+ *
+ *   Key change: field 'name' → 'authority'.
+ *   Spring Security Core requires the authority field to hold a string with the
+ *   ROLE_ prefix (e.g. "ROLE_SALES_PERSON"). PricewellSecurity.hasRole() and
+ *   UserManagementService.createRole() handle the conversion from the legacy
+ *   human-readable names (e.g. "SALES PERSON") stored in RoleId.code.
+ *
+ *   The following Nimble-specific associations have been removed as they are
+ *   no longer needed: groups, permissions (Shiro WildcardPermissions).
+ *   Role-to-user assignment is now managed via UserRole join domain.
  */
-@SuppressWarnings("deprecation")
 class Role {
 
-    String name
+    /**
+     * Spring Security authority string. Must carry the ROLE_ prefix.
+     * Examples: "ROLE_SYSTEM_ADMINISTRATOR", "ROLE_SALES_PERSON".
+     * (Previously the 'name' field held the human-readable label e.g. "SALES PERSON".)
+     */
+    String authority
+
+    /** Human-readable label retained for display in the admin UI. */
     String description
-	String realm
-	String code
-	
-	boolean external = false
+
+    /**
+     * Short code that maps to RoleId enum values.
+     * Retained so that BootStrap and UserManagementService can look roles up
+     * by their legacy code without needing to know the ROLE_ prefix format.
+     */
+    String code
+
+    /**
+     * When true, this role cannot be deleted or renamed through the admin UI.
+     * Used to protect the SYSTEM ADMINISTRATOR role from accidental removal.
+     */
     boolean protect = false
 
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [
-        users: UserBase,
-        groups: Group,
-        permissions: Permission
-    ]
-
-    static belongsTo = [Group]
-
     static mapping = {
         cache usage: 'read-write', include: 'all'
-        table ConfigurationHolder.config.nimble.tablenames.role
-
-        users cache: true
-        groups cache: true
-        permissions cache: true
+        // Table name kept as the original Nimble table so no DB migration is needed
+        // for the role table itself (only the user_role join table changes).
+        table 'role'
     }
 
     static constraints = {
-        name(blank: false, unique: true, minSize:4, maxSize: 255)
-        description(nullable:true, blank:false)
-		realm(nullable:true, blank:false)
-        
-        dateCreated(nullable: true) // must be true to enable grails
-        lastUpdated(nullable: true) // auto-inject to be useful which occurs post validation
-
-        permissions(nullable:true)
+        authority    blank: false, unique: true
+        description  nullable: true
+        code         nullable: true
+        dateCreated  nullable: true
+        lastUpdated  nullable: true
     }
+
+    String toString() { authority }
 }

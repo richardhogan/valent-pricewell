@@ -1,10 +1,10 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
 
-import org.apache.shiro.SecurityUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import grails.plugins.nimble.core.*
 import com.ibm.icu.text.SimpleDateFormat
 import com.valent.pricewell.ObjectType.Type;
 import com.valent.pricewell.ServiceProfile.ServiceProfileType

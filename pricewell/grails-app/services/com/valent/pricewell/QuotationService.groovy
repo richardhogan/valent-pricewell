@@ -52,7 +52,7 @@ class QuotationService {
 		List map = new ArrayList()
 		def quotationList
 		int counter = 0;
-		for(Object r in user.roles)
+		for(Object r in UserRole.findAllByUser(user)*.role)
 		{
 			map[counter++] = r.name
 		}
@@ -75,7 +75,7 @@ class QuotationService {
 		List map = new ArrayList()
 		def quotationList
 		int counter = 0;
-		for(Object r in user.roles)
+		for(Object r in UserRole.findAllByUser(user)*.role)
 		{
 			map[counter++] = r.name
 		}

@@ -1,5 +1,5 @@
 
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.Geo" %>
 <%
 	def baseurl = request.siteUrl
@@ -103,7 +103,7 @@
 		                            </tr>
 		                        
 		                        	<tr>
-									  <g:if test="${!SecurityUtils.subject.hasRole('SALES MANAGER')}">
+									  <g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
 								          <g:if test="${salesManagerList.size() > 0}">
 									          <td valign="top" class="name"><label for="salesManager">Assign Sales Manager</label><em>*</em></td>
 									          <td valign="top">

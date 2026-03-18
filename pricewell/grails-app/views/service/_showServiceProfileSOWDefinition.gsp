@@ -1,4 +1,4 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <script>
 		jQuery(function() {
 		  	jQuery( "#tabs" ).tabs();//.addClass( "ui-tabs-vertical ui-helper-clearfix" );

@@ -1,31 +1,31 @@
 package com.valent.pricewell
-
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class NavigationController {
 	static navigation = [
 		[group:'navigation', action:'home', order: 0],
 		[action:'reviewBoard', order: 1, title: "Inbox"],
-	/*	[action:'administration', order: 2, isVisible: {SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")},
+	/*	[action:'administration', order: 2, isVisible: {PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")},
 			subItems: [
 						[action:'manageRoles', order:2],
 						[action:'manageUsers', order:10]
 						]], */
-		[action:'deliveryRoles', order: 3, isVisible: {!SecurityUtils.subject.hasRole("SALES PERSON")}],
-		[action:'portfolio', order: 5, isVisible: {!SecurityUtils.subject.hasRole("PRODUCT MANAGER") && !SecurityUtils.subject.hasRole("SALES PERSON") && !SecurityUtils.subject.hasRole("SERVICE DESIGNER")}],
+		[action:'deliveryRoles', order: 3, isVisible: {!PricewellSecurity.hasRole("SALES PERSON")}],
+		[action:'portfolio', order: 5, isVisible: {!PricewellSecurity.hasRole("PRODUCT MANAGER") && !PricewellSecurity.hasRole("SALES PERSON") && !PricewellSecurity.hasRole("SERVICE DESIGNER")}],
 		[action:'services', title: 'Service Catalog', order: 10, isVisible: {true}],
-		[action:'reports', order: 25, isVisible: {SecurityUtils.subject.isPermitted("reports:show")}],
-		[action:'accounts', order: 35, isVisible: {SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SALES MANAGER")}],
-		[action:'contacts', order: 45, isVisible: {SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SALES MANAGER")}],
-		[action:'leads', order: 55, isVisible: {SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SALES MANAGER")}],
-		[action:'opportunities', order: 65, isVisible: {SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SALES MANAGER")}]
+		[action:'reports', order: 25, isVisible: {PricewellSecurity.isPermitted("reports:show")}],
+		[action:'accounts', order: 35, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
+		[action:'contacts', order: 45, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
+		[action:'leads', order: 55, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
+		[action:'opportunities', order: 65, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}]
 		
 	]
 
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	

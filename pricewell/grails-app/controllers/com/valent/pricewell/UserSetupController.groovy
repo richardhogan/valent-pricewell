@@ -1,22 +1,21 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.lang.reflect.InvocationTargetException
 import java.util.List;
 
-import org.apache.shiro.SecurityUtils
 import grails.converters.JSON;
-import grails.plugins.nimble.core.*
 import javax.management.relation.RoleInfo;
-import grails.plugins.nimble.InstanceGenerator
 import com.valent.pricewell.Staging.AuthorizedScope;
-import org.apache.shiro.crypto.hash.Sha256Hash
 
 class UserSetupController {
 
-	def userService
-	def roleService
+	def userManagementService
+	def springSecurityService
+	def passwordEncoder
 	def sendMailService
 	def serviceCatalogService
-	def salesCatalogService, permissionService, phoneNumberService
+	def salesCatalogService, phoneNumberService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
 	static def randomPassword = null
@@ -24,7 +23,7 @@ class UserSetupController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		//def user = User.get(new Long(SecurityUtils.subject.principal))
+		//def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//[User: ${user.profile.fullName}] - 
 		log.info("${actionUri} with params ${params}")
 	}
@@ -49,11 +48,11 @@ class UserSetupController {
 
 	public boolean isSuperAdmin()
 	{
-		def cred = SecurityUtils.subject.principal
+		def cred = PricewellSecurity.principalId  // was: SecurityUtils.subject.principal
 		
 		if(cred != null)
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			if(user.username == "superadmin")
 			{
 				return true
@@ -195,7 +194,7 @@ class UserSetupController {
 		def existingUsers = []
 		for(User user : User.list())
 		{
-			if(!user.roles.contains(roleInstance) && !user.roles.contains(adminRole))
+			if(!UserRole.findByUserAndRole(user, roleInstance) && !UserRole.findByUserAndRole(user, adminRole))
 			{
 				existingUsers.add(user)
 			}
@@ -212,8 +211,7 @@ class UserSetupController {
 		
 		if(role && user)
 		{
-			user.addToRoles(role)
-			user.save()
+			UserRole.create(user, role, true)
 			render "success"
 			
 		}
@@ -225,17 +223,16 @@ class UserSetupController {
 	}
 	
 	def setlogouttime = {
-		SecurityUtils.subject.getSession().setTimeout(10000);
+		// Session timeout was controlled by Shiro; Spring Security uses container session management.
 		render 's'
 	}
 
 	def getlogouttime = {
-		render SecurityUtils?.subject?.getSession()?.getTimeout();
+		render session?.getMaxInactiveInterval() ?: 0
 	}
 
 	def islogin = {
-		
-		if(SecurityUtils?.subject?.principal)
+		if(PricewellSecurity.principalId)
 			render "true"
 		else
 			render "false"
@@ -272,7 +269,7 @@ class UserSetupController {
 	}
 	
 	def addPrimaryTerritory = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		
@@ -280,7 +277,7 @@ class UserSetupController {
 	}
 	
 	def savePrimaryTerritory = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//user.country = params.country
 		def territory = Geo.get(params.primaryTerritory.toLong())
 		user.primaryTerritory = territory
@@ -345,27 +342,20 @@ class UserSetupController {
 					randomPassword = generateRandomPassword.generatePswd(8, 8, 1, 1, 1)
 					println "random : "+randomPassword
 					
-					User user = new User(profile: new ProfileBase())//InstanceGenerator.user()
-					def userFields = grailsApplication.config.nimble.fields.enduser.user
-					
-					user.properties[userFields] = params
+					User user = new User()
+					user.username = params.username
 					user.pass = "$randomPassword"
 					user.passConfirm = "$randomPassword"
-					user.lastUpdated = new Date()
 					user.dateCreated = new Date()
 					user.enabled = true
-					user.external = false
-					
-					
-					ProfileBase profile = user.profile//InstanceGenerator.profile()
-					//user.profile = InstanceGenerator.profile()
-					def profileFields = grailsApplication.config.nimble.fields.enduser.profile
-					
-					profile.properties[profileFields] = params
+
+					Profile profile = new Profile(owner: user)
+					user.profile = profile
+
+					profile.fullName = params.fullName
+					profile.email = params.email
 					profile.phone = params.phone
 					profile.country = params.phoneCountry
-					profile.lastUpdated = new Date()
-					profile.dateCreated = new Date()
 					
 					if(params?.geoGroup != null && params?.geoGroup != "")
 					{
@@ -375,11 +365,7 @@ class UserSetupController {
 					
 					Role role = Role.get(params.roleId)
 					
-					if(role) {
-						user.addToRoles(role)
-					}
-					else
-					{
+					if(!role) {
 						log.error("Unable to locate role, aborting user creation")
 						throw new RuntimeException("Unable to locate role, aborting user creation")
 					}
@@ -402,7 +388,7 @@ class UserSetupController {
 						 }
 					 
 				   //*****************************************************************************
-					if(role?.name == "GENERAL MANAGER")
+					if(role?.code == RoleId.GENERAL_MANAGER.code)
 					{
 						//********************** Assign GeoGroup(geo) for General Manager ****************
 						 
@@ -421,7 +407,7 @@ class UserSetupController {
 						 //******************************************************************************
 					}
 					
-					else if(role?.name == "SALES MANAGER")
+					else if(role?.code == RoleId.SALES_MANAGER.code)
 					{
 						 //******************* Assign Territories to Sales Manager *************************
 							
@@ -458,7 +444,7 @@ class UserSetupController {
 						
 					   //******************************************************************************
 					}
-					else if(role?.name == "SALES PERSON")
+					else if(role?.code == RoleId.SALES_PERSON.code)
 					{
 						 //******************* Assign Territory to Sales Person *************************
 						  /*if(params?.territoryId)// != null && params.territoryId != "")
@@ -481,41 +467,23 @@ class UserSetupController {
 					   //******************************************************************************
 					}
 					
-					if(role.code == RoleId.ADMINISTRATOR.code)
-					{
-						Permission adminPermission = new Permission(target:'*')
-						adminPermission.managed = true
-						adminPermission.type = Permission.adminPerm
-			
-						permissionService.createPermission(adminPermission, user)
-					}
+					// ROLE_SYSTEM_ADMINISTRATOR has full access via Spring Security interceptUrlMap — no Shiro permission needed.
 					
 					//session.save(profile)
-					def savedUser = userService.createUser(user)
-					if (savedUser == "defalutRoleLocate" || savedUser == "defalutRoleAssign" || savedUser == "defalutPermissionsAssign")//.hasErrors())
+					user.password = springSecurityService.encodePassword(user.pass ?: randomPassword)
+					user.save(flush: true)
+					def savedUser = user
+					if (savedUser.hasErrors())
 					{
-						  log.info("Failed to save new user")
-						  if(params.source == "setup" || params.source == "firstsetup")
-						  {
-							  if(savedUser?.id != null)
-							  {
-								  deleteSavedUser(savedUser)
-							  }
-							  if(savedUser == "defalutRoleLocate")
-							  {
-								  render "Could not find default role 'USER' internally, please reload and try again."
-							  }
-							  else if(savedUser == "defalutRoleAssign")
-							  {
-								  render "Could not assing default role 'USER' to the creating user internally, please reload and try again."
-							  }
-							  else if(savedUser == "defalutPermissionsAssign")
-							  {
-								  render "Could not assign default permission to the creating user internally, please reload and try again."
-							  }
-							  //render "Failed to save new user."
-						  }//view: 'create', model: [roleList: Role.list(), user: user]
+						log.info("Failed to save new user")
+						if(params.source == "setup" || params.source == "firstsetup")
+						{
+							render "Failed to save new user: " + savedUser.errors
+						}
 					}
+					else
+					{
+						UserRole.create(savedUser, role, true)
 					else
 					{
 						if(params?.geoGroupId)// != null && params.geoGroupId != "")
@@ -567,28 +535,11 @@ class UserSetupController {
 
 	private void deleteSavedUser(User user)
 	{
-		def username =  user.username
-		for(Role role : user?.roles)
-		{
-			user.removeFromRoles(role)
-			role.removeFromUsers(user)
-			role.save()
-			
-			if (role.hasErrors()) {
-				log.error("Unable to remove role $role.name from user [$user.id]$user.username")
-				role.errors.each {
-					log.error(it)
-				}
-
-				throw new RuntimeException("Unable to remove role $role.name from user [$user.id]$user.username")
-			}
-		}	
-		user.save()
-		
-		if(user.delete())
-			log.info("Successfully deleted user $username")
-		else
-			log.info("User $username was not deleted")
+		def username = user.username
+		// Remove all UserRole assignments before deleting the user
+		UserRole.findAllByUser(user).each { UserRole.remove(user, it.role, false) }
+		user.delete(flush: true)
+		log.info("Deleted user $username")
 		//flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'user.label', default: 'User'), params.id])}"
 		
 	}
@@ -622,37 +573,37 @@ class UserSetupController {
 	
 	public boolean isRoleVisibleInList(def code)
 	{
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}
 		else
 		{
 			switch(code)
 			{
 				case RoleId.ADMINISTRATOR.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 						break;
 				case RoleId.PORTFOLIO_MANAGER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 						break;
 				case RoleId.PRODUCT_MANAGER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("PORTFOLIO MANAGER")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("PORTFOLIO MANAGER")){return true}else {return false}
 						break;
 				case RoleId.SERVICE_DESIGNER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("PRODUCT MANAGER") || SecurityUtils.subject.hasRole("PORTFOLIO MANAGER")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("PRODUCT MANAGER") || PricewellSecurity.hasRole("PORTFOLIO MANAGER")){return true}else {return false}
 						break;
 				case RoleId.GENERAL_MANAGER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT")){return true}else {return false}
 						break;
 				case RoleId.SALES_PRESIDENT.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 						break;
 				case RoleId.SALES_MANAGER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER")){return true}else {return false}
 						break;
 				case RoleId.SALES_PERSON.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER")){return true}else {return false}
 						break;
 				case RoleId.DELIVERY_ROLE_MANAGER.code :
-						if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
+						if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")){return true}else {return false}
 						break;
 			}
 		}
@@ -675,7 +626,7 @@ class UserSetupController {
 		}*/
 		def roleInstance = Role.get(params.roleId)
 		
-		List roleUsers = userService.filterUserList(roleInstance?.users.toList())
+		List roleUsers = UserRole.findAllByRole(roleInstance).collect { it.user }.findAll { it.username != "superadmin" && it.username != "user" }
 		/*for(User user : roleInstance?.users)
 		{
 			if(user.username != "superadmin" && user.username != "user")
@@ -691,10 +642,9 @@ class UserSetupController {
 	def listusersbyrole = {
 		int index = params.roleindex.toInteger();
 		def users = usersByRoleList[index]["users"]
-		def role = Role.findByName(usersByRoleList[index]["role"])
-		println role.name
+		def role = Role.findByDescription(usersByRoleList[index]["role"])
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
-		List roleUsers = userService.filterUserList(role?.users.toList())
+		List roleUsers = UserRole.findAllByRole(role).collect { it.user }.findAll { it.username != "superadmin" && it.username != "user" }
 		/*for(User user : role?.users)
 		{
 			if(user.username != "superadmin" && user.username != "user")
@@ -903,9 +853,8 @@ class UserSetupController {
 					}
 					else
 					{
-					  def fields = grailsApplication.config.nimble.fields.admin.user
-					  def profileFields = grailsApplication.config.nimble.fields.enduser.profile
-					  user.properties[fields] = params
+					  def profileFields = ['fullName', 'email', 'phone', 'country']
+					  user.username = params.username ?: user.username
 					  user.profile.properties[profileFields] = params
 					  user.profile.phone = params.phone
 					  user.profile.country = params.phoneCountry
@@ -951,7 +900,7 @@ class UserSetupController {
 							   }
 						   
 						 //*****************************************************************************
-						  if(role?.name == "GENERAL MANAGER")
+						  if(role?.code == RoleId.GENERAL_MANAGER.code)
 						  {
 							  //********************** Assign GeoGroup(geo) for General Manager ****************
 							   
@@ -966,7 +915,7 @@ class UserSetupController {
 							   //******************************************************************************
 						  }
 						  
-						  else if(role?.name == "SALES MANAGER")
+						  else if(role?.code == RoleId.SALES_MANAGER.code)
 						  {
 							   //******************* Assign Territories to Sales Manager *************************
 								  
@@ -1011,7 +960,7 @@ class UserSetupController {
 							  
 							 //******************************************************************************
 						  }
-						  else if(role?.name == "SALES PERSON")
+						  else if(role?.code == RoleId.SALES_PERSON.code)
 						  {
 							  
 							  if(primaryTerritory != null)
@@ -1022,7 +971,8 @@ class UserSetupController {
 						  }
 						  
 						  
-						  def updatedUser = userService.updateUser(user)
+						  user.save(flush: true)
+					  def updatedUser = user
 						  log.info("Successfully updated details for user [$user.id]$user.username")
 						  flash.type = "success"
 						  
@@ -1178,46 +1128,31 @@ class UserSetupController {
 	def savepassword = 
 	{
 		def user = User.get(params.id)
-		def pwEnc = new Sha256Hash(params.pass_old)
-		def crypt = pwEnc.toHex()
-		def oldPass = user.properties.passwordHash
-		
-		if(oldPass != crypt)
+		if (!user)
+		{
+			log.warn("User identified by id '$params.id' was not located")
+			render "fail"
+			return
+		}
+		// Compare old password using BCrypt encoder
+		if(!passwordEncoder.isPasswordValid(user.password, params.pass_old, null))
 		{
 			render "not_match"
 		}
-		else if(oldPass == crypt)
+		else if(params.pass == params.passConfirm && params.pass?.length() >= 8)
 		{
-			if (!user)
-			{
-			  log.warn("User identified by id '$params.id' was not located")
-			  flash.type = "error"
-			  flash.message = message(code: 'nimble.user.nonexistant', args: [params.id])
-			  //redirect action: list
-			  render "fail"
+			user.password = springSecurityService.encodePassword(params.pass)
+			user.save(flush: true)
+			if (!user.hasErrors()) {
+				log.info("Successfully saved password change for user [$user.id]$user.username")
+				render "success"
+			} else {
+				render "fail"
 			}
-			else 
-			{
-				user.properties['pass', 'passConfirm'] = params
-				Map userValidityMap = userService.validatePass(user, true)
-				if (!user.validate() || !userValidityMap["isValidPassword"])
-				{
-					log.debug("Password change for [$user.id]$user.username was invalid")
-					//render view: 'changepassword', model: [user: user]
-					render userValidityMap["error_message"]
-				}
-				else 
-				{
-					def savedUser = userService.changePassword(user)
-					log.info("Successfully saved password change for user [$user.id]$user.username")
-					flash.type = "success"
-					flash.message = message(code: 'nimble.user.password.change.success', args: [params.id])
-					//redirect(controller: "home", action: "index")
-					//action: show, id: user.id
-					render "success"
-				}
-				
-			}
+		}
+		else
+		{
+			render "password_invalid"
 		}
 	}
 	def reset = 
@@ -1240,7 +1175,7 @@ class UserSetupController {
 	{
 		if(isEmailAvailable(params.email))
 		{
-			def userProfile = ProfileBase.findByEmail(params.email)
+			def userProfile = Profile.findByEmail(params.email)
 			def user = User.get(userProfile?.owner?.id)
 			//println user.username
 			//println user
@@ -1267,25 +1202,22 @@ class UserSetupController {
 		}
 		else
 		{
-			user.properties['pass', 'passConfirm'] = params
-			Map userValidityMap = userService.validatePass(user, true)
-			if (!user.validate() || !userValidityMap["isValidPassword"])
+			if(params.pass == params.passConfirm && params.pass?.length() >= 8)
 			{
-				log.debug("Password change for [$user.id]$user.username was invalid")
-				//render view: 'changepassword', model: [user: user]
-				render userValidityMap["error_message"]//"password_available"
+				user.password = springSecurityService.encodePassword(params.pass)
+				user.save(flush: true)
+				if (!user.hasErrors()) {
+					log.info("Successfully saved password change for user [$user.id]$user.username")
+					render "success"
+				} else {
+					render "fail"
+				}
 			}
 			else
 			{
-				def savedUser = userService.changePassword(user)
-				log.info("Successfully saved password change for user [$user.id]$user.username")
-				flash.type = "success"
-				flash.message = message(code: 'nimble.user.password.change.success', args: [params.id])
-				//redirect(controller: "home", action: "index")
-				//action: show, id: user.id
-				render "success"
+				render "password_invalid"
 			}
-			
+
 		}
 	}
 	def updateTerritoryGeo =

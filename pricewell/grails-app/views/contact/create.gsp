@@ -1,12 +1,12 @@
 
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.Contact" %>
 <%@ page import="com.valent.pricewell.Geo" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.SalesController" %>
 <%
 	def baseurl = request.siteUrl
-	def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+	def loginUser = PricewellSecurity.currentUser
 	def primaryTerritory = null
 	if(loginUser?.primaryTerritory!=null && loginUser?.primaryTerritory!='null' && loginUser?.primaryTerritory!='NULL')
 	{
@@ -270,7 +270,7 @@
                                     <label for="assignTo"><g:message code="contact.assignTo.label" default="Contact Assign To" /></label><em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: contactInstance, field: 'assignTo', 'errors')}">
-                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(loginUser.id)}" value="${SecurityUtils.subject.principal}" noSelection="['': 'Select Any One']" class="required"/>
+                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(loginUser.id)}" value="${PricewellSecurity.principalId}" noSelection="['': 'Select Any One']" class="required"/>
                                 </td>
                             </tr>
                             

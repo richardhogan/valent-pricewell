@@ -2,7 +2,7 @@
 <%@ page import="com.valent.pricewell.ServiceProfile"%>
 <%@ page import="com.valent.pricewell.Staging"%>
 <%@ page import="com.valent.pricewell.ServiceController"%>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 	<script>
 		
 	</script>
@@ -363,18 +363,18 @@
 
 					</g:if>
 					
-					<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
+					<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
 				 		<span>
 							<input id="btnMove" type="button" title="Move To Other Portfolio" value="Move"  class="buttons.button button" class="menuButtonStyle "/>
 						</span>
 					</g:if>
 					
-					<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
+					<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
 				 		<span>
 							<input id="btnExport" type="button" title="Export Service" value="Export"  class="buttons.button button" class="menuButtonStyle "/>
 						</span>
 					</g:if>
-					<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
+					<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && serviceProfileInstance.type == ServiceProfile.ServiceProfileType.PUBLISHED}">
 				 		<span>
 							<input id="btnCopy" type="button" title="Copy Service" value="Copy"  class="buttons.button button" class="menuButtonStyle "/>
 						</span>

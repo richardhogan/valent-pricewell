@@ -1,7 +1,7 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <html>
 <head>
        
@@ -206,7 +206,7 @@
                         </g:if>
                         
                     </g:each>
-                    <g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}"> 
+                    <g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}"> 
 						<tr>
 							<td>
 								<a class="hyperlink" href="${baseurl}/administration/users/list"> Advanced Administration </a>

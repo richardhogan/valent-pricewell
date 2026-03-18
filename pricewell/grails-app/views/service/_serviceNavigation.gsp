@@ -1,11 +1,11 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
 							  
  		<table> 
  			
- 			<g:if test="${SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') || SecurityUtils.subject.hasRole('PRODUCT MANAGER') || SecurityUtils.subject.hasRole('SERVICE DESIGNER') || SecurityUtils.subject.hasRole('DELIVERY ROLE MANAGER') }">
+ 			<g:if test="${PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('PRODUCT MANAGER') || PricewellSecurity.hasRole('SERVICE DESIGNER') || PricewellSecurity.hasRole('DELIVERY ROLE MANAGER') }">
     			<tr> 
     				<td> 
     					<b>  My Services </b> 
@@ -37,7 +37,7 @@
  			</tr>
  			<tr>
  				<td>
- 					<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') || SecurityUtils.subject.hasRole('PRODUCT MANAGER') || SecurityUtils.subject.hasRole('SERVICE DESIGNER') || SecurityUtils.subject.hasRole('DELIVERY ROLE MANAGER') || (!SecurityUtils.subject.hasRole('GENERAL MANAGER') && !SecurityUtils.subject.hasRole('SALES PRESIDENT') && !SecurityUtils.subject.hasRole('SALES MANAGER') && !SecurityUtils.subject.hasRole('SALES PERSON'))}">
+ 					<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('PRODUCT MANAGER') || PricewellSecurity.hasRole('SERVICE DESIGNER') || PricewellSecurity.hasRole('DELIVERY ROLE MANAGER') || (!PricewellSecurity.hasRole('GENERAL MANAGER') && !PricewellSecurity.hasRole('SALES PRESIDENT') && !PricewellSecurity.hasRole('SALES MANAGER') && !PricewellSecurity.hasRole('SALES PERSON'))}">
  						<ul id="plain">
 	 						<li><a href="${baseurl}/service/allInCatalog" title="Published Services">Published Services</a></li>
 	 						<li><a href="${baseurl}/service/allInStaging" title="In Development Services">In Development</a></li>

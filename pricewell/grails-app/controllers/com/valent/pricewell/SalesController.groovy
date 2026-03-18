@@ -1,6 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
-
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 class SalesController {
 
 	def salesCatalogService// = new SalesCatalogService()
@@ -9,7 +9,7 @@ class SalesController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -21,7 +21,7 @@ class SalesController {
 		}
 		else
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		}
 		
 		List territoryList = salesCatalogService.findUserTerritories(user)
@@ -40,7 +40,7 @@ class SalesController {
 	
 	public def generateAssignedToListForNewObject()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Map salesUsersMap = salesCatalogService.getMapOfAssignedToSalesUsers()
 		
 		def content = g.render(template: "/sales/selectOptionOfAssignedToUsers",  model: [selectId: user.id, sPresidents : salesUsersMap['sPresidents'], gManagers : salesUsersMap['gManagers'],

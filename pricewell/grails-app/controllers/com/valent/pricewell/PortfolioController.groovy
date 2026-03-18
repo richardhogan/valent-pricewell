@@ -1,7 +1,8 @@
 package com.valent.pricewell
 import com.valent.pricewell.Service
 import grails.converters.JSON
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class PortfolioController {
 
@@ -13,7 +14,7 @@ class PortfolioController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -50,7 +51,7 @@ class PortfolioController {
 	
     def list = {
 		//params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		List serviceProfileInstanceList = serviceCatalogService.findUserPortfolios(user, params)
 	    
 		if(params.source == "setup" || params.source == "firstsetup")
@@ -182,8 +183,8 @@ class PortfolioController {
 			if(params.source == "setup" || params.source == "firstsetup")
 			{
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
-				render(template: "showsetup", model: [portfolioInstance: portfolioInstance, createPermission: SecurityUtils.subject.isPermitted("portfolio:create"), 
-									updatePermission: SecurityUtils.subject.isPermitted("portfolio:update"), source: source])
+				render(template: "showsetup", model: [portfolioInstance: portfolioInstance, createPermission: PricewellSecurity.isPermitted("portfolio:create"),  // was: SecurityUtils.subject.isPermitted("portfolio:create") 
+									updatePermission: PricewellSecurity.isPermitted("portfolio:update"), source: source])  // was: SecurityUtils.subject.isPermitted("portfolio:update")
 			}
 			else
             	[portfolioInstance: portfolioInstance, updatePermit: isPermitted("update"), createPermit: isPermitted("create")]
@@ -384,13 +385,13 @@ class PortfolioController {
 	boolean isPermitted(String action)
 	{	
 		boolean permit = false
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))  // was: SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR")
 		{
 			permit = true
 		}
 		else
 		{
-			if(SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+			if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))  // was: SecurityUtils.subject.hasRole("PORTFOLIO MANAGER")
 			{
 				if(action =="show")
 					{permit = true}

@@ -1,17 +1,15 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Date
 import java.util.Set;
 import java.util.TreeMap
 
 import java.util.List;
-import org.apache.shiro.SecurityUtils
 import grails.converters.JSON;
-import grails.plugins.nimble.core.*
 import javax.management.relation.RoleInfo;
-import grails.plugins.nimble.InstanceGenerator
 import com.valent.pricewell.Staging.AuthorizedScope;
-import org.apache.shiro.crypto.hash.Sha256Hash
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class SalesCatalogService {
@@ -19,7 +17,7 @@ class SalesCatalogService {
     static transactional = true
 
 	def serviceCatalogService
-	def sendMailService, userService
+	def sendMailService
     def serviceMethod() {
 
     }
@@ -63,11 +61,11 @@ class SalesCatalogService {
 		def quotaInstanceList = new ArrayList(), tmpList = new ArrayList()
 		Set quotaSet = new HashSet()
 		
-		if(SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') || SecurityUtils.subject.hasRole('SALES PRESIDENT'))
+		if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT'))
 		{
 			tmpList = Quota.list()
 		}
-		else if(SecurityUtils.subject.hasRole('GENERAL MANAGER'))
+		else if(PricewellSecurity.hasRole('GENERAL MANAGER'))
 		{
 			def quotaList = Quota.findAll("FROM Quota quota WHERE quota.createdBy.id=:uid OR quota.person.id=:uid", [uid: user.id])
 			quotaSet = addToSet(quotaList, quotaSet)
@@ -84,7 +82,7 @@ class SalesCatalogService {
 			}
 			tmpList = quotaSet.toList()
 		}
-		else if(SecurityUtils.subject.hasRole('SALES MANAGER'))
+		else if(PricewellSecurity.hasRole('SALES MANAGER'))
 		{
 			tmpList = Quota.findAll("FROM Quota quota WHERE quota.createdBy.id=:uid OR quota.person.id=:uid", [uid: user.id])
 		}
@@ -115,7 +113,7 @@ class SalesCatalogService {
 	public List getUserRolesCode(User user)
 	{
 		List rolesCode = new ArrayList()
-		for(Role role : user.roles)
+		for(Role role : UserRole.findAllByUser(user)*.role)
 		{
 			rolesCode.add(role.code)
 		}
@@ -126,30 +124,30 @@ class SalesCatalogService {
 	{
 		if(user == null)
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		}
 		
 		Set territoryList = new HashSet()
 		List rolesCode = getUserRolesCode(user)
-		//if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("PORTFOLIO MANAGER"))
+		//if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
 		if(rolesCode.contains(RoleId.ADMINISTRATOR.code) || rolesCode.contains(RoleId.SALES_PRESIDENT.code) || rolesCode.contains(RoleId.PORTFOLIO_MANAGER.code))
 		{
 			if(Geo.list().size() > 0)
 				territoryList.addAll(Geo.list())
 		}
-		//else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		//else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		else if(rolesCode.contains(RoleId.GENERAL_MANAGER.code))
 		{
 			if(user?.geoGroup != null && user?.geoGroup?.geos.size() > 0)
 				territoryList.addAll(user?.geoGroup?.geos)
 		}
-		//else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		//else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		else if(rolesCode.contains(RoleId.SALES_MANAGER.code))
 		{
 			if(user?.territories.size() > 0)
 				territoryList.addAll(user?.territories)
 		}
-		//else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		//else if(PricewellSecurity.hasRole("SALES PERSON"))
 		else if(rolesCode.contains(RoleId.SALES_PERSON.code))
 		{
 			if(user?.territory != null)
@@ -160,12 +158,12 @@ class SalesCatalogService {
 	
 	public List findSalesUsers()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Set territoryList = new HashSet()
 		def salesUsers = []
 		salesUsers.addAll(serviceCatalogService.findUsersByRole("SALES PRESIDENT"))
 		
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			
 			salesUsers.addAll(serviceCatalogService.findUsersByRole("SALES PERSON"))
@@ -173,7 +171,7 @@ class SalesCatalogService {
 			salesUsers.addAll(serviceCatalogService.findUsersByRole("GENERAL MANAGER"))
 			//return salesUsers
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			salesUsers.add(user)
 			if(user?.geoGroup != null && user?.geoGroup?.geos.size() > 0)
@@ -187,7 +185,7 @@ class SalesCatalogService {
 				}	
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			salesUsers.add(user)
 			if(user?.territories.size() > 0)
@@ -201,7 +199,7 @@ class SalesCatalogService {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			salesUsers.add(user)
 			if(user?.territory != null)
@@ -212,19 +210,19 @@ class SalesCatalogService {
 					{salesUsers.add(user?.territory?.salesManager)}
 			}
 		}
-		return userService.filterUserList(salesUsers)
+		return (salesUsers).findAll { it.username != 'superadmin' && it.username != 'user' }
 	}
 	
 	public Map getMapOfAssignedToSalesUsers()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Set sPresidents = new HashSet(), gManagers = new HashSet(), sManagers = new HashSet(), sPersons = new HashSet()
 		Set territoryList = new HashSet()
 		def salesUsers = []
 		
 		sPresidents.addAll(serviceCatalogService.findUsersByRole("SALES PRESIDENT"))
 		
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			
 			sPersons.addAll(serviceCatalogService.findUsersByRole("SALES PERSON"))
@@ -232,7 +230,7 @@ class SalesCatalogService {
 			gManagers.addAll(serviceCatalogService.findUsersByRole("GENERAL MANAGER"))
 			//return salesUsers
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			gManagers.add(user)
 			if(user?.geoGroup != null && user?.geoGroup?.geos.size() > 0)
@@ -246,7 +244,7 @@ class SalesCatalogService {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			sManagers.add(user)
 			if(user?.territories.size() > 0)
@@ -260,7 +258,7 @@ class SalesCatalogService {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			sPersons.add(user)
 			if(user?.territory != null)
@@ -272,10 +270,10 @@ class SalesCatalogService {
 			}
 		}
 		Map dataMap = [:]
-		dataMap.put('sPresidents', userService.filterUserList(sPresidents.toList()))
-		dataMap.put('gManagers', userService.filterUserList(gManagers.toList()))
-		dataMap.put('sManagers', userService.filterUserList(sManagers.toList()))
-		dataMap.put('sPersons', userService.filterUserList(sPersons.toList()))
+		dataMap.put('sPresidents', (sPresidents.toList().findAll { it.username != 'superadmin' && it.username != 'user' }))
+		dataMap.put('gManagers', (gManagers.toList().findAll { it.username != 'superadmin' && it.username != 'user' }))
+		dataMap.put('sManagers', (sManagers.toList().findAll { it.username != 'superadmin' && it.username != 'user' }))
+		dataMap.put('sPersons', (sPersons.toList().findAll { it.username != 'superadmin' && it.username != 'user' }))
 		
 		return dataMap
 	}
@@ -324,7 +322,7 @@ class SalesCatalogService {
 			}
 		} 
 		
-		return userService.filterUserList(filteredList)
+		return (filteredList).findAll { it.username != 'superadmin' && it.username != 'user' }
 	}
 	
 	public List findUnassignedSalesPersonList()
@@ -340,7 +338,7 @@ class SalesCatalogService {
 			}
 			
 		}
-		return userService.filterUserList(salesPersonList)
+		return (salesPersonList).findAll { it.username != 'superadmin' && it.username != 'user' }
 	}
 	
 	public List findUnassignedGeneralManagerList()
@@ -355,7 +353,7 @@ class SalesCatalogService {
 				generalManagerList.add(manager)
 			}
 		}
-		return userService.filterUserList(generalManagerList)
+		return (generalManagerList).findAll { it.username != 'superadmin' && it.username != 'user' }
 	}
 	
 	public List findUnassignedGeosForGeneralManager()
@@ -396,9 +394,9 @@ class SalesCatalogService {
 	{
 		Set geoList = new HashSet()
 		def territoryList = new ArrayList()
-		if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			geoList.add(user?.geoGroup)
 			for(Geo territory : user?.geoGroup?.geos)
 			{
@@ -456,16 +454,16 @@ class SalesCatalogService {
 	
 	public List findTerritoriesForSalesPerson(GeoGroup geoGroup)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
-		if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			for(Geo territory : user?.geoGroup?.geos)
 			{
 				territoryList.add(territory)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(Geo territory : user?.territories)
 			{
@@ -536,7 +534,7 @@ class SalesCatalogService {
 			return geo?.salesManager
 		else if(geo?.geoGroup?.generalManagers?.size() > 0)
 		{
-			for(UserBase user : geo?.geoGroup?.generalManagers)
+			for(User user : geo?.geoGroup?.generalManagers)
 			{
 				return user
 				break
@@ -545,7 +543,7 @@ class SalesCatalogService {
 		else
 		{
 			def presidentUsers = serviceCatalogService.findUsersByRole("SALES PRESIDENT")
-			for(UserBase user : presidentUsers)
+			for(User user : presidentUsers)
 			{
 				return user
 				break

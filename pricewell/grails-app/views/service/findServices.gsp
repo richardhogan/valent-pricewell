@@ -1,7 +1,7 @@
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.Portfolio" %>
 <%@ page import="grails.plugins.nimble.core.Role" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

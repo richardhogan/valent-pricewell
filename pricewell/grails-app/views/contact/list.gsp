@@ -1,6 +1,6 @@
 
 <%@ page import="com.valent.pricewell.Contact" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -76,7 +76,7 @@
             <div class="message">${flash.message}</div>
             </g:if>-->
             
-           <g:if test="${SecurityUtils.subject.hasRole('SALES PERSON') && !isSearchList}">
+           <g:if test="${PricewellSecurity.hasRole('SALES PERSON') && !isSearchList}">
 						
 				<div id="tabsDiv">
 					<ul>

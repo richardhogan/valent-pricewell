@@ -1,5 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 class NotificationController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -7,7 +8,7 @@ class NotificationController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -36,7 +37,7 @@ class NotificationController {
 		}
 		else
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			def notifications = Notification.listUserNotifications(user, "")
 			for(int i = 0; i<6; i++)
 			{
@@ -59,14 +60,14 @@ class NotificationController {
 	}
 	public List listActiveNotification()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def notifications = []
 		notifications = Notification.listUserNotifications(user, "active")
 		return notifications
 	}
 	
 	def dismissNotifications = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def ids = []
 		if(params.type == "selected")

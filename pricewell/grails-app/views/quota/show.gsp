@@ -1,8 +1,8 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.Quota" %>
 <%@ page import="com.valent.pricewell.User" %>
 <%
-def user = User.get(new Long(SecurityUtils.subject.principal))
+def user = PricewellSecurity.currentUser
  %>
 <html>
     <head>

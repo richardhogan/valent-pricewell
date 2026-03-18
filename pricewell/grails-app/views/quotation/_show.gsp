@@ -3,7 +3,7 @@
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.ServiceQuotation" %>
 <%@ page import="com.valent.pricewell.Pricelist" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -300,7 +300,7 @@
 								<input id="changeOrder" title="Change Sequence Order" type="button" value="Change Order" class="button"/>
 							</g:if>
 							
-							<g:if test="${!moreDiscountAllowed && !SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && !SecurityUtils.subject.hasRole('SALES PRESIDENT')}">
+							<g:if test="${!moreDiscountAllowed && !PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && !PricewellSecurity.hasRole('SALES PRESIDENT')}">
 								<span class="discount">Discount Request Sent </span>|
 							</g:if>
 							

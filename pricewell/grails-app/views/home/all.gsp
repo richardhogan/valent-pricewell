@@ -1,6 +1,6 @@
 
 <%@ page import="grails.converters.JSON"%>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -189,7 +189,7 @@
 							var dataObject = jQuery.parseJSON(dateRange);
 							//alert(dataObject);
 							//if(${role != 'PRODUCT MANAGER'})									
-				    	  if(${!SecurityUtils.subject.hasRole('PRODUCT MANAGER')})
+				    	  if(${!PricewellSecurity.hasRole('PRODUCT MANAGER')})
 				    	 {
 								refreshAllData(dataObject,portfolio_id,territory_id)
 				    	 }
@@ -226,7 +226,7 @@
 				    			var jsonObj = JSON.stringify(myObj);
 				    			var obj = jQuery.parseJSON(jsonObj);
 				    			//if(${role != 'PRODUCT MANAGER'})									
-						    	 if(${!SecurityUtils.subject.hasRole('PRODUCT MANAGER')})
+						    	 if(${!PricewellSecurity.hasRole('PRODUCT MANAGER')})
 						    	 {
 										refreshAllData(dataObject,portfolio_id,territory_id)
 						    	 }
@@ -379,7 +379,7 @@
 
 
 			<div id="dashboard">
-				<g:if test="${SecurityUtils.subject.hasRole('PORTFOLIO MANAGER')}">
+				<g:if test="${PricewellSecurity.hasRole('PORTFOLIO MANAGER')}">
 
 					<g:if test="${ serviceList?.size()>0}">
 						<button id="serviceExceptionBtn" title="Service Exception Report"
@@ -401,7 +401,7 @@
 				</g:if>
 
 				<g:elseif
-					test="${!SecurityUtils.subject.hasRole('SERVICE DESIGNER')}">
+					test="${!PricewellSecurity.hasRole('SERVICE DESIGNER')}">
 					<div class="chartNav">
 						<div class="leftDiv" style="float: left">Charts</div>
 						<g:set var="glbl_portfolios"
@@ -409,7 +409,7 @@
 						
 						<div style="text-align: right; font-weight: bold;">
 							<g:form name="filterChartsForm" class="filterChartsForm">
-								<g:if test="${!SecurityUtils.subject.hasRole('PRODUCT MANAGER')}">
+								<g:if test="${!PricewellSecurity.hasRole('PRODUCT MANAGER')}">
 								<b> Territory: </b>
 								<g:select name="glbl_terrotory_id"
 									from="${serviceSoldPerPortfolioMap['territory']}" value=""
@@ -474,7 +474,7 @@
 						value="${serviceSoldPerPortfolioMap['portfolio']}" />
 
 					<g:if
-						test="${SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') && portfolios?.size() > 0}">
+						test="${PricewellSecurity.hasRole('PORTFOLIO MANAGER') && portfolios?.size() > 0}">
 						<div class="twoRowChartDiv"
 							id="mainChartDivForServiceSoldPerPortfolio">
 
@@ -562,7 +562,7 @@
 						</div>
 					</g:if>
 					
-					<g:if test="${SecurityUtils.subject.hasRole('PRODUCT MANAGER')}">
+					<g:if test="${PricewellSecurity.hasRole('PRODUCT MANAGER')}">
 						<div class="mainChartDiv" id="mainChartDivForServiceDesignerAvgEstVarianceAndServicePipeling">
 							<div class="leftChartDiv">
 								<div class="chartBox oneRowChartBoxHeight">

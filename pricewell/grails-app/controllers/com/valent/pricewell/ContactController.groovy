@@ -1,5 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class ContactController {
 
@@ -18,13 +19,13 @@ class ContactController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
     def list = {
 		//def accountList = Account.findAll("FROM Account ac")
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def leadList = [], contactList = []
 		Set set = new HashSet()
 		Set set1 = new HashSet()
@@ -43,12 +44,12 @@ class ContactController {
 		def contacts
 		def accountList = []
 		def unAssignedList = [], assignedList = []
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			contacts = Contact.findAll("FROM Contact ct")
 			set.addAll(contacts)
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			
 			accountList = reviewService.findUserAccounts()
@@ -61,7 +62,7 @@ class ContactController {
 				}
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			accountList = reviewService.findUserAccounts()
 			for(Account ac : accountList)
@@ -75,7 +76,7 @@ class ContactController {
 		else
 		{
 			contacts = Contact.findAll("FROM Contact ct WHERE ct.assignTo.id=${user.id} OR ct.createdBy.id=${user.id}")
-			if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			if(PricewellSecurity.hasRole("SALES PERSON"))
 			{
 				for(Contact c in contacts)
 				{
@@ -179,9 +180,9 @@ class ContactController {
 		String queryString =  buildContactSearchQuery(params.searchFields)
 		def contactList = Contact.findAll(queryString)
 		List assignedList = new ArrayList(), unAssignedList = new ArrayList()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		List contacts = contactList
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			for(Contact c in contacts)
 			{
@@ -227,7 +228,7 @@ class ContactController {
 	}
 	
     def create = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
 		
@@ -348,7 +349,7 @@ class ContactController {
 		
 		contactInstance.billingAddress = billingAddress
 		println params
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		contactInstance.createdBy = user
 		contactInstance.assignTo = User.get(params.assignToId)
 		def map = [:]
@@ -385,14 +386,14 @@ class ContactController {
 	{
 		 boolean check = false
 	 
-		 if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		 if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		 {
 			 check = true
 		 }
 		 else
 		 {
-			 def user = User.get(new Long(SecurityUtils.subject.principal))
-			 if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			 def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+			 if(PricewellSecurity.hasRole("SALES PERSON"))
 			 {
 				 if(contactInstance?.assignTo?.id == user?.id)
 				 {
@@ -517,7 +518,7 @@ class ContactController {
 			contactInstance.properties["firstname", "lastname", "department", "email", "altEmail", "title", "fax"] = params
 			contactInstance.phone = params.phone
 			contactInstance.mobile = params.mobile
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			contactInstance.dateModified = new Date()
 			
 			

@@ -1,8 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Map;
-import org.apache.shiro.SecurityUtils
-
 class ImportService {
 
     static transactional = true
@@ -38,7 +38,7 @@ class ImportService {
 	public Service createService(Service serviceInstance, Map serviceProperties)
 	{
 		serviceInstance.serviceName = serviceProperties['serviceName']
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		serviceInstance.createdBy = serviceInstance.productManager = serviceInstance.modifiedBy = user
 		
 		serviceInstance.active = true
@@ -65,7 +65,7 @@ class ImportService {
 		else
 		{
 			def portfolioInstance = new Portfolio()
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			portfolioInstance.portfolioName = portfolioName
 			portfolioInstance.description = portfolioProperties['description']
 			portfolioInstance.stagingStatus = "Published"
@@ -116,7 +116,7 @@ class ImportService {
 		sProfile.reviewRequests = new ArrayList()
 		sProfile.rolesRequired = new ArrayList()
 		sProfile.stagingLogs = new ArrayList()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		sProfile.revision = profileProperties['revision']
 		sProfile.dateCreated = new Date()

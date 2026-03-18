@@ -1,6 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
-import org.apache.shiro.SecurityUtils
 class CommonSalesController {
 
 	def salesCatalogService
@@ -14,7 +15,7 @@ class CommonSalesController {
 		}
 		else
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		}
 		
 		List territoryList = salesCatalogService.findUserTerritories(user)

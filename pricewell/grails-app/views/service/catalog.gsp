@@ -1,7 +1,7 @@
 
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.Pricelist" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 
 <%
 	def baseurl = request.siteUrl
@@ -194,7 +194,7 @@
 			
 		</div>
 		
-    	<g:if test="${!SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && !SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') && !SecurityUtils.subject.hasRole('PRODUCT MANAGER') && !SecurityUtils.subject.hasRole('SERVICE DESIGNER') && (SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('SALES MANAGER') || SecurityUtils.subject.hasRole('SALES PERSON'))}">	
+    	<g:if test="${!PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && !PricewellSecurity.hasRole('PORTFOLIO MANAGER') && !PricewellSecurity.hasRole('PRODUCT MANAGER') && !PricewellSecurity.hasRole('SERVICE DESIGNER') && (PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('SALES MANAGER') || PricewellSecurity.hasRole('SALES PERSON'))}">	
 	    	<div class="body">
         </g:if>
         <g:else>
@@ -212,7 +212,7 @@
             <h1> ${title} </h1>
             <g:set var="serviceMode" value="published" scope="request"/>
             
-            <g:if test="${!SecurityUtils.subject.hasRole('GENERAL MANAGER') && !SecurityUtils.subject.hasRole('SALES PRESIDENT') && !SecurityUtils.subject.hasRole('SALES MANAGER') && !SecurityUtils.subject.hasRole('SALES PERSON')}">
+            <g:if test="${!PricewellSecurity.hasRole('GENERAL MANAGER') && !PricewellSecurity.hasRole('SALES PRESIDENT') && !PricewellSecurity.hasRole('SALES MANAGER') && !PricewellSecurity.hasRole('SALES PERSON')}">
             	<g:render template="searchService" model="['searchFields': searchFields]" />
             </g:if>
             
@@ -221,7 +221,7 @@
             </g:if>
             
             <div class="nav">
-            	<g:if test="${!SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR') && !SecurityUtils.subject.hasRole('PORTFOLIO MANAGER') && !SecurityUtils.subject.hasRole('PRODUCT MANAGER') && !SecurityUtils.subject.hasRole('SERVICE DESIGNER') && (SecurityUtils.subject.hasRole('GENERAL MANAGER') || SecurityUtils.subject.hasRole('SALES PRESIDENT') || SecurityUtils.subject.hasRole('SALES MANAGER') || SecurityUtils.subject.hasRole('SALES PERSON'))}">
+            	<g:if test="${!PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') && !PricewellSecurity.hasRole('PORTFOLIO MANAGER') && !PricewellSecurity.hasRole('PRODUCT MANAGER') && !PricewellSecurity.hasRole('SERVICE DESIGNER') && (PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('SALES MANAGER') || PricewellSecurity.hasRole('SALES PERSON'))}">
 				
 					<span><g:link class="buttons.button darkbutton" action="index" title="Refresh Catalog" >Refresh Catalog</g:link></span>
             	</g:if>
@@ -236,7 +236,7 @@
 
             			<!-- <span><g:link class="buttons.button button" action="importService" title="Import New Service" onclick="if(${portfolioList?.size()==0}){jAlert('${message(code:'newServicePortfolioNotAssign.message.alert')}', 'Create New Service Alert');return false;}">Import Service</g:link></span>-->
             			
-            			<g:if test="${SecurityUtils.subject.hasRole('SYSTEM ADMINISTRATOR')}">
+            			<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 					 		<span>
 								<!-- <input id="btnImport" type="button" title="Import Multiple Services" value="Import Service"  class="buttons.button button" class="menuButtonStyle "/> -->
 								<g:link class="buttons.button darkbutton" action="importFile" title="Import Multiple Services" >Import Service</g:link>

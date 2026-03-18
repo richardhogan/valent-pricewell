@@ -1,7 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
-import org.apache.shiro.SecurityUtils
 class SalesforceCredentialsController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -9,7 +10,7 @@ class SalesforceCredentialsController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -71,11 +72,11 @@ class SalesforceCredentialsController {
 	
 	public def generateFailureMessageForUser()
 	{
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			return "Salesforce Credentials not added. Please add it first by going to SETUP tab."
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			return "Salesforce Credentials not added. Please contact SYSTEM ADMINISTATOR or SALES PRESIDENT."
 		}
@@ -106,7 +107,7 @@ class SalesforceCredentialsController {
     def save = {
         def salesforceCredentialsInstance = new SalesforceCredentials(params)
 		
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		salesforceCredentialsInstance.createdBy = user
 		salesforceCredentialsInstance.modifiedBy = user
@@ -191,7 +192,7 @@ class SalesforceCredentialsController {
             }
             salesforceCredentialsInstance.properties = params
 			
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			
 			salesforceCredentialsInstance.modifiedBy = user
 			salesforceCredentialsInstance.modifiedDate = new Date()

@@ -1,6 +1,7 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
-import org.apache.shiro.SecurityUtils;
 
 
 import grails.converters.JSON
@@ -11,7 +12,7 @@ class ClarizenCredentialsController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	def index = {
@@ -55,7 +56,7 @@ class ClarizenCredentialsController {
 	def save = {
 		def clarizenCredentialsInstance = new ClarizenCredentials(params)
 		println "hello"+clarizenCredentialsInstance
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		clarizenCredentialsInstance.createdBy = user
 		clarizenCredentialsInstance.modifiedBy = user
@@ -138,7 +139,7 @@ class ClarizenCredentialsController {
 			}
 			clarizenCredentialsInstance.properties = params
 			
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			
 			clarizenCredentialsInstance.modifiedBy = user
 			clarizenCredentialsInstance.modifiedDate = new Date()

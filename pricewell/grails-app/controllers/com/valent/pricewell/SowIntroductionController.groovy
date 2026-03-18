@@ -1,8 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 import java.util.List;
-
-import org.apache.shiro.SecurityUtils
 
 class SowIntroductionController {
 
@@ -26,11 +26,11 @@ class SowIntroductionController {
 		{
 			def source = (params.source == "firstsetup")?"firstsetup":"setup"
 			render(template: "listsetup", model :[sowIntroductionInstanceList: SowIntroduction.list(), source: source, sowIntroductionInstanceTotal: SowIntroduction.count(),
-													createPermission: SecurityUtils.subject.isPermitted("sowIntroduction:create")])
+													createPermission: PricewellSecurity.isPermitted("sowIntroduction:create")])
 		}
 		else
         	[sowIntroductionInstanceList: SowIntroduction.list(), sowIntroductionInstanceTotal: SowIntroduction.count(),
-				createPermission: SecurityUtils.subject.isPermitted("sowIntroduction:create")]
+				createPermission: PricewellSecurity.isPermitted("sowIntroduction:create")]
     }
 	
 	def listsetup = {
@@ -152,13 +152,13 @@ class SowIntroductionController {
 			{
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
 				render(template: "showsetup", model: [sowIntroductionInstance: sowIntroductionInstance, source: source, relationSowIntroductionList: relationSowIntroductionList,
-														message: message, createPermission: SecurityUtils.subject.isPermitted("sowIntroduction:create"), 
-														updatePermission: SecurityUtils.subject.isPermitted("sowIntroduction:create")])
+														message: message, createPermission: PricewellSecurity.isPermitted("sowIntroduction:create"), 
+														updatePermission: PricewellSecurity.isPermitted("sowIntroduction:create")])
 			}
 			else
 				[sowIntroductionInstance: sowIntroductionInstance, relationSowIntroductionList: relationSowIntroductionList, message: message,
-					createPermission: SecurityUtils.subject.isPermitted("sowIntroduction:create"), 
-					updatePermission: SecurityUtils.subject.isPermitted("sowIntroduction:create")]
+					createPermission: PricewellSecurity.isPermitted("sowIntroduction:create"), 
+					updatePermission: PricewellSecurity.isPermitted("sowIntroduction:create")]
         }
     }
 	

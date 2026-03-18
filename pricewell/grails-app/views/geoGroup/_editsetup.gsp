@@ -1,7 +1,7 @@
 
 <%@ page import="com.valent.pricewell.Geo" %>
 <%@ page import="com.valent.pricewell.User" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.GeoGroup" %>
 <%@ page import="grails.plugins.nimble.core.Role" %>
 <%
@@ -246,7 +246,7 @@
 			                            <tr>
 								          	<td valign="top" class="name"><label for="generalManager">Assign General Manager</label></td>
 								          	<td valign="top">
-								          		<g:if test="${SecurityUtils.subject.hasRole('GENERAL MANAGER')}">
+								          		<g:if test="${PricewellSecurity.hasRole('GENERAL MANAGER')}">
 								          			<g:hiddenField name="generalManagerId" value="${generalManagerId}" />
 								          			<g:textField name="gemeralManager" value="${User.get(generalManagerId)}" readOnly="true" />
 								          		</g:if>

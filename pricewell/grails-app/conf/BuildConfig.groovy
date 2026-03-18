@@ -1,5 +1,6 @@
 grails.plugin.location.'pricewellDomain' = "../pricewellDomain"
-grails.plugin.location.'nimble' = "../nimble"
+// REMOVED: grails.plugin.location.'nimble' = "../nimble"
+// Replaced by Spring Security Core 1.2.7.3 — see compile dependency below.
 grails.plugin.location.'calendar' = "../calendar"
 grails.plugin.location.'connectwiseIntegration' = "../connectwiseIntegration"
 grails.plugin.location.'console' = "../console"
@@ -63,6 +64,11 @@ grails.project.dependency.resolution = {
 		compile "org.reflections:reflections:0.9.5-RC2"
 		compile 'hr.ngs.templater:templater:2.1.4'
 		test 'net.sourceforge.nekohtml:nekohtml:1.9.13'
+    }
+    plugins {
+        // Replaces the local nimble/ plugin (Apache Shiro-based).
+        // 1.2.7.3 is the final release on the 1.2.x branch targeting Grails 2.0.x.
+        compile ":spring-security-core:1.2.7.3"
     }
 }
 

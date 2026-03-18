@@ -1,5 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 class RelationDeliveryGeoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", addGeosForDeliveryRole: "POST", updateMultiple: "POST", editMultiple: "POST", deleteMultiple: "POST"]
@@ -7,7 +8,7 @@ class RelationDeliveryGeoController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -231,7 +232,7 @@ class RelationDeliveryGeoController {
             redirect(action: "list")
         }
         else {
-            [relationDeliveryGeoInstance: relationDeliveryGeoInstance, createPermission: SecurityUtils.subject.isPermitted("relationDeliveryGeo:create"), updatePermission: SecurityUtils.subject.isPermitted("relationDeliveryGeo:update")]
+            [relationDeliveryGeoInstance: relationDeliveryGeoInstance, createPermission: PricewellSecurity.isPermitted("relationDeliveryGeo:create"), updatePermission: PricewellSecurity.isPermitted("relationDeliveryGeo:update")]
         }
     }
 

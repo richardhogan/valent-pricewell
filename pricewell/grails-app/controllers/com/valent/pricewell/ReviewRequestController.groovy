@@ -1,12 +1,11 @@
 package com.valent.pricewell
-import grails.plugins.nimble.core.*
-
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class ReviewRequestController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	def sendMailService, userService
+	def sendMailService
 
 	def index = {
 
@@ -16,13 +15,13 @@ class ReviewRequestController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
 	def inbox = {
 
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def notificationList = Notification.listUserNotifications(user,null)
 		//println notificationList
@@ -65,7 +64,7 @@ class ReviewRequestController {
 	}
 
 	def myAssigned = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def requestsList = ReviewRequest.findAll("FROM ReviewRequest rq WHERE rq.serviceProfile != null ORDER BY dateModified DESC")
 		def reviewRequestList = []
 		for(ReviewRequest rq in requestsList)
@@ -82,7 +81,7 @@ class ReviewRequestController {
 	}
 
 	def mySubmitted = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def requestsList = ReviewRequest.findAll("FROM ReviewRequest rq WHERE rq.serviceProfile != null ORDER BY dateModified DESC")
 		def reviewRequestList = []
 		for(ReviewRequest rq in requestsList)
@@ -122,7 +121,7 @@ class ReviewRequestController {
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == new Long(SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
 			[reviewRequestInstance: reviewRequestInstance,submitterLoggedIn: submitterLoggedIn ]
 		}
 	}
@@ -133,7 +132,7 @@ class ReviewRequestController {
 		def reviewRequestInstance = new ReviewRequest()
 		reviewRequestInstance.properties = params
 		//println params.category +" "+ params.type
-		List userList = userService.filterUserList(User.list())
+		List userList = (User.list().findAll { it.username != 'superadmin' && it.username != 'user' })
 		return [reviewRequestInstance: reviewRequestInstance,serviceProfileId: serviceProfileId,userId: userId,category: params.category, type: params.type, userList: userList]
 
 	}
@@ -145,7 +144,7 @@ class ReviewRequestController {
 		def serviceProfile = ServiceProfile.get(serviceProfileId)
 		println serviceProfile
 		def reviewRequestInstance = new ReviewRequest()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		bindData(reviewRequestInstance, params, ['fromStage'])
 		//reviewRequestInstance.properties['assignees']  = params;
 		reviewRequestInstance.dateModified = new Date()
@@ -164,7 +163,7 @@ class ReviewRequestController {
 			println reviewRequestInstance
 			NotificationGenerator gen = new NotificationGenerator(g)
 			map = gen.notifyReviewRequestUpdate(reviewRequestInstance, NotificationGenerator.ReviewRequestUpdates.NEW,
-					User.get(new Long(SecurityUtils.subject.principal)))
+					PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceProfile.id)
 			println map
 			if(params.source == "inbox")
@@ -195,8 +194,8 @@ class ReviewRequestController {
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == new Long(SecurityUtils.subject.principal))
-			User user = User.get(new Long(SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =null
 			def listBtn ="yes"
 			if(reviewRequestInstance.serviceProfile!= null)
@@ -244,8 +243,8 @@ class ReviewRequestController {
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == new Long(SecurityUtils.subject.principal))
-			User user = User.get(new Long(SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =
 					new ServiceProfileSecurityProvider(reviewRequestInstance.serviceProfile, user)
 
@@ -264,8 +263,8 @@ class ReviewRequestController {
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == new Long(SecurityUtils.subject.principal))
-			User user = User.get(new Long(SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =
 					new ServiceProfileSecurityProvider(reviewRequestInstance.serviceProfile, user)
 			[reviewRequestInstance: reviewRequestInstance,submitterLoggedIn: submitterLoggedIn, commentAllowed: profileSecurity.isCommentAllowed(reviewRequestInstance), statusChangeAllowed: profileSecurity.isStatusChangedAllowed(reviewRequestInstance) ]
@@ -287,7 +286,7 @@ class ReviewRequestController {
 			Set tmpSet = new HashSet()
 			tmpSet = profileSecurity.listAuthorizedUsers()
 			List usersList = new ArrayList()
-			for(UserBase user : tmpSet.toList())
+			for(User user : tmpSet.toList())
 			{
 				if(user.username != "superadmin")
 				{

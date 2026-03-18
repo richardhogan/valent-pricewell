@@ -1,7 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 
-import org.apache.shiro.SecurityUtils
 import org.springframework.context.MessageSource
 
 import com.valent.pricewell.cw15.SalesforceOpportunityImportTimer
@@ -84,7 +85,7 @@ class SfimportService {
 		def totalImported = 0
 		for(Opportunity opp : importedOpportunities)
 		{
-			def user = User.findByUsername("admin")//get(new Long(SecurityUtils.subject.principal))
+			def user = User.findByUsername("admin")//get(PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
 			def map = sendSFToPricewellOpportunityImportNotification(messageSource, opp, user)//new NotificationGenerator(g).sendCWToPricewellOpportunityImportNotification(opp, user);
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], siteUrl+"/opportunity/show/"+opp.id)
 			totalImported++
@@ -134,7 +135,7 @@ class SfimportService {
 		}
 		else
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		}
 		
 		dataMap['credentials'] = getCredentials()

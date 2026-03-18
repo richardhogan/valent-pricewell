@@ -1,12 +1,12 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.apache.shiro.SecurityUtils
 
 import com.valent.pricewell.cw15.*
 
@@ -339,7 +339,7 @@ class ConnectwiseCatalogService {
 	public void addContactsInAccount(Account account, List <ContactFindResult>companyContacts)
 	{
 		//println "contact count : "+companyContacts.size()
-		def user = User.findByUsername("admin")//User.get(new Long(SecurityUtils.subject.principal))
+		def user = User.findByUsername("admin")//PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		CWContactToContactMapper contactMapper = new CWContactToContactMapper();
 		for(ContactFindResult contact : companyContacts)
 		{
@@ -408,7 +408,7 @@ class ConnectwiseCatalogService {
 	
 	public Account putAccountData(Account account)
 	{
-		def user = User.findByUsername("admin")//User.get(new Long(SecurityUtils.subject.principal))
+		def user = User.findByUsername("admin")//PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		account.shippingAddress = new ShippingAddress().save()
 		account.dateCreated = new Date()
 		account.dateModified = new Date()
@@ -638,7 +638,7 @@ class ConnectwiseCatalogService {
 	
 	public void saveTimestampForServiceTicket(Date fromDate, Date toDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		TimeStampSaverObject timeStamp = TimeStampSaverObject.findByObjectName("serviceTicket")
 		if(timeStamp != null)
 		{
@@ -739,7 +739,7 @@ class ConnectwiseCatalogService {
 	
 	public void updateServiceQuotationTicket(Ticket ticket)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		ServiceQuotationTicket sqTicket = ServiceQuotationTicket.findByTicketId(ticket.srServiceRecID)//findBySummary(ticket.summary)
 		if(sqTicket)

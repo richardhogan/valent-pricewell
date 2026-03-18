@@ -1,9 +1,9 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import java.util.List;
 
 import grails.converters.JSON
-import org.apache.shiro.SecurityUtils
-
 class GeoGroupController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -15,7 +15,7 @@ class GeoGroupController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -37,25 +37,25 @@ class GeoGroupController {
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def geoGroupInstanceList = new ArrayList()
-		if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			if(user?.geoGroup != null)
 			{
 				geoGroupInstanceList.add(user?.geoGroup)
 			}
 		}
-		else if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		else if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			geoGroupInstanceList = GeoGroup.list(params)
 		}
 		if(params.source == "setup" || params.source == "firstsetup")
 		{
 			def source = (params.source == "firstsetup")?"firstsetup":"setup"
-			render(template: "listsetup", model :[geoGroupInstanceList: geoGroupInstanceList, geoGroupInstanceTotal: geoGroupInstanceList.size(), source: source, allowCreate: isPermitted("create"), allowEdit: isPermitted("edit"), allowDelete: isPermitted("delete"), allowShow: isPermitted("show")])//SecurityUtils.subject.isPermitted("geoGroup:create")]
+			render(template: "listsetup", model :[geoGroupInstanceList: geoGroupInstanceList, geoGroupInstanceTotal: geoGroupInstanceList.size(), source: source, allowCreate: isPermitted("create"), allowEdit: isPermitted("edit"), allowDelete: isPermitted("delete"), allowShow: isPermitted("show")])//PricewellSecurity.isPermitted("geoGroup:create")]
 		}
 		else
-        	[geoGroupInstanceList: geoGroupInstanceList, geoGroupInstanceTotal: geoGroupInstanceList.size(), createPermission: isPermitted("create")]//SecurityUtils.subject.isPermitted("geoGroup:create")]
+        	[geoGroupInstanceList: geoGroupInstanceList, geoGroupInstanceTotal: geoGroupInstanceList.size(), createPermission: isPermitted("create")]//PricewellSecurity.isPermitted("geoGroup:create")]
     }
 	
 
@@ -219,7 +219,7 @@ class GeoGroupController {
             redirect(action: "list")
         }
         else {
-            [geoGroupInstance: geoGroupInstance, createPermission: isPermitted("create")]//SecurityUtils.subject.isPermitted("geoGroup:create")]
+            [geoGroupInstance: geoGroupInstance, createPermission: isPermitted("create")]//PricewellSecurity.isPermitted("geoGroup:create")]
         }
     }
 	
@@ -496,13 +496,13 @@ class GeoGroupController {
 	boolean isPermitted(String action)
 	{
 		boolean permit = false
-		if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		{
 			permit = true
 		}
 		else
 		{
-			if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+			if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 			{
 				if(action == "show" || action == "edit")
 					{permit = true}

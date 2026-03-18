@@ -1,6 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
-
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import com.valent.pricewell.util.PricewellUtils;
 
 import grails.converters.JSON
@@ -16,7 +16,7 @@ class ChartsController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
@@ -429,8 +429,8 @@ class ChartsController {
 	{
 		Date endDate = null
 		Map quoteTypesMap = [:]
-				PricewellUtils.Println("In deal status Chart"+SecurityUtils.subject.principal)  
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+				PricewellUtils.Println("In deal status Chart"+PricewellSecurity.principalId  // was: SecurityUtils.subject.principal)  
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = dateFormat.parse(params.start);
 		
@@ -463,7 +463,7 @@ class ChartsController {
 		}
 		
 		Map quotaData = [:]
-		if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 			{quotaData = opportunityService.getQuotaAssignedVsQuotaAchivement(dateMap, territoryInstance)}
 			
 		if(quotaData['Greater'] != "" && quotaData['Greater'] != null)
@@ -494,7 +494,7 @@ class ChartsController {
 		}
 		
 		Map quotaData = [:]
-		if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER") || SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
 			{	quotaData = opportunityService.getQuotaAssignedVsQuotaAchivement(dateMap, territoryInstance)
 				//PricewellUtils.Println("Charts Controller", "Lol"+quotaData['Percent']+"SAd"+ quotaData['Achieved'] + "Hello")
 				
@@ -527,7 +527,7 @@ class ChartsController {
 		}
 				
 		Map quotaPerPersons = [:]
-			if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER"))
+			if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER"))
 				{quotaPerPersons = opportunityService.getQuotaAssignedVsQuotaAchivementPerPersons(dateMap, territoryInstance)}
 			
 		render(view: "/reports/quotaAssignedVsQuotaAchivementPerPerson", model: [quotaPerPersons: quotaPerPersons])
@@ -545,7 +545,7 @@ class ChartsController {
 		}
 				
 		Map quotaPerPersons = [:]
-			if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("GENERAL MANAGER") || SecurityUtils.subject.hasRole("SALES MANAGER"))
+			if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER"))
 				{quotaPerPersons = opportunityService.getQuotaAssignedVsQuotaAchivementPerPersons(dateMap, territoryInstance)}
 			
 		render(view: "/reports/quotaAssignedVsQuotaAchivementPerPerson", model: [quotaPerPersons: quotaPerPersons])

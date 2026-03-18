@@ -1,9 +1,7 @@
 package com.valent.pricewell
 import java.util.List;
 
-import grails.plugins.nimble.core.Role;
-import grails.plugins.nimble.core.UserBase
-import org.apache.shiro.SecurityUtils;
+import com.valent.pricewell.PricewellSecurity
 
 class NotificationGenerator 
 {
@@ -179,7 +177,7 @@ class NotificationGenerator
 	public List findUsersByRole(String roleName)
 	{
 		List tmpList = new ArrayList()
-		for(UserBase user in Role.findByCode(roleName)?.users)//User user in Role.findByCode(roleName)?.users)
+		for(User user in UserRole.findAllByRole(Role.findByCode(roleName)).collect { it.user })//User user in Role.findByCode(roleName) via UserRole
 		{
 			tmpList.add(User.get(user.id))
 		}
@@ -359,7 +357,7 @@ class NotificationGenerator
 	
 	def acceptDiscountNotification(Quotation quotationInstance, List userList)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		def message = "Notification for more discount is accepted by ${user} for customer ${quotationInstance.account.accountName}."
 		def subject = "Discount Notification"
 		for(User receiver : userList)
@@ -388,7 +386,7 @@ class NotificationGenerator
 	
 	def rejectDiscountNotification(Quotation quotationInstance, List userList)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		def message = "Notification for more discount is accepted by ${user} for customer ${quotationInstance.account.accountName}."
 		def subject = "Discount Notification"
 		
@@ -441,7 +439,7 @@ class NotificationGenerator
 	
 	def sendRequestToDefineRateCostForTerritories(DeliveryRole deliveryRoleInstance, Service serviceInstance, List territoryList)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		def note = new Notification()
 		note.objectType = "Delivery Role"
 		note.objectId = deliveryRoleInstance.id
@@ -606,7 +604,7 @@ class NotificationGenerator
 	}
 	def sendMoveServiceNotificationToOldPortfolioManager(ServiceProfile serviceProfile, Portfolio oldPortfolio)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		def note = new Notification()
 		note.objectType = "ServiceProfile"
 		note.objectId = serviceProfile.id
@@ -630,7 +628,7 @@ class NotificationGenerator
 	
 	def sendMoveServiceNotificationToNewPortfolioManager(ServiceProfile serviceProfile, Portfolio oldPortfolio)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser
 		def note2 = new Notification()
 		note2.objectType = "ServiceProfile"
 		note2.objectId = serviceProfile.id

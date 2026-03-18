@@ -1,6 +1,6 @@
 package com.valent.pricewell
-
-import org.apache.shiro.SecurityUtils
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 class ReviewCommentController {
 	
@@ -11,7 +11,7 @@ class ReviewCommentController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -28,7 +28,7 @@ class ReviewCommentController {
 		if(params.id)
 		{
 			def reviewRequest = ReviewRequest.get(params.id)
-			User user = User.get(new Long(SecurityUtils.subject.principal))
+			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			if(reviewRequest.serviceProfile!= null)
 			{
 				ServiceProfileSecurityProvider profileSecurity =
@@ -57,7 +57,7 @@ class ReviewCommentController {
 		def reviewCommentInstance = new ReviewComment()
 		reviewCommentInstance.properties = params
 		def reviewRequest = ReviewRequest.get(params.id)
-		User user = User.get(new Long(SecurityUtils.subject.principal))
+		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		if(reviewRequest.serviceProfile!= null)
 		{
 			ServiceProfileSecurityProvider profileSecurity =
@@ -84,7 +84,7 @@ class ReviewCommentController {
 		flash.message = "";
 		def map = [:]
 		def reviewCommentInstance = new ReviewComment()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		reviewCommentInstance.submitter = user
 		reviewCommentInstance.dateModified = new Date()
 		reviewCommentInstance.dateCreated = new Date()
@@ -139,7 +139,7 @@ class ReviewCommentController {
 		if(reviewRequest.save(flush:true) && reviewRequest.serviceProfile!=null)
 		{
 			NotificationGenerator gen = new NotificationGenerator(g)
-			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, User.get(new Long(SecurityUtils.subject.principal)))
+			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+reviewRequest.serviceProfile.id)
 			
 			res = "success"
@@ -166,7 +166,7 @@ class ReviewCommentController {
 		flash.message = "";
 		def map = [:]
 		def reviewCommentInstance = new ReviewComment()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		reviewCommentInstance.submitter = user
 		reviewCommentInstance.dateModified = new Date()
 		reviewCommentInstance.dateCreated = new Date()
@@ -188,7 +188,7 @@ class ReviewCommentController {
 		{
 		
 			NotificationGenerator gen = new NotificationGenerator(g)
-			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, User.get(new Long(SecurityUtils.subject.principal)))
+			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"])
 			
 			

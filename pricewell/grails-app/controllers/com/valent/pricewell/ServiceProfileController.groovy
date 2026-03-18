@@ -1,6 +1,6 @@
 package com.valent.pricewell
-import org.apache.shiro.SecurityUtils
-
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 class ServiceProfileController {
 	
 	def quotationService 
@@ -11,7 +11,7 @@ class ServiceProfileController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	

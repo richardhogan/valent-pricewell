@@ -1,4 +1,4 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
 %>
@@ -211,7 +211,7 @@
                                     <label for="assignTo"><g:message code="account.assignto.label" default="Assign To" /></label><em>*</em>
                                 </td>
                                 <td valign="top" class="value">
-                                    <g:select name="assignToId" from="${com.valent.pricewell.User.list()}" value="${SecurityUtils.subject.principal}" optionKey="id"/>
+                                    <g:select name="assignToId" from="${com.valent.pricewell.User.list()}" value="${PricewellSecurity.principalId}" optionKey="id"/>
                                     <b>Or Create <button id="newAccount">New Account</button></b>
                                 </td>                              
                             </tr>

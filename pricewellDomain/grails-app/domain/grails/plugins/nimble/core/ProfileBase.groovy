@@ -16,7 +16,6 @@
  */
 package grails.plugins.nimble.core
 
-import org.apache.shiro.crypto.hash.Md5Hash
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
@@ -47,11 +46,8 @@ class ProfileBase {
     }
 
     def hashEmail = {
-        // Do MD5 hash of email for Gravatar
-        if(email) {
-            def hasher = new Md5Hash(email)
-            emailHash = hasher.toHex()
-        }
+        // MD5 email hashing (Gravatar) removed — Md5Hash was Apache Shiro, which is no longer a dependency.
+        // emailHash field kept for DB schema compatibility only.
     }
     
     static belongsTo = [owner:UserBase]

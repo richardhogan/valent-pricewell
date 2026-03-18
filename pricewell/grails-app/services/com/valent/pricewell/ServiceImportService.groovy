@@ -1,8 +1,8 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Map;
-import org.apache.shiro.SecurityUtils
-
 class ServiceImportService {
 
 	static transactional = true
@@ -205,7 +205,7 @@ class ServiceImportService {
 			serviceInstance.properties['serviceName', 'skuName', 'tags'] = serviceProperties //'description',
 			serviceInstance.serviceDescription = new Description(name: "Service Description: "+serviceProperties['serviceName'], value: serviceProperties['description']).save() 
 			//serviceInstance.serviceName = serviceProperties['serviceName']
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			serviceInstance.createdBy = serviceInstance.modifiedBy = user
 			
 			serviceInstance.active = true
@@ -237,7 +237,7 @@ class ServiceImportService {
 		else
 		{
 			def portfolioInstance = new Portfolio()
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			portfolioInstance.portfolioName = portfolioName
 			portfolioInstance.description = portfolioProperties['description']
 			portfolioInstance.stagingStatus = "Published"
@@ -399,7 +399,7 @@ class ServiceImportService {
 		sProfile.rolesRequired = new ArrayList()
 		sProfile.defs = new ArrayList()
 		sProfile.stagingLogs = new ArrayList()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		sProfile.properties['unitOfSale', 'baseUnits', 'premiumPercent', 'definition']	= profileProperties
 						

@@ -159,13 +159,15 @@ app.version=0.1
 `BuildConfig.groovy` declares the sibling directories as inline plugins:
 
 ```groovy
-grails.plugin.location.'pricewell-domain' = "../pricewellDomain"
-grails.plugin.location.'nimble'           = "../nimble"
-grails.plugin.location.'connectwiseIntegration' = "../connectwiseIntegration"
+grails.plugin.location.'pricewell-domain'        = "../pricewellDomain"
+grails.plugin.location.'connectwiseIntegration'  = "../connectwiseIntegration"
 // ...
 ```
 
 All plugin directories must be present at build time. Do not move or rename sibling directories.
+
+> **Note:** The `nimble` local plugin has been removed. Authentication is now handled by
+> the `spring-security-core:1.2.7.3` plugin declared in `BuildConfig.groovy` via Maven Central.
 
 ---
 
@@ -238,6 +240,10 @@ Connection pool keepalive:
   ```groovy
   file name:'file', file:'/var/log/pricewell/mylog.log'
   ```
+- Spring Security block (`grails.plugins.springsecurity.*`) — controls login URL (`/auth/login`),
+  password encoding (BCrypt), and the `interceptUrlMap` URL access rules. Edit this block to
+  add or restrict URL-level access control. Do not remove the `IS_AUTHENTICATED_REMEMBERED`
+  catch-all at the bottom of the map.
 
 ### `WebXmlConfig.groovy`
 Session timeout is set to **480 minutes** (8 hours). Adjust as needed:
@@ -245,21 +251,8 @@ Session timeout is set to **480 minutes** (8 hours). Adjust as needed:
 webxml { sessionConfig.sessionTimeout = 480 }
 ```
 
-### `NimbleConfig.groovy`
-Authentication provider settings. For email notifications to work, update the SMTP block:
-```groovy
-nimble {
-    messaging {
-        mail {
-            from = "notifications@your-domain.com"
-            host = "your.smtp.host"
-            port = 587         // or 465 for SSL
-            username = "your-smtp-user"
-            password = "your-smtp-password"
-        }
-    }
-}
-```
+> **Removed:** `NimbleConfig.groovy` is no longer used. The SMTP block it contained for email
+> notifications has been superseded by `web-app/props/email.properties` (used by `SendMailService`).
 
 ### `web-app/props/email.properties`
 A second SMTP configuration used by `SendMailService`. Update before deployment:
@@ -278,10 +271,12 @@ from=notifications@your-domain.com
 
 On every startup, `BootStrap.groovy` automatically:
 
-1. Initialises roles: `SYSTEM ADMINISTRATOR`, `PORTFOLIO MANAGER`, `PRODUCT MANAGER`,
-   `SERVICE DESIGNER`, `SALES PERSON`, `SALES MANAGER`, `GENERAL MANAGER`, `SALES PRESIDENT`,
-   `DELIVERY ROLE MANAGER`
-2. Verifies and repairs role permissions
+1. Initialises roles (idempotent — skipped if the bootstrap revision is already recorded):
+   `ROLE_SYSTEM_ADMINISTRATOR`, `ROLE_PORTFOLIO_MANAGER`, `ROLE_PRODUCT_MANAGER`,
+   `ROLE_SERVICE_DESIGNER`, `ROLE_SALES_PERSON`, `ROLE_SALES_MANAGER`, `ROLE_GENERAL_MANAGER`,
+   `ROLE_SALES_PRESIDENT`, `ROLE_DELIVERY_ROLE_MANAGER`
+2. Creates default users (`admin`, `superadmin`, `nobody`) if they do not exist, with BCrypt-hashed
+   passwords, via `UserManagementService`
 3. Populates workflow stages for Services, Quotations, Opportunities, Leads, and Service Quotations
 4. Adds default settings, deliverable types, activity types, SOW milestone types
 5. Runs a series of data-migration fixups (idempotent — safe to run repeatedly)
@@ -295,7 +290,11 @@ Bootstrap runs synchronously during Tomcat startup. On a large existing database
 
 ## 9. First-Time Setup (After First Boot)
 
-Login at `http://<host>:8080/pricewell/` with the default administrator account:
+Navigate to the login page and sign in with the default administrator account:
+
+```
+http://<host>:8080/pricewell/auth/login
+```
 
 ```
 Username: admin
@@ -437,14 +436,19 @@ When deploying the WAR to Tomcat, pass `-Dgrails.env=production` via `CATALINA_O
 ## 15. Security Notes
 
 - Default admin password (`admiN123!`) **must be changed** immediately after first login.
-- SMTP credentials in `NimbleConfig.groovy` and `email.properties` are stored in plaintext.
+- SMTP credentials in `email.properties` are stored in plaintext.
   Move them to external properties or environment variables before deploying to production.
 - Production database credentials in `DataSource.groovy` (`usr`/`sa`) are default placeholders.
   Change both the username and password, and restrict MySQL grants to `localhost` only.
 - The `console/` plugin provides a live Groovy REPL. Ensure it is excluded from production builds
   or protected behind a firewall rule — it grants arbitrary code execution on the server.
-- All controllers require authentication (enforced by `NimbleSecurityFilters.groovy`).
-  Passwords are hashed with SHA-256 by the Nimble plugin.
+- Authentication is handled by **Spring Security Core 1.2.7.3**. URL access rules are defined
+  in the `interceptUrlMap` block in `Config.groovy`. All controllers require authentication
+  (`IS_AUTHENTICATED_REMEMBERED`) unless explicitly listed as anonymous.
+- Passwords are hashed with **BCrypt** (via Spring Security's `springSecurityService.encodePassword()`).
+  New users created through the UI or `UserManagementService` automatically receive BCrypt hashes.
+- **Existing database users** (pre-migration from SHA-256) will have their passwords rejected on
+  first login. Use the admin UI (`/userSetup`) to reset their passwords after deploying.
 
 ---
 
@@ -458,5 +462,7 @@ When deploying the WAR to Tomcat, pass `-Dgrails.env=production` via `CATALINA_O
 | `OutOfMemoryError: PermGen` | Default JVM too small for Grails 2 | Add `-XX:MaxPermSize=256m` to `CATALINA_OPTS` |
 | SOW generation fails with `FileNotFoundException` | `SOWFiles/` path not found | Verify Tomcat's working directory contains `SOWFiles/` or use an absolute path in `GenerateSOWService` |
 | Uploads fail silently | `uploadedFiles/` not writable | `chown tomcat:tomcat /var/pricewell/uploadedFiles` |
-| Emails not sent | SMTP config wrong | Check `web-app/props/email.properties` and `NimbleConfig.groovy` SMTP block |
+| Emails not sent | SMTP config wrong | Check `web-app/props/email.properties` SMTP block |
+| Login page shows 404 | Auth URL mapping missing | Verify `/auth/login` mapping in `UrlMappings.groovy`; access via `/pricewell/auth/login` |
+| Existing user can't log in after migration | SHA-256 password hash incompatible with BCrypt | Reset password via admin UI at `/userSetup` |
 | Session expires immediately | Session timeout misconfigured | Check `WebXmlConfig.groovy` — default is 480 minutes |

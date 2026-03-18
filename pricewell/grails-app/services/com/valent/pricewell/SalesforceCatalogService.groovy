@@ -1,9 +1,9 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.util.Date;
 import java.util.Map;
-import org.apache.shiro.SecurityUtils
-
 class SalesforceCatalogService {
 
     static transactional = true
@@ -48,7 +48,7 @@ class SalesforceCatalogService {
 		}
 		else
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		}
 		
 		UpdateRecord importOpportunity = new UpdateRecord()

@@ -1,11 +1,10 @@
 package com.valent.pricewell
-import grails.plugins.nimble.core.Role
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.text.DateFormatSymbols
 import java.util.Date
 import java.util.TreeMap
-
-import org.apache.shiro.SecurityUtils
 
 class ReviewService {
 
@@ -29,7 +28,7 @@ class ReviewService {
 	public def quarterlyTotalSalesByUser()
 	{
 		def categories = [], data = []
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityList = new ArrayList(), quotationList = new ArrayList()
 		def tmpList = opportunityService.retrieveOpportunityList("closedWon", [:]), tmpList2 = opportunityService.retrieveOpportunityList("pending", [:])
 		opportunityList.addAll(tmpList); opportunityList.addAll(tmpList2)
@@ -123,7 +122,7 @@ class ReviewService {
 	
 	public def generateSalesTotalUnitsByServiceMap(Date fromDate, Date toDate) 
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -199,7 +198,7 @@ class ReviewService {
 	}
 
 	public def generateProductsSoldByServiceMap(Date fromDate, Date toDate) {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		//Service[] services1 = Service.listPublished(user)
 		
@@ -330,7 +329,7 @@ class ReviewService {
 
 	public def generateSalesSoldByServicesMap(Date fromDate, Date toDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def serviceList = Service.listPublished(user)
 		def tmpMap = [:]
@@ -400,7 +399,7 @@ class ReviewService {
 
 	public Map countVSOEDiscounting(Date startDate, Date endDate)
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = []
 		float greater15 = 0//for % greater then +15
 		float less_15 = 0 // for % less then -15
@@ -502,7 +501,7 @@ class ReviewService {
 
 	public def buildChartDataForQuotesPendingDays()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def tmpTypes = [
 			"LEAD",
 			"OPPORTUNITY",
@@ -943,7 +942,7 @@ class ReviewService {
 
 		for(User user in User.list())
 		{
-			def userRoles = user.roles.code
+			def userRoles = UserRole.findAllByUser(user)*.role.code
 
 			for(roleCode in userRoles)
 			{
@@ -999,7 +998,7 @@ class ReviewService {
 	{
 		Set serviceDesignerList = new HashSet(), list1 = new HashSet()
 		
-		def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+		def loginUser = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def serviceList = ServiceProfile.findAll("FROM ServiceProfile sp WHERE sp.service.productManager.id = :uid", [uid: loginUser.id])
 		for(ServiceProfile sp : serviceList)
 		{
@@ -1032,7 +1031,7 @@ class ReviewService {
 	public def findEstimateVarianceForPMs()
 	{
 		Set productManagerIdList = new HashSet()
-		def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+		def loginUser = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def serviceList = ServiceProfile.findAll("FROM ServiceProfile sp WHERE sp.service.portfolio.portfolioManager.id = :uid", [uid: loginUser.id])
 		for(ServiceProfile sp : serviceList)
 		{
@@ -1350,16 +1349,16 @@ class ReviewService {
 
 	public def findUserAccounts()
 	{
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def accountList = [], tempList = []
 		def usersList = []
 		Set users = new HashSet(); Set accounts = new HashSet()
 
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			usersList.add(user)
 		}
-		else if(SecurityUtils.subject.hasRole("SALES MANAGER"))
+		else if(PricewellSecurity.hasRole("SALES MANAGER"))
 		{
 			for(Object territory in user?.territories)
 			{
@@ -1368,7 +1367,7 @@ class ReviewService {
 			usersList.addAll(users.toList())
 			usersList.add(user)
 		}
-		else if(SecurityUtils.subject.hasRole("GENERAL MANAGER"))
+		else if(PricewellSecurity.hasRole("GENERAL MANAGER"))
 		{
 			for(Object territory in user?.geoGroup?.geos)
 			{
@@ -1378,7 +1377,7 @@ class ReviewService {
 			usersList.add(user)
 		}
 
-		if(SecurityUtils.subject.hasRole("SALES PRESIDENT") || SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR"))
+		if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
 			accountList = Account.findAll("FROM Account ac")
 		}

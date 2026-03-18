@@ -1,11 +1,12 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 import java.awt.image.BufferedImage
 import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.ImageOutputStream
 import javax.imageio.ImageIO;
 
-import org.apache.shiro.SecurityUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
@@ -26,7 +27,7 @@ class AccountController {
 	def beforeInterceptor = [action:this.&debug]
 	
 	def debug() {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
@@ -43,8 +44,8 @@ class AccountController {
 		
 		def unAssignedList = [], assignedList = []
 		accountList = reviewService.findUserAccounts()
-		def user = User.get(new Long(SecurityUtils.subject.principal))
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			for(Account ac in accountList)
 			{
@@ -64,7 +65,7 @@ class AccountController {
     }
 
     def create = {
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//if(user.country != null && user.country != "null" && user.country != "NULL")// && user.primaryTerritory != null && user.primaryTerritory != "null" && user.primaryTerritory != "NULL")
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -170,8 +171,8 @@ class AccountController {
 		def accountList = Account.findAll(queryString)
 		
 		def unAssignedList = [], assignedList = []
-		def user = User.get(new Long(SecurityUtils.subject.principal))
-		if(SecurityUtils.subject.hasRole("SALES PERSON"))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+		if(PricewellSecurity.hasRole("SALES PERSON"))
 		{
 			for(Account ac in accountList)
 			{
@@ -244,7 +245,7 @@ class AccountController {
 	public boolean saveAccount(Object params)
 	{
 		Account accountInstance = new Account(shippingAddress: new ShippingAddress().save(), billingAddress: new BillingAddress().save())
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if(params.website != null && params.website != "")
 		{
@@ -426,14 +427,14 @@ class AccountController {
 	{
 		 boolean check = false
 	 
-		 if(SecurityUtils.subject.hasRole("SYSTEM ADMINISTRATOR") || SecurityUtils.subject.hasRole("SALES PRESIDENT"))
+		 if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT"))
 		 {
 			 check = true
 		 }
 		 else
 		 {
-			 def user = User.get(new Long(SecurityUtils.subject.principal))
-			 if(SecurityUtils.subject.hasRole("SALES PERSON"))
+			 def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
+			 if(PricewellSecurity.hasRole("SALES PERSON"))
 			 {
 				 if(accountInstance?.assignTo?.id == user?.id)
 				 {
@@ -568,7 +569,7 @@ class AccountController {
 			}
 			
 			accountInstance.properties['accountName','website','phone','fax','email','createdBy','dateCreated'] = params
-			def user = User.get(new Long(SecurityUtils.subject.principal))
+			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			accountInstance.modifiedBy = user
 			def previousAssignedUserId = accountInstance.assignTo.id
 			accountInstance.assignTo = User.get(params.accountAssignToId)

@@ -1,4 +1,6 @@
 package com.valent.pricewell
+// MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
+import com.valent.pricewell.PricewellSecurity
 
 import java.text.DateFormat
 import org.springframework.context.MessageSource
@@ -13,8 +15,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest
 import javax.xml.datatype.XMLGregorianCalendar
 import java.net.MalformedURLException;
-import org.apache.shiro.SecurityUtils
-
 import com.valent.pricewell.cw15.*
 
 import cw.ContactFindResult
@@ -115,7 +115,7 @@ class CwimportService {
 		def totalImported = 0
 		for(Opportunity opp : importedOpportunities)
 		{
-			def user = User.findByUsername("admin")//get(new Long(SecurityUtils.subject.principal))
+			def user = User.findByUsername("admin")//get(PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
 			def map = sendCWToPricewellOpportunityImportNotification(messageSource, opp, user)//new NotificationGenerator(g).sendCWToPricewellOpportunityImportNotification(opp, user);
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], siteUrl+"/opportunity/show/"+opp.id)
 			totalImported++
@@ -166,7 +166,7 @@ class CwimportService {
 		}
 		else
 		{
-			user = User.get(new Long(SecurityUtils.subject.principal))	
+			user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))	
 		}
 		
 		
@@ -564,7 +564,7 @@ class CwimportService {
 		Account accountInstance = Account.get(opportunity.account.id)
 		Contact contactInstance = Contact.get(opportunity.primaryContact.id) 
 		int count = 0
-		def user = User.get(new Long(SecurityUtils.subject.principal))
+		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		for(ServiceQuotation sq : quotation.serviceQuotations)
 		{
 			ServiceProfile sp = ServiceProfile.get(sq.profile.id)

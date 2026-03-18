@@ -1,11 +1,11 @@
 <%@ page import="com.valent.pricewell.Lead" %>
-<%@ page import="org.apache.shiro.SecurityUtils"%>
+<%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.SalesController" %>
 
 <%
 	def baseurl = request.siteUrl
-	def loginUser = User.get(new Long(SecurityUtils.subject.principal))
+	def loginUser = PricewellSecurity.currentUser
 	
 %>
     <head>
