@@ -2,7 +2,7 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<r:script>
+<asset:script>
    
     jQuery(document).ready(function(){
     		
@@ -57,7 +57,7 @@
           
      
 		});
-</r:script>
+</asset:script>
 
 	<g:if test="${serviceProfileInstance?.id != null}">
 		<g:each in="${stagingInstanceList}" status="i" var="stage">

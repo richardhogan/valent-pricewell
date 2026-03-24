@@ -87,7 +87,7 @@
 	            <span><g:link action="list" title="List Of Accounts" class="buttons.button button"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
 	            <span><g:link action="create" title="Create Account" class="buttons.button button"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
 	       		<g:if test="${updatePermission}">	
-                	<span><button type="submit" class="buttons.button button" title="Edit Account" > <r:img dir="images" file="edit-24.png"/>  </button></span>      
+                	<span><button type="submit" class="buttons.button button" title="Edit Account" > <asset:image dir="images" file="edit-24.png"/>  </button></span>      
            		</g:if>
            	</g:form>
         </div>

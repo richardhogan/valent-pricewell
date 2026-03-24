@@ -3,7 +3,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<r:script>
+<asset:script>
    
     jQuery(document).ready(function(){
         	
@@ -58,7 +58,7 @@
           
      
 	});
-</r:script>
+</asset:script>
 
 <div id="wizard" class="swMain">
   			<ul>

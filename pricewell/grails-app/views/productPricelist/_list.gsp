@@ -115,8 +115,8 @@
                         
                             <td>${fieldValue(bean: productPricelistInstance, field: "unitPrice")}</td>
                         	
-							<td> <button class="editPricelist" title="Edit Price List" id="${productPricelistInstance?.id}"> <r:img dir="images" file="edit-24.png"/>  </button> </td>
-							<td> <button class="deletePricelist" title="Delete Price List" id="${productPricelistInstance?.id}"> <r:img dir="images" file="delete-24.png"/> </button> </td>
+							<td> <button class="editPricelist" title="Edit Price List" id="${productPricelistInstance?.id}"> <asset:image dir="images" file="edit-24.png"/>  </button> </td>
+							<td> <button class="deletePricelist" title="Delete Price List" id="${productPricelistInstance?.id}"> <asset:image dir="images" file="delete-24.png"/> </button> </td>
                         </tr>
                     </g:each>
                     </tbody>

@@ -48,19 +48,19 @@
 		<td align="true" width=20%>
 			<font color="#ffffff">
 			<g:if test="${navigation}">
-				<n:isLoggedIn>
+				
 					<div id="userops">
-						 <n:principalName /> | <g:link controller="auth" action="logout" class=""><g:message code="nimble.link.logout.basic" /></g:link>
+						 <sec:username/> | <g:link controller="auth" action="logout" class=""><g:message code="nimble.link.logout.basic" /></g:link>
 					</div>
-				</n:isLoggedIn>
+				
 			</g:if>
 			</font>
 	</td></tr>
 	</table>
 	<g:if test="${navigation}">
-		<n:isLoggedIn>
+		
 			<g:render template="/layouts/new_navigation"/>
 			<hr>
-		</n:isLoggedIn>
+		
 	</g:if>
 </div>

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@ page import="NimbleTagLib" %>
 <%@ page import="com.valent.pricewell.PricewellSecurity"%>
 
 <%
@@ -12,8 +11,9 @@
                          
         <link rel="shortcut icon" href="${baseurl}/images/valentlogo.png" type="image/x-icon" />
               
-         <r:require module="coreui"/>
-         <r:layoutResources/>
+         
+         <asset:javascript src="application.js"/>
+         <asset:stylesheet href="application.css"/>
          
          <script type="text/javascript">
 			jQuery.noConflict();
@@ -76,7 +76,7 @@
     </head>
     <body>
         
-      	<r:layoutResources/>
+      	
 			<font color="#ffffff">
 			
 				<table id="header">
@@ -85,13 +85,13 @@
 						  	<a href="http://valent-software.com"><img src="${baseurl}/images/valentlogo.png" border="0" /></a>
 						</td>
 						<td align="true" width=30%>
-							<n:isLoggedIn>
+							
 								<div id="userops">
 						      		<div class="headerNav-list">
-						      			<div><span class="headerNav-link2"><n:principalName /></span></div>
+						      			<div><span class="headerNav-link2"><sec:username/></span></div>
 							      	</div>
 								</div>
-							</n:isLoggedIn>
+							
 						</td>
 					</tr>
 				</table>		

@@ -130,7 +130,7 @@
 								<span>	
 				        			<g:remoteLink controller="opportunity" action="edit" class="edit" title="Edit Opportunity"
 							 			update="[success:'dvopportunity',failure:'dvopportunity']" params="['id': opportunityInstance?.id]" >
-										<r:img dir="images" file="edit-24.png"/>
+										<asset:image dir="images" file="edit-24.png"/>
 									</g:remoteLink>
 								</span>
 								

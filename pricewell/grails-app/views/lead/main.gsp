@@ -41,7 +41,7 @@
 		            			<g:remoteLink controller="lead" action="edit" class="edit" title="Edit Lead"
 					 				update="[success:'dvlead',failure:'dvlead']" params="[id: leadInstance?.id]" 
 					 				onLoading ="showLoadingBox();" onComplete="hideLoadingBox();" title="Edit Lead">
-									<r:img dir="images" file="edit-24.png"/>
+									<asset:image dir="images" file="edit-24.png"/>
 									</g:remoteLink>
 							</span>
 								
@@ -52,7 +52,7 @@
 								<g:remoteLink action="delete" update="success"  class="hyperlink" title="Delete Lead"
 									id="${leadInstance?.id}" onLoading="changeUrl();" 
 									onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">
-									<r:img dir="images" file="delete-24.png"/>
+									<asset:image dir="images" file="delete-24.png"/>
 									</g:remoteLink>
 		            		</span>
 	            		</g:if>

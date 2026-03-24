@@ -23,7 +23,7 @@
         	jQuery.noConflict();
 		</script>
 		
-        <r:require module="jqueryalert"/>
+        
 		        
         <title>Service Catalog </title>
         <script>

@@ -14,7 +14,7 @@
 			em { font-weight: bold; padding-right: 1em; vertical-align: top; }
 		</style>
 		
-		<r:script>
+		<asset:script>
 				  jQuery(document).ready(function()
 				  {				 
 				    jQuery("#opportunityEdit").validate();
@@ -29,7 +29,7 @@
 					});
 				  });
 				  
-  		</r:script>
+  		</asset:script>
         
         
     </head>

@@ -46,7 +46,7 @@
 	            <span><g:link class="buttons.button button" title="List Of Contacts" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
 	            <span><g:link class="buttons.button button" title="Create Contact" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
 	            <g:if test="${updatePermission}">
-	            	<span><button type="submit" class="buttons.button button" title="Edit Contact" > <r:img dir="images" file="edit-24.png"/>  </button></span>
+	            	<span><button type="submit" class="buttons.button button" title="Edit Contact" > <asset:image dir="images" file="edit-24.png"/>  </button></span>
 	            </g:if>
             </g:form>
         </div>

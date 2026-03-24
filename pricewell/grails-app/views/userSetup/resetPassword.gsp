@@ -104,7 +104,7 @@
 	  <g:message code="nimble.view.user.changepassword.descriptive" />
 	</p>
 
-	<n:errors bean="${user}"/>
+	<g:hasErrors bean="${user}"><g:renderErrors bean="${user}" as="list"/></g:hasErrors>
 
 	
 		<g:form action="savepassword" class="passwordchange" name="changePasswordFrm">

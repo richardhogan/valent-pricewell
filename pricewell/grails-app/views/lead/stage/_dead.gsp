@@ -2,7 +2,7 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<r:script>
+<asset:script>
 
 	var prevCalled = false;
     jQuery(document).ready(function(){
@@ -40,7 +40,7 @@
         }
      
 	});
-</r:script>
+</asset:script>
 
 <div id="wizard" class="swMain">
   			<ul>

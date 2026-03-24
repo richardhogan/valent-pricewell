@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
-<r:require module="wizardui"/>
+
 <g:set var="entityName"
 	value="${message(code: 'service.label', default: 'ServiceProfile')}" />
 	
@@ -42,7 +42,7 @@ label.error
   	
 </style>
 
-<r:require module="wizardui"/>
+
 
 <ckeditor:resources />
 

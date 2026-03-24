@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@ page import="NimbleTagLib" %>
 <%@ page import="com.valent.pricewell.PricewellSecurity"%>
 <%
 	def baseurl = request.siteUrl
@@ -10,8 +9,9 @@
                          
         <link rel="shortcut icon" href="${resource(dir:'images',file:'valentlogo.png')}" type="image/x-icon" />
               
-         <r:require module="coreui"/>
-         <r:layoutResources/>
+         
+         <asset:javascript src="application.js"/>
+         <asset:stylesheet href="application.css"/>
          
          <script type="text/javascript">
 			jQuery.noConflict();
@@ -66,7 +66,7 @@
     </head>
     <body>
     	
-      	<r:layoutResources/>
+      	
       	
        	<script>
       	
@@ -116,16 +116,16 @@
 				  	<a href="http://valent-software.com"><img src="${resource(dir:'images',file:'valentlogo.png')}" border="0" /></a>
 				</td>
 				<td align="true" width=20%>
-					<n:isLoggedIn>
+					
 						<div id="userops">  
-							 <n:principalName /> | <g:link controller="auth" action="logout" class=""><g:message code="nimble.link.logout.basic" /></g:link>
+							 <sec:username/> | <g:link controller="auth" action="logout" class=""><g:message code="nimble.link.logout.basic" /></g:link>
 							 <!--<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}">
 							  |  <a href="${baseurl}/navigation/administration" class="">Admin Menu</a> | 
 							 <a href="${baseurl}/setting/settings" class="">Settings</a>
 							  
 							  </g:if>-->
 						</div>
-					</n:isLoggedIn>
+					
 			</td></tr>
 			</table>		
 			</font>

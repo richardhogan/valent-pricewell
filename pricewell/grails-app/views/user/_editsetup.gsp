@@ -86,7 +86,7 @@
     <g:message code="nimble.view.user.edit.descriptive" />
   </p>
 
-  <n:errors bean="${user}"/>
+  <g:hasErrors bean="${user}"><g:renderErrors bean="${user}" as="list"/></g:hasErrors>
 
   <g:form class="editaccount" name="userUpdate">
     <input type="hidden" name="id" value="${user.id}"/>

@@ -57,7 +57,7 @@
 	<td>
 		<g:remoteLink action="edit" controller="emailSetting" update="emailSettingEdit" class="hyperlink"
 			id="${emailSettingInstance?.id}" onLoading="jQuery('#emailSettingEdit').dialog('open');" tooltip="Edit">
-			<r:img dir="images/skin" file="database_edit.png"/>
+			<asset:image dir="images/skin" file="database_edit.png"/>
 			</g:remoteLink>
 	</td>
    
@@ -66,7 +66,7 @@
 		<g:remoteLink action="delete" controller="emailSetting" update="success" class="hyperlink"
 			id="${emailSettingInstance?.id}" onLoading="doRefresh();" tooltip="Delete"
 			onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');">
-			<r:img dir="images/skin" file="database_delete.png"/>
+			<asset:image dir="images/skin" file="database_delete.png"/>
 			</g:remoteLink>
 	</td>
 </div>

@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <%@page import="com.valent.pricewell.util.PricewellUtils"%>
 <%@page import="com.valent.pricewell.HomeController"%>
-<%@ page import="NimbleTagLib" %>
 <%@ page import="com.valent.pricewell.PricewellSecurity"%>
-
-<%
-	def baseurl = request.siteUrl
-%>
     
 <html>
     <head>
         <title>Price Well</title>
                          
-        <link rel="shortcut icon" href="${baseurl}/images/valentlogo.png" type="image/x-icon" />
-              
-         <r:require module="coreui"/>
-         <r:layoutResources/>
-         
+        <asset:image src="valentlogo.png" rel="shortcut icon" type="image/x-icon" />
+
+         <asset:javascript src="application.js"/>
+         <asset:stylesheet href="application.css"/>
+
         <script type="text/javascript">
 			jQuery.noConflict();
 		</script>
@@ -25,14 +20,10 @@
 						label.error {
     			font-size: 12px;
 				}
-				
-			
+
+
 		</style>
-		<link rel="stylesheet" href="${baseurl}/css/badgeStyle.css">
-		<link rel="stylesheet" href="${baseurl}/css/chartsBox.css">
-		
-		<script src="${baseurl}/js/editor.validate.js"></script>
-		
+
        <g:layoutHead />
         
         <script>
@@ -178,7 +169,7 @@
     <body>
         
       	<div id="dvChangeRoleMenu"></div>
-      	<r:layoutResources/>
+      	
       	<script>
       	
        	  <g:if test="${flash.message != null && flash.message.length() > 0}">
@@ -205,11 +196,11 @@
 				<table id="header">
 					<tr>
 						<td>
-						  	<a href="http://valent-software.com"><img src="${baseurl}/images/valentlogo.png" border="0" /></a>
+						  	<a href="http://valent-software.com"><asset:image src="valentlogo.png" border="0" /></a>
 						  	<p id="demo"></p>
 						</td>
 						<td align="right" width=35%>
-							<n:isLoggedIn>
+							
 								<div id="userops">
 						      		<div class="headerNav-list">
 						      			<div>
@@ -234,12 +225,12 @@
 												  role = obj.value();
 											  }
 			      						%>
-							        	<div><span class="headerNav-link2"><n:principalName /> <div id="dvChangeRole" style="float:right;" title="<%=role%>">(<%=role%> <img title="Change Role" width="12px" alt="Change Role" src="${baseurl}/images/edit-24.png">) </div></span></div>
+							        	<div><span class="headerNav-link2"><sec:username/> <div id="dvChangeRole" style="float:right;" title="<%=role%>">(<%=role%> <asset:image src="edit-24.png" title="Change Role" width="12px" alt="Change Role"/>) </div></span></div>
 							        	
 							        	<div><g:link controller="auth" action="logout" class="headerNav-link"><g:message code="nimble.link.logout.basic" /></g:link></div>
 							      	</div>
 								</div>
-							</n:isLoggedIn>
+							
 						</td>
 					</tr>
 				</table>		
