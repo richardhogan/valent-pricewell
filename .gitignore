@@ -19,6 +19,10 @@ pricewell/mylog.log
 .DS_Store
 Thumbs.db
 
+# Grails generated plugin metadata
+META-INF/grails-plugin.xml
+META-INF/grails.factories
+
 # Grails 2 legacy (already deleted but keep for safety)
 target/
 */target/
