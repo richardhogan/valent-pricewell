@@ -7,24 +7,21 @@ class ReviewCommentController {
 	def serviceStagingService
 	def sendMailService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [reviewCommentInstanceList: ReviewComment.list(params), reviewCommentInstanceTotal: ReviewComment.count()]
     }
 
-	def listComments= {
+	def listComments() {
 		if(params.id)
 		{
 			def reviewRequest = ReviewRequest.get(params.id)
@@ -40,14 +37,13 @@ class ReviewCommentController {
 	}
 	
 	
-	def create = {
+	def create() {
 	        def reviewCommentInstance = new ReviewComment()
 	        reviewCommentInstance.properties = params
 	        return [reviewCommentInstance: reviewCommentInstance]
 	    }
 
-	def addComment = 
-	{
+	def addComment() {
 		if(!params.id)
 		{
 			flash.message = "Invalid Request";
@@ -68,7 +64,7 @@ class ReviewCommentController {
 		}
 	}
 	
-	def editComment = {
+	def editComment() {
 		def reviewCommentInstance = ReviewComment.get(params.id)
 		if (!reviewCommentInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'reviewComment.label', default: 'ReviewComment'), params.id])}"
@@ -79,7 +75,7 @@ class ReviewCommentController {
 		}
 	}
 
-	def save = {
+	def save() {
 		def res = "fail"
 		flash.message = "";
 		def map = [:]
@@ -139,7 +135,7 @@ class ReviewCommentController {
 		if(reviewRequest.save(flush:true) && reviewRequest.serviceProfile!=null)
 		{
 			NotificationGenerator gen = new NotificationGenerator(g)
-			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
+			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser)  // was: User.get(new Long(SecurityUtils.subject.principal))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+reviewRequest.serviceProfile.id)
 			
 			res = "success"
@@ -161,7 +157,7 @@ class ReviewCommentController {
 		}
 	}
 	
-	def saveComment = {
+	def saveComment() {
 		def res = "fail"
 		flash.message = "";
 		def map = [:]
@@ -188,7 +184,7 @@ class ReviewCommentController {
 		{
 		
 			NotificationGenerator gen = new NotificationGenerator(g)
-			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
+			map = gen.notifyReviewCommentsToUsers(reviewRequest, statusChanged, PricewellSecurity.currentUser)  // was: User.get(new Long(SecurityUtils.subject.principal))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"])
 			
 			
@@ -211,7 +207,7 @@ class ReviewCommentController {
 	}
 	
 	
-    def show = {
+    def show() {
         def reviewCommentInstance = ReviewComment.get(params.id)
         if (!reviewCommentInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'reviewComment.label', default: 'ReviewComment'), params.id])}"
@@ -222,7 +218,7 @@ class ReviewCommentController {
         }
     }
 
-    def edit = {
+    def edit() {
         def reviewCommentInstance = ReviewComment.get(params.id)
         if (!reviewCommentInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'reviewComment.label', default: 'ReviewComment'), params.id])}"
@@ -233,7 +229,7 @@ class ReviewCommentController {
         }
     }
 
-    def update = {
+    def update() {
         def reviewCommentInstance = ReviewComment.get(params.id)
         if (reviewCommentInstance) {
             if (params.version) {
@@ -259,8 +255,7 @@ class ReviewCommentController {
             redirect(action: "list")
         }
     }
-	def updateComment = {
-		
+	def updateComment() {
 		def reviewCommentInstance = ReviewComment.get(params.id)
 		if (reviewCommentInstance) {
 			if (params.version) {
@@ -287,7 +282,7 @@ class ReviewCommentController {
 		}
 	}
 
-    def delete = {
+    def delete() {
         def reviewCommentInstance = ReviewComment.get(params.id)
         if (reviewCommentInstance) {
             try {

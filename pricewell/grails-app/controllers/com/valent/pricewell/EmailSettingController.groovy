@@ -5,25 +5,21 @@ import com.valent.pricewell.PricewellSecurity
 class EmailSettingController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [emailSettingInstanceList: EmailSetting.list(params), emailSettingInstanceTotal: EmailSetting.count()]
     }
 	
-	def emailSetting = 
-	{
+	def emailSetting() {
 		for(EmailSetting es in EmailSetting.list())
 		{
 			if(es.secret == null)
@@ -39,7 +35,7 @@ class EmailSettingController {
 		[emailSettings: EmailSetting.list()]
 	}
 
-	def emailSettings = {
+	def emailSettings() {
 		//def emailSettingList = []
 		//emailSettingList = EmailSetting.findAll("FROM EmailSetting es")
 	
@@ -47,8 +43,7 @@ class EmailSettingController {
 		//[emailSettings: emailSettingList]
 	}
 	
-	def saveSettings = {
-		
+	def saveSettings() {
 		println params
 		/*if(params?.username){
 			EmailSetting es = map["username"];
@@ -72,13 +67,13 @@ class EmailSettingController {
 		redirect(action: "emailSettings")
 	}
 	
-    def create = {
+    def create() {
         def emailSettingInstance = new EmailSetting()
         emailSettingInstance.properties = params
         return [emailSettingInstance: emailSettingInstance]
     }
 
-    def save = {
+    def save() {
 		def res = "fail"
 		def emailSettingInstance = new EmailSetting()
 		def value = params.value
@@ -104,7 +99,7 @@ class EmailSettingController {
 		render res
     }
 
-    def show = {
+    def show() {
         def emailSettingInstance = EmailSetting.get(params.id)
         if (!emailSettingInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'emailSetting.label', default: 'EmailSetting'), params.id])}"
@@ -115,7 +110,7 @@ class EmailSettingController {
         }
     }
 
-    def edit = {
+    def edit() {
         def emailSettingInstance = EmailSetting.get(params.id)
         if (!emailSettingInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'emailSetting.label', default: 'EmailSetting'), params.id])}"
@@ -127,7 +122,7 @@ class EmailSettingController {
         }
     }
 
-    def update = {
+    def update() {
 		def res = "fail"
         def emailSettingInstance = EmailSetting.get(params.id)
         if (emailSettingInstance) {
@@ -166,7 +161,7 @@ class EmailSettingController {
 		render res
     }
 
-    def delete = {
+    def delete() {
         def emailSettingInstance = EmailSetting.get(params.id)
 		if (emailSettingInstance) {
             try {

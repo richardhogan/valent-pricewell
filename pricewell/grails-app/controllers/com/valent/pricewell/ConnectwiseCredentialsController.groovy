@@ -10,15 +10,12 @@ class ConnectwiseCredentialsController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def cwimportService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         if(ConnectwiseCredentials.list().size()!=0) {
 			for(ConnectwiseCredentials cc in ConnectwiseCredentials.list()) {
 				redirect(action: "show", id: cc.id)
@@ -29,7 +26,7 @@ class ConnectwiseCredentialsController {
 		}
     }
 
-	def isCredentialsAvailable = {
+	def isCredentialsAvailable() {
 		def isAvailable = "no"
 		Map resultMap = [:]
 		if(ConnectwiseCredentials.list().size() > 0)
@@ -61,7 +58,7 @@ class ConnectwiseCredentialsController {
 		}
 	}
 	
-	def checkApiPermissions = {
+	def checkApiPermissions() {
 		Map resultMap = new HashMap()
 		def credentialsMap = cwimportService.getCredentials()
 		ApiCredentials credentials = credentialsMap["credentials"]
@@ -76,7 +73,7 @@ class ConnectwiseCredentialsController {
 		render resultMap as JSON
 	}
 	
-	def checkCredentials = {
+	def checkCredentials() {
 		Map resultMap = new HashMap()
 		def siteUrl = params.siteUrl
 		def companyId = params.companyId
@@ -142,24 +139,24 @@ class ConnectwiseCredentialsController {
 		}
 	}
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [connectwiseCredentialsInstanceList: ConnectwiseCredentials.list(params), connectwiseCredentialsInstanceTotal: ConnectwiseCredentials.count()]
     }
 
-    def create = {
+    def create() {
         def connectwiseCredentialsInstance = new ConnectwiseCredentials()
         connectwiseCredentialsInstance.properties = params
         return [connectwiseCredentialsInstance: connectwiseCredentialsInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		def connectwiseCredentialsInstance = new ConnectwiseCredentials()
 		connectwiseCredentialsInstance.properties = params
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
 		render(template: "create", model: [connectwiseCredentialsInstance: connectwiseCredentialsInstance, source: source])
 	}
-    def save = {
+    def save() {
         def connectwiseCredentialsInstance = new ConnectwiseCredentials(params)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
@@ -187,7 +184,7 @@ class ConnectwiseCredentialsController {
         }
     }
 
-    def show = {
+    def show() {
         def connectwiseCredentialsInstance = ConnectwiseCredentials.get(params.id)
         if (!connectwiseCredentialsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'connectwiseCredentials.label', default: 'ConnectwiseCredentials'), params.id])}"
@@ -198,7 +195,7 @@ class ConnectwiseCredentialsController {
         }
     }
 
-	def showsetup = {
+	def showsetup() {
 		def connectwiseCredentialsInstance = ConnectwiseCredentials.list().get(0);
 
 		if (!connectwiseCredentialsInstance) {
@@ -215,7 +212,7 @@ class ConnectwiseCredentialsController {
 		}
 	}
 	
-    def edit = {
+    def edit() {
         def connectwiseCredentialsInstance = ConnectwiseCredentials.get(params.id)
         if (!connectwiseCredentialsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'connectwiseCredentials.label', default: 'ConnectwiseCredentials'), params.id])}"
@@ -233,7 +230,7 @@ class ConnectwiseCredentialsController {
         }
     }
 
-    def update = {
+    def update() {
         def connectwiseCredentialsInstance = ConnectwiseCredentials.get(params.id)
         if (connectwiseCredentialsInstance) {
             if (params.version) {
@@ -275,7 +272,7 @@ class ConnectwiseCredentialsController {
         }
     }
 
-    def delete = {
+    def delete() {
         def connectwiseCredentialsInstance = ConnectwiseCredentials.get(params.id)
         if (connectwiseCredentialsInstance) {
             try {

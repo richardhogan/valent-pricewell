@@ -9,13 +9,11 @@ import grails.converters.JSON
 class ClarizenCredentialsController {
 	def clarizenExportService
 		static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
-	def index = {
+	def index() {
 		if(ClarizenCredentials.list().size()!=0) {
 			for(ClarizenCredentials cc in ClarizenCredentials.list()) {
 				redirect(action: "show", id: cc.id)
@@ -25,19 +23,19 @@ class ClarizenCredentialsController {
 			redirect(action: "create", params: params)
 		}
 	}
-	def create = {
+	def create() {
 		def clarizenCredentialsInstance = new ClarizenCredentials()
 		clarizenCredentialsInstance.properties = params
 		return [clarizenCredentialsInstance: clarizenCredentialsInstance]
 	}
 
-	def createsetup = {
+	def createsetup() {
 		def clarizenCredentialsInstance = new ClarizenCredentials()
 		clarizenCredentialsInstance.properties = params
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
 		render(template: "create", model: [clarizenCredentialsInstance: clarizenCredentialsInstance, source: source])
 	}
-	def showsetup = {
+	def showsetup() {
 		def clarizenCredentialsInstance = ClarizenCredentials.list().get(0);
 
 		if (!clarizenCredentialsInstance) {
@@ -53,7 +51,7 @@ class ClarizenCredentialsController {
 				render(template: "show", model: [clarizenCredentialsInstance: clarizenCredentialsInstance, source: "setup"])
 		}
 	}
-	def save = {
+	def save() {
 		def clarizenCredentialsInstance = new ClarizenCredentials(params)
 		println "hello"+clarizenCredentialsInstance
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -80,7 +78,7 @@ class ClarizenCredentialsController {
 			}
 		}
 	}
-	def checkCredentials = {
+	def checkCredentials() {
 		Map resultMap = new HashMap()
 		def instanceUri = params.instanceUri
 		def username = params.username
@@ -107,7 +105,7 @@ class ClarizenCredentialsController {
 		}
 		render resultMap as JSON
 	}
-	def edit = {
+	def edit() {
 		def clarizenCredentialsInstance = ClarizenCredentials.get(params.id)
 		if (!clarizenCredentialsInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'clarizenCredentials.label', default: 'ClarizenCredentials'), params.id])}"
@@ -125,7 +123,7 @@ class ClarizenCredentialsController {
 		}
 	}
 
-	def update = {
+	def update() {
 		ClarizenCredentials clarizenCredentialsInstance = ClarizenCredentials.get(params.id)
 		if (clarizenCredentialsInstance) {
 			if (params.version) {

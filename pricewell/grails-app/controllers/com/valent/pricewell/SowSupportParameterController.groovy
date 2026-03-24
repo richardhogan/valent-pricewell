@@ -9,17 +9,14 @@ class SowSupportParameterController {
     static allowedMethods = [save: "POST", update: "POST"]
 
 
-    def index = {
+    def index() {
         redirect(action: "listsetup", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		log.info("${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		if(params.source == "setup" || params.source == "firstsetup")
 		{
@@ -32,7 +29,7 @@ class SowSupportParameterController {
 				createPermission: PricewellSecurity.isPermitted("sowSupportParameter:create")]
     }
 	
-	def getParameterText = {
+	def getParameterText() {
 		Map resultMap = new HashMap()
 		resultMap.put("project_parameter_text", "")
 		def sowSupportParameterInstance = SowSupportParameter.get(params.id)
@@ -43,7 +40,7 @@ class SowSupportParameterController {
 		render resultMap as JSON
 	}
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
 	}
 	
@@ -58,8 +55,7 @@ class SowSupportParameterController {
 			return false
 		}
 	  }
-	def isSowSupportParameterDefined =
-	{
+	def isSowSupportParameterDefined() {
 		if(SowSupportParameter.list().size() > 0)
 		{
 			render "true"
@@ -70,7 +66,7 @@ class SowSupportParameterController {
 		}
 	}
 
-    def create = {
+    def create() {
         def sowSupportParameterInstance = new SowSupportParameter()
         sowSupportParameterInstance.properties = params
         if(params.source == "setup" || params.source == "firstsetup")
@@ -83,16 +79,16 @@ class SowSupportParameterController {
 			return [sowSupportParameterInstance: sowSupportParameterInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
-	def getName = {
+	def getName() {
 		def sowSupportParameterInstance = SowSupportParameter.get(params.id)
 		render sowSupportParameterInstance.name
 	}
 	
-    def save = {
+    def save() {
         def sowSupportParameterInstance = new SowSupportParameter(params)
 		def geoInstance = Geo.get(params.territoryId)
 		sowSupportParameterInstance.geo = geoInstance
@@ -125,7 +121,7 @@ class SowSupportParameterController {
 		}
 		sb.append("</ul>");
 	}
-    def show = {
+    def show() {
         def sowSupportParameterInstance = SowSupportParameter.get(params.id)
         if (!sowSupportParameterInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'sowSupportParameter.label', default: 'SowSupportParameter'), params.id])}"
@@ -157,11 +153,11 @@ class SowSupportParameterController {
         }
     }
 	
-	def showsetup = {
+	def showsetup() {
 		redirect(action:"show", params: params)
     }
 
-    def edit = {
+    def edit() {
         def sowSupportParameterInstance = SowSupportParameter.get(params.id)
 		
 		
@@ -183,11 +179,11 @@ class SowSupportParameterController {
 		}
 	}
 	
-	def editsetup = {
+	def editsetup() {
 		redirect(action:"edit", params: params)
 	}
 	
-	def getTerritory = {
+	def getTerritory() {
 		def sowSupportParameterInstance = Geo.get(params.territoryId)
 		if (!sowSupportParameterInstance) {
 			//flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'setting.label', default: 'Setting'), params.id])}"
@@ -204,7 +200,7 @@ class SowSupportParameterController {
 		
 	}
 	
-    def update = {		
+    def update() {
 		def sowSupportParameterInstance = SowSupportParameter.get(params.id)
         if (sowSupportParameterInstance) {
             if (params.version) {
@@ -251,7 +247,7 @@ class SowSupportParameterController {
         }
     }
    
-	def deletesetup = {
+	def deletesetup() {
 		def sowSupportParameterInstance = SowSupportParameter.get(params.id)
 		def name =  sowSupportParameterInstance.name
 		
@@ -281,7 +277,7 @@ class SowSupportParameterController {
 		}
 	}	
 	
-	def getSowSupportParameterName = {
+	def getSowSupportParameterName() {
 		def sowSupportParameterInstance = SowSupportParameter.get(params.id)
 		def sowSupportParameterName = ""
 		if (sowSupportParameterInstance)
@@ -291,7 +287,7 @@ class SowSupportParameterController {
 		render sowSupportParameterName
 		
 	}
-    def delete = {
+    def delete() {
         def sowSupportParameterInstance = SowSupportParameter.get(params.id)
 		def name =  sowSupportParameterInstance.name
         if (sowSupportParameterInstance) {

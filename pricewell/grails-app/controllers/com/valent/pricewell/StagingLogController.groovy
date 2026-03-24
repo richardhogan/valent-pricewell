@@ -4,25 +4,21 @@ import com.valent.pricewell.PricewellSecurity
 class StagingLogController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [stagingLogInstanceList: StagingLog.list(params), stagingLogInstanceTotal: StagingLog.count()]
     }
 	
-	def listServiceStagingLog = {
-		
+	def listServiceStagingLog() {
 		def serviceProfileInstance
 		if(params.serviceProfileId)
 		{
@@ -32,13 +28,13 @@ class StagingLogController {
 		[serviceProfileInstance: serviceProfileInstance]
 	}
 
-    def create = {
+    def create() {
         def stagingLogInstance = new StagingLog()
         stagingLogInstance.properties = params
         return [stagingLogInstance: stagingLogInstance]
     }
 
-    def save = {
+    def save() {
         def stagingLogInstance = new StagingLog(params)
         if (stagingLogInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'stagingLog.label', default: 'StagingLog'), stagingLogInstance.id])}"
@@ -49,7 +45,7 @@ class StagingLogController {
         }
     }
 
-    def show = {
+    def show() {
         def stagingLogInstance = StagingLog.get(params.id)
         if (!stagingLogInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'stagingLog.label', default: 'StagingLog'), params.id])}"
@@ -60,7 +56,7 @@ class StagingLogController {
         }
     }
 
-    def edit = {
+    def edit() {
         def stagingLogInstance = StagingLog.get(params.id)
         if (!stagingLogInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'stagingLog.label', default: 'StagingLog'), params.id])}"
@@ -71,7 +67,7 @@ class StagingLogController {
         }
     }
 
-    def update = {
+    def update() {
         def stagingLogInstance = StagingLog.get(params.id)
         if (stagingLogInstance) {
             if (params.version) {
@@ -98,7 +94,7 @@ class StagingLogController {
         }
     }
 
-    def delete = {
+    def delete() {
         def stagingLogInstance = StagingLog.get(params.id)
         if (stagingLogInstance) {
             try {

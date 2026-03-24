@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.Role
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 import java.lang.reflect.InvocationTargetException
@@ -19,9 +20,6 @@ class UserSetupController {
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
 	static def randomPassword = null
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		//def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//[User: ${user.profile.fullName}] - 
@@ -42,7 +40,7 @@ class UserSetupController {
 	
 	static Map[] usersByRoleList = new Map[roleIds.size()];
 
-	def index = {
+	def index() {
 		redirect(action: "list", params: params)
 	}
 
@@ -61,13 +59,12 @@ class UserSetupController {
 		return false
 	}
 	
-	def list = {
+	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[userInstanceList: User.list(params), userInstanceTotal: User.count()]
 	}
 
-	def isUserDefined = 
-	{
+	def isUserDefined() {
 		println "coming here user"
 		String roleName = ServiceStageFlow.findUserRole("addUsers", params.stepNumber.toInteger());
 		def roleInstance = Role.findByName(roleName)
@@ -82,13 +79,13 @@ class UserSetupController {
 		}
 	}
 	
-	def create = {
+	def create() {
 		def userInstance = new User()
 		userInstance.properties = params
 		return [userInstance: userInstance]
 	}
 
-	def createsetup = {
+	def createsetup() {
 		def userInstance = new User()
 		def territoriesList = new ArrayList(), geoGroupList = new ArrayList()
 		userInstance.properties = params
@@ -147,8 +144,7 @@ class UserSetupController {
 		render(template: "createsetup", model: [sourceFrom: sourceFrom, user: userInstance, roleInstance: roleInstance, source: source, geoGroupList: geoGroupList?.sort {it.name}, territoriesList: territoriesList?.sort {it.name}])
 	}
 
-	def getGeosTerritories = {
-		
+	def getGeosTerritories() {
 		def territoriesList = new ArrayList()
 		def roleInstance = Role.get(params.roleId.toInteger())
 		def geoGroup = GeoGroup.get(params.id.toInteger())
@@ -184,7 +180,7 @@ class UserSetupController {
 		//render(template: "filteredTerritoryList", model: [roleInstance: roleInstance, territoriesList: territoriesList])
 	}
 	
-	def getExistingUsers = {
+	def getExistingUsers() {
 		int index = params.roleindex.toInteger()
 		def roleInstance = Role.findByName(usersByRoleList[index]["role"])
 		
@@ -205,7 +201,7 @@ class UserSetupController {
 		
 	}
 	
-	def addExistingUser = {
+	def addExistingUser() {
 		def user = User.get(params?.userId.toInteger())
 		def role = Role.get(params?.roleId.toInteger())
 		
@@ -222,16 +218,16 @@ class UserSetupController {
 		return
 	}
 	
-	def setlogouttime = {
+	def setlogouttime() {
 		// Session timeout was controlled by Shiro; Spring Security uses container session management.
 		render 's'
 	}
 
-	def getlogouttime = {
+	def getlogouttime() {
 		render session?.getMaxInactiveInterval() ?: 0
 	}
 
-	def islogin = {
+	def islogin() {
 		if(PricewellSecurity.principalId)
 			render "true"
 		else
@@ -268,7 +264,7 @@ class UserSetupController {
 		
 	}
 	
-	def addPrimaryTerritory = {
+	def addPrimaryTerritory() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -276,7 +272,7 @@ class UserSetupController {
 		render(view: "addTerritory", model: [territoryList: territoryList, userInstance: user])
 	}
 	
-	def savePrimaryTerritory = {
+	def savePrimaryTerritory() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//user.country = params.country
 		def territory = Geo.get(params.primaryTerritory.toLong())
@@ -292,8 +288,7 @@ class UserSetupController {
 		//redirect(action: "create", controller: session['controller'])
 	}
 	
-	def save = 
-	{
+	def save() {
 		def map = [:]
 		def phone = ""
 		if(params.phone!="" && params.phoneCountry!="")
@@ -484,8 +479,6 @@ class UserSetupController {
 					else
 					{
 						UserRole.create(savedUser, role, true)
-					else
-					{
 						if(params?.geoGroupId)// != null && params.geoGroupId != "")
 						{
 							def geoGroupInstance =  GeoGroup.get(params?.geoGroupId.toInteger())
@@ -609,12 +602,12 @@ class UserSetupController {
 		}
 	}
 	
-	def listroles = {
+	def listroles() {
 		loadRoleUserCache();
 		render(template: "listsetuproles", model: [usersByRoleList: usersByRoleList, isRoleDisplay: isRoleDisplay, source: params.source])
 	}
 
-	def listsetup = {
+	def listsetup() {
 		/*int index = params.roleindex.toInteger(); 
 		def users = usersByRoleList[index]["users"]
 		def role = Role.findByName(usersByRoleList[index]["role"])
@@ -639,7 +632,7 @@ class UserSetupController {
 		//render(template: "usersbyrole", model: ["users": role.users, "roleindex": index,usersByRoleList: usersByRoleList, roleInstance: role ])//
 	}
 
-	def listusersbyrole = {
+	def listusersbyrole() {
 		int index = params.roleindex.toInteger();
 		def users = usersByRoleList[index]["users"]
 		def role = Role.findByDescription(usersByRoleList[index]["role"])
@@ -655,15 +648,14 @@ class UserSetupController {
 		render(template: "roleusers", model: ["users": roleUsers, "roleindex": index, usersByRoleList: usersByRoleList, roleInstance: role, source: source ])
 	}
 	
-	def getRoleName =
-	{
+	def getRoleName() {
 		int index = params.roleindex.toInteger()
 		def roleName = usersByRoleList[index]["role"]
 		println roleName
 		render roleName	
 	}
 
-	def show = {
+	def show() {
 		def userInstance = User.get(params.id)
         if (!userInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])}"
@@ -675,7 +667,7 @@ class UserSetupController {
         }
 	}
 
-	def showsetup = {
+	def showsetup() {
 		def userInstance = User.get(params.id)
 		def roleInstance = Role.get(params.roleId.toLong())
 		loadRoleUserCache();
@@ -689,7 +681,7 @@ class UserSetupController {
 		}
 	}
 
-	def edit = {
+	def edit() {
 		def userInstance = User.get(params.id)
         if (!userInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])}"
@@ -700,7 +692,7 @@ class UserSetupController {
         }
 	}
 
-	def editsetup = {
+	def editsetup() {
 		User userInstance = User.get(params.id)
 		Role roleInstance = Role.get(params.roleId)
 		Set secondaryTerritories = new HashSet()
@@ -782,8 +774,7 @@ class UserSetupController {
 		}
 	}
 
-	def update =
-	{
+	def update() {
 		User user = User.get(params.id)
 		boolean usernameAvailable = false
 		boolean emailAvailable = false
@@ -1018,7 +1009,7 @@ class UserSetupController {
 		return territoryIds
 	}
 
-	def deletesetup = {
+	def deletesetup() {
 		def userInstance = User.get(params.id)
         if (userInstance) {
             try {
@@ -1037,7 +1028,7 @@ class UserSetupController {
         }
 	}
 
-	def delete = {
+	def delete() {
 		def userInstance = User.get(params.id)
         if (userInstance) {
             try {
@@ -1056,8 +1047,7 @@ class UserSetupController {
         }
 	}
 
-	def validusername = 
-	{
+	def validusername() {
 		println "coming here"
 		if (params?.val == null || params?.val?.length() < 4) {
 		  render "fail"
@@ -1075,14 +1065,13 @@ class UserSetupController {
 		}
 	  }
 	
-	def changeProperties =
-	{
+	def changeProperties() {
 		def user = User.get(params.id)
 		
 		render(template: "change", model: [user: user, changeFor: params.userRole])
 
 	}
-	def changepassword = {
+	def changepassword() {
 		def user = User.get(params.id)
 		if (!user) {
 		  log.warn("User identified by id '$params.id' was not located")
@@ -1103,7 +1092,7 @@ class UserSetupController {
 			}
 		}
 	  }
-	def resetPassword = {
+	def resetPassword() {
 		def user = User.get(params.id)
 		if (!user) {
 		  log.warn("User identified by id '$params.id' was not located")
@@ -1125,8 +1114,7 @@ class UserSetupController {
 		}
 	  }
 	
-	def savepassword = 
-	{
+	def savepassword() {
 		def user = User.get(params.id)
 		if (!user)
 		{
@@ -1155,8 +1143,7 @@ class UserSetupController {
 			render "password_invalid"
 		}
 	}
-	def reset = 
-	{
+	def reset() {
 		try {
 			
 			render(template: "reset")
@@ -1171,8 +1158,7 @@ class UserSetupController {
 		}
 			
 	}
-	def resetPass =
-	{
+	def resetPass() {
 		if(isEmailAvailable(params.email))
 		{
 			def userProfile = Profile.findByEmail(params.email)
@@ -1189,8 +1175,7 @@ class UserSetupController {
 		}
 	}
 	
-	def saveResetPassword = 
-	{
+	def saveResetPassword() {
 		def user = User.get(params.id)
 		if (!user)
 		{
@@ -1220,8 +1205,7 @@ class UserSetupController {
 
 		}
 	}
-	def updateTerritoryGeo =
-	{
+	def updateTerritoryGeo() {
 		def result = "fail"
 		def user = User.get(params.id)
 		

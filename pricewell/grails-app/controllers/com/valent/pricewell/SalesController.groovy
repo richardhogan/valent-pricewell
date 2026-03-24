@@ -4,16 +4,13 @@ import com.valent.pricewell.PricewellSecurity
 class SalesController {
 
 	def salesCatalogService// = new SalesCatalogService()
-    def index = { }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
+    def index() { }
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def getUserTerritoriesForQuota = {
+	def getUserTerritoriesForQuota() {
 		User user = null
 		if(params.id && params.id != null)
 		{

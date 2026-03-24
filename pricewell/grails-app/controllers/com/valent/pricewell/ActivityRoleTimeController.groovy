@@ -5,19 +5,16 @@ import com.valent.pricewell.PricewellSecurity
 class ActivityRoleTimeController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         if(!params.serviceActivityId)
 		{
 				flash.message = "service activity id is not valid"
@@ -33,7 +30,7 @@ class ActivityRoleTimeController {
         render(template: "listActivityRoleTime", model:[serviceActivityInstance: activity])
     }
 	
-	def create = {
+	def create() {
 		def activityRoleTimeInstance = new ActivityRoleTime()
         activityRoleTimeInstance.properties = params
 		def serviceActivityInstance = ServiceActivity.get(params.id)
@@ -48,7 +45,7 @@ class ActivityRoleTimeController {
 		render(template: "create" ,model: [activityRoleTimeInstance: activityRoleTimeInstance, roleList: roleList, serviceActivityId: params.id, serviceActivityInstance: serviceActivityInstance])
 	}
 	
-    def save = {
+    def save() {
 		if(!params.serviceActivityId)
 		{
 			flash.message = "Service activity id is not valid"
@@ -97,7 +94,7 @@ class ActivityRoleTimeController {
 		activity.save(flush:true)
 	}
 	
-    def show = {
+    def show() {
         def activityRoleTimeInstance = ActivityRoleTime.get(params.id)
         if (!activityRoleTimeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'activityRoleTime.label', default: 'ActivityRoleTime'), params.id])}"
@@ -108,7 +105,7 @@ class ActivityRoleTimeController {
         }
     }
 
-    def edit = {
+    def edit() {
         def activityRoleTimeInstance = ActivityRoleTime.get(params.id)
         if (!activityRoleTimeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'activityRoleTime.label', default: 'ActivityRoleTime'), params.id])}"
@@ -120,8 +117,7 @@ class ActivityRoleTimeController {
         }
     }
 
-    def update = {
-		
+    def update() {
 		if(!params.serviceActivityId)
 		{
 			flash.message = "Service activity id is not valid"
@@ -176,7 +172,7 @@ class ActivityRoleTimeController {
         }
     }
 
-    def delete = {
+    def delete() {
         def activityRoleTimeInstance = ActivityRoleTime.get(params.id)
 		def role = activityRoleTimeInstance.role.name
 		

@@ -6,16 +6,13 @@ import grails.converters.JSON
 class SalesforceCredentialsController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
 	def salesforceExportService
-    def index = {
+    def index() {
         if(SalesforceCredentials.list().size()!=0) {
 			for(SalesforceCredentials sc in SalesforceCredentials.list()) {
 				redirect(action: "show", id: sc.id)
@@ -26,7 +23,7 @@ class SalesforceCredentialsController {
 		}
     }
 
-	def checkCredentials = {
+	def checkCredentials() {
 		Map resultMap = new HashMap()
 		def instanceUri = params.instanceUri
 		def username = params.username
@@ -54,7 +51,7 @@ class SalesforceCredentialsController {
 		render resultMap as JSON
 	}
 	
-	def isCredentialsAvailable = {
+	def isCredentialsAvailable() {
 		def isAvailable = "no"
 		Map resultMap = [:]
 		if(SalesforceCredentials.list().size() > 0)
@@ -86,25 +83,25 @@ class SalesforceCredentialsController {
 		}
 	}
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [salesforceCredentialsInstanceList: SalesforceCredentials.list(params), salesforceCredentialsInstanceTotal: SalesforceCredentials.count()]
     }
 
-    def create = {
+    def create() {
         def salesforceCredentialsInstance = new SalesforceCredentials()
         salesforceCredentialsInstance.properties = params
         return [salesforceCredentialsInstance: salesforceCredentialsInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		def salesforceCredentialsInstance = new SalesforceCredentials()
 		salesforceCredentialsInstance.properties = params
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
 		render(template: "create", model: [salesforceCredentialsInstance: salesforceCredentialsInstance, source: source])
 	}
 	
-    def save = {
+    def save() {
         def salesforceCredentialsInstance = new SalesforceCredentials(params)
 		
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -132,7 +129,7 @@ class SalesforceCredentialsController {
 		}
     }
 
-	def showsetup = {
+	def showsetup() {
 		def salesforceCredentialsInstance = SalesforceCredentials.list().get(0);
 
 		if (!salesforceCredentialsInstance) {
@@ -149,7 +146,7 @@ class SalesforceCredentialsController {
 		}
 	}
 	
-    def show = {
+    def show() {
         def salesforceCredentialsInstance = SalesforceCredentials.get(params.id)
         if (!salesforceCredentialsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'salesforceCredentials.label', default: 'SalesforceCredentials'), params.id])}"
@@ -160,7 +157,7 @@ class SalesforceCredentialsController {
         }
     }
 
-    def edit = {
+    def edit() {
         def salesforceCredentialsInstance = SalesforceCredentials.get(params.id)
         if (!salesforceCredentialsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'salesforceCredentials.label', default: 'SalesforceCredentials'), params.id])}"
@@ -178,7 +175,7 @@ class SalesforceCredentialsController {
         }
     }
 
-    def update = {
+    def update() {
         SalesforceCredentials salesforceCredentialsInstance = SalesforceCredentials.get(params.id)
         if (salesforceCredentialsInstance) {
             if (params.version) {
@@ -220,7 +217,7 @@ class SalesforceCredentialsController {
         }
     }
 
-    def delete = {
+    def delete() {
         def salesforceCredentialsInstance = SalesforceCredentials.get(params.id)
         if (salesforceCredentialsInstance) {
             try {

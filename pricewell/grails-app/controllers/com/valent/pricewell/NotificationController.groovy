@@ -4,25 +4,21 @@ import com.valent.pricewell.PricewellSecurity
 class NotificationController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [notificationInstanceList: Notification.list(params), notificationInstanceTotal: Notification.count()]
     }
 
-	def myNotifications = 
-	{
+	def myNotifications() {
 		def notificationList = []
 		def activeNotification = listActiveNotification()
 		boolean isActiveAvailable = false
@@ -52,8 +48,7 @@ class NotificationController {
 		render(view: "notifications", model: [notificationList: activeNotification, isActiveAvailable: isActiveAvailable])
 	}
 	
-	def countActiveNotification =
-	{
+	def countActiveNotification() {
 		def notifications = listActiveNotification()
 		
 		render notifications?.size()
@@ -66,7 +61,7 @@ class NotificationController {
 		return notifications
 	}
 	
-	def dismissNotifications = {
+	def dismissNotifications() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		def ids = []
@@ -101,13 +96,13 @@ class NotificationController {
 		note.save(flush:true)
 	}
 	
-    def create = {
+    def create() {
         def notificationInstance = new Notification()
         notificationInstance.properties = params
         return [notificationInstance: notificationInstance]
     }
 
-    def save = {
+    def save() {
         def notificationInstance = new Notification(params)
         if (notificationInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'notification.label', default: 'Notification'), notificationInstance.id])}"
@@ -118,7 +113,7 @@ class NotificationController {
         }
     }
 
-    def show = {
+    def show() {
         def notificationInstance = Notification.get(params.id)
         if (!notificationInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'notification.label', default: 'Notification'), params.id])}"
@@ -129,7 +124,7 @@ class NotificationController {
         }
     }
 
-    def edit = {
+    def edit() {
         def notificationInstance = Notification.get(params.id)
         if (!notificationInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'notification.label', default: 'Notification'), params.id])}"
@@ -140,7 +135,7 @@ class NotificationController {
         }
     }
 
-    def update = {
+    def update() {
         def notificationInstance = Notification.get(params.id)
         if (notificationInstance) {
             if (params.version) {
@@ -167,7 +162,7 @@ class NotificationController {
         }
     }
 
-    def delete = {
+    def delete() {
         def notificationInstance = Notification.get(params.id)
         if (notificationInstance) {
             try {

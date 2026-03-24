@@ -6,29 +6,26 @@ class ProductController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-	def index = {
+	def index() {
 		redirect(action: "list", params: params)
 	}
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 
-	def list = {
+	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[productInstanceList: Product.list(), productInstanceTotal: Product.count()]
 	}
 
-	def create = {
+	def create() {
 		def productInstance = new Product()
 		productInstance.properties = params
 		return [productInstance: productInstance]
 	}
 
-	def save = {
+	def save() {
 		if(params.datePublished){
 			params.datePublished = new Date().parse("mm/dd/yyyy", params.datePublished)
 		}
@@ -47,7 +44,7 @@ class ProductController {
 		}
 	}
 
-	def show = {
+	def show() {
 		def productInstance = Product.get(params.id)
 		if (!productInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'product.label', default: 'Product'), params.id])}"
@@ -58,7 +55,7 @@ class ProductController {
 		}
 	}
 
-	def edit = {
+	def edit() {
 		def productInstance = Product.get(params.id)
 		if (!productInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'product.label', default: 'Product'), params.id])}"
@@ -69,7 +66,7 @@ class ProductController {
 		}
 	}
 
-	def update = {
+	def update() {
 		if(params.datePublished){
 			params.datePublished = new Date().parse("mm/dd/yyyy", params.datePublished)
 		}
@@ -102,7 +99,7 @@ class ProductController {
 		}
 	}
 
-	def delete = {
+	def delete() {
 		def productInstance = Product.get(params.id)
 		if (productInstance) {
 			try {

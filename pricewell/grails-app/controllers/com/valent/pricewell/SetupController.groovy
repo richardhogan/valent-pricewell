@@ -10,9 +10,6 @@ class SetupController {
 	def salesCatalogService
 	def fileUploadService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
@@ -138,14 +135,12 @@ class SetupController {
 		return stagingList.size()
 	}
 	
-	def index = {
+	def index() {
 		redirect(action: "firstsetup", params: params)
 	}
 
-	def setup2 = { render(view: "firstsetup2") }
-
-	def firstsetup = {
-
+	def setup2() { render(view: "firstsetup2") }
+	def firstsetup() {
 		boolean displayUsersCount = true
 		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
 		{
@@ -381,7 +376,7 @@ class SetupController {
 
 	}
 	
-	def process = {
+	def process() {
 		if(params.id == 'link_instance_info'){
 			if(c_instance_info == 0){
 				redirect(controller: "companyInformation", action: "createInstanceInfo", params: [source: "firstsetup"])
@@ -487,8 +482,7 @@ class SetupController {
 		}
 	}
 
-	def changeStage =
-	{
+	def changeStage() {
 		currentStepSequenceOrder++
 		println currentStepSequenceOrder
 		
@@ -499,8 +493,7 @@ class SetupController {
 		redirect(action: "setup")
 	}
 	
-	def isUserDefined =
-	{
+	def isUserDefined() {
 		println "coming here user"
 		String roleName = ServiceStageFlow.findUserRole("addUsers", currentStepNo);
 		def roleInstance = Role.findByName(roleName)
@@ -515,8 +508,7 @@ class SetupController {
 		}
 	}
 	
-	def showStage = {
-		
+	def showStage() {
 		String source = params.source
 		
 		int stepNumber = (params.step_number && params.step_number.toInteger() > 0?params.step_number.toInteger(): 1);
@@ -711,7 +703,7 @@ class SetupController {
 		}
 		return territoriesList
 	}
-	def setup = {
+	def setup() {
 		List stagingInstanceList = Staging.listSetupStages("NEW_STAGE")
 		//currentStepSequenceOrder = 0
 		if(currentStepSequenceOrder == 0)

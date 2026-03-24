@@ -4,8 +4,7 @@ import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import com.ibm.icu.text.SimpleDateFormat
+import java.text.SimpleDateFormat
 import com.valent.pricewell.ObjectType.Type;
 import com.valent.pricewell.ServiceProfile.ServiceProfileType
 import com.valent.pricewell.ServiceProfileMetaphors.MetaphorsType
@@ -16,7 +15,7 @@ import java.util.List;
 
 class ExtraUnitController {
 	
-	def saveExtraUnit = {
+	def saveExtraUnit() {
 		println 'In saveExtraUnit Method'
 		//println 'id' + params.serviceProfileId
 		ExtraUnit extraUnitInstance = new ExtraUnit(params);
@@ -37,7 +36,7 @@ class ExtraUnitController {
 		render extraUnitInstanceList as JSON
 	}
 	
-	def list = {
+	def list() {
 		ExtraUnit extraUnitInstance = new ExtraUnit(params);
 		def serviceProfileId = params.serviceProfileId
 		Long test;
@@ -46,7 +45,7 @@ class ExtraUnitController {
 		def extraUnitInstanceList = ExtraUnit.findAll("From ExtraUnit eu Where eu.serviceProfileId = :serviceProfileId",[serviceProfileId:test]);
 		[extraUnitInstanceList:extraUnitInstanceList]
 	}
-	def getAll = {
+	def getAll() {
 		ExtraUnit extraUnitInstance = new ExtraUnit(params);
 		def serviceProfileId = params.serviceProfileId
 		Long test = extraUnitInstance.serviceProfileId.id
@@ -58,7 +57,7 @@ class ExtraUnitController {
 	}
 			
 
-	def deleteExtraUnit = {
+	def deleteExtraUnit() {
 		println"In delete method";
 		def extraUnitInstance = ExtraUnit.get(params.id);
 		
@@ -66,7 +65,7 @@ class ExtraUnitController {
 		render "success"
 	}
 	
-	def loadExtraUnit = {
+	def loadExtraUnit() {
 		println 'In loadExtraUnit Method'
 		ExtraUnit extraUnitInstance = new ExtraUnit(params);
 		def serviceProfileId = params.serviceId

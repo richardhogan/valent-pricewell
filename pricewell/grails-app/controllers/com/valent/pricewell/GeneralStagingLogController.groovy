@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class GeneralStagingLogController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [generalStagingLogInstanceList: GeneralStagingLog.list(params), generalStagingLogInstanceTotal: GeneralStagingLog.count()]
     }
 
-    def create = {
+    def create() {
         def generalStagingLogInstance = new GeneralStagingLog()
         generalStagingLogInstance.properties = params
         return [generalStagingLogInstance: generalStagingLogInstance]
     }
 
-    def save = {
+    def save() {
         def generalStagingLogInstance = new GeneralStagingLog(params)
         if (generalStagingLogInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'generalStagingLog.label', default: 'GeneralStagingLog'), generalStagingLogInstance.id])}"
@@ -39,7 +36,7 @@ class GeneralStagingLogController {
         }
     }
 
-    def show = {
+    def show() {
         def generalStagingLogInstance = GeneralStagingLog.get(params.id)
         if (!generalStagingLogInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'generalStagingLog.label', default: 'GeneralStagingLog'), params.id])}"
@@ -50,7 +47,7 @@ class GeneralStagingLogController {
         }
     }
 
-    def edit = {
+    def edit() {
         def generalStagingLogInstance = GeneralStagingLog.get(params.id)
         if (!generalStagingLogInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'generalStagingLog.label', default: 'GeneralStagingLog'), params.id])}"
@@ -61,7 +58,7 @@ class GeneralStagingLogController {
         }
     }
 
-    def update = {
+    def update() {
         def generalStagingLogInstance = GeneralStagingLog.get(params.id)
         if (generalStagingLogInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class GeneralStagingLogController {
         }
     }
 
-    def delete = {
+    def delete() {
         def generalStagingLogInstance = GeneralStagingLog.get(params.id)
         if (generalStagingLogInstance) {
             try {

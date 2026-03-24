@@ -1,6 +1,6 @@
 package com.valent.pricewell
 
-import grails.plugins.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Authentication controller — login, logout, and access-denied handling.

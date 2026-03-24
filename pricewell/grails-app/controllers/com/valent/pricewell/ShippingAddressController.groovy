@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class ShippingAddressController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [shippingAddressInstanceList: ShippingAddress.list(params), shippingAddressInstanceTotal: ShippingAddress.count()]
     }
 
-    def create = {
+    def create() {
         def shippingAddressInstance = new ShippingAddress()
         shippingAddressInstance.properties = params
         return [shippingAddressInstance: shippingAddressInstance]
     }
 
-    def save = {
+    def save() {
         def shippingAddressInstance = new ShippingAddress(params)
         if (shippingAddressInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'shippingAddress.label', default: 'ShippingAddress'), shippingAddressInstance.id])}"
@@ -39,7 +36,7 @@ class ShippingAddressController {
         }
     }
 
-    def show = {
+    def show() {
         def shippingAddressInstance = ShippingAddress.get(params.id)
         if (!shippingAddressInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'shippingAddress.label', default: 'ShippingAddress'), params.id])}"
@@ -50,7 +47,7 @@ class ShippingAddressController {
         }
     }
 
-    def edit = {
+    def edit() {
         def shippingAddressInstance = ShippingAddress.get(params.id)
         if (!shippingAddressInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'shippingAddress.label', default: 'ShippingAddress'), params.id])}"
@@ -61,7 +58,7 @@ class ShippingAddressController {
         }
     }
 
-    def update = {
+    def update() {
         def shippingAddressInstance = ShippingAddress.get(params.id)
         if (shippingAddressInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class ShippingAddressController {
         }
     }
 
-    def delete = {
+    def delete() {
         def shippingAddressInstance = ShippingAddress.get(params.id)
         if (shippingAddressInstance) {
             try {

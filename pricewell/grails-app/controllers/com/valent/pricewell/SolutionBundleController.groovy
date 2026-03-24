@@ -5,23 +5,20 @@ import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 import java.util.List;
 
-import org.codehaus.groovy.grails.web.json.JSONObject;
+import org.json.JSONObject;
 
 class SolutionBundleController {
 
     static allowedMethods = [save: "POST", update: "POST"]
 
-    def index = {
+    def index() {
         redirect(view: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		log.info("${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def solutionBundleInstance = new SolutionBundle(); 
 		def solutionBundleInstanceList = solutionBundleInstance.findAll("From SolutionBundle sb");
@@ -32,7 +29,7 @@ class SolutionBundleController {
 			createPermission: PricewellSecurity.isPermitted("solutionBundle:create")])
 	}
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
 	}
 	
@@ -48,8 +45,7 @@ class SolutionBundleController {
 		}
 	}
 	
-	def isSolutionBundleDefined =
-	{
+	def isSolutionBundleDefined() {
 		if(SolutionBundle.list().size() > 0)
 		{
 			render "true"
@@ -60,7 +56,7 @@ class SolutionBundleController {
 		}
 	}
 
-    def create = {
+    def create() {
         def solutionBundleInstance = new SolutionBundle()
 		solutionBundleInstance.properties = params
 		if(params.source == "setup" || params.source == "firstsetup")
@@ -72,20 +68,20 @@ class SolutionBundleController {
 			return [solutionBundleInstance: solutionBundleInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
-	def manageservice = {
+	def manageservice() {
 		redirect(action: "manageservicesetup", params: params)
 	}
 	
-	def getName = {
+	def getName() {
 		def solutionBundleInstance = SolutionBundle.get(params.id)
 		render solutionBundleInstance.name
 	}
 	
-    def save = {
+    def save() {
         def solutionBundleInstance = new SolutionBundle(params)
 		solutionBundleInstance.createdDate = new Date()
 		if(isSolutionBundleAvailable(params.name))
@@ -112,7 +108,7 @@ class SolutionBundleController {
 		}
     }
 
-	def saveservices = {
+	def saveservices() {
 		def flag
 
 		def serviceList = params.solutionBundleServices 
@@ -146,7 +142,7 @@ class SolutionBundleController {
 		
 	}
 	
-	def manageservicesetup = {
+	def manageservicesetup() {
 		def solutionBundleInstance = SolutionBundle.get(params.id)
 		
 		def serviceInstance = new Service();
@@ -156,7 +152,7 @@ class SolutionBundleController {
 		render (view:"manageservicesetup", model: [solutionBundleInstance:solutionBundleInstance,serviceListInstance:serviceListInstance])
 	}
 	
-	def manageservicesetup2 = {
+	def manageservicesetup2() {
 		def sbInstance = new SolutionBundle(params)
 		sbInstance.createdDate = new Date()
 		if(isSolutionBundleAvailable(params.name))
@@ -185,7 +181,7 @@ class SolutionBundleController {
 			}
 		}
 	}
-	def saveAndManageServices = {
+	def saveAndManageServices() {
 		def solutionBundleInstance = new SolutionBundle(params)
 		solutionBundleInstance.createdDate = new Date()
 		def solutionBundle = SolutionBundle.get(params.id)
@@ -228,7 +224,7 @@ class SolutionBundleController {
 		sb.append("</ul>");
 	}
 	
-    def show = {
+    def show() {
         def solutionBundleInstance = SolutionBundle.get(params.id)
         if (!solutionBundleInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'solutionBundle.label', default: 'SolutionBundle'), params.id])}"
@@ -260,21 +256,21 @@ class SolutionBundleController {
         }
     }
 	
-	def showsetup = {
+	def showsetup() {
 		redirect(action:"show", params: params)
     }
 	
-    def edit = {
+    def edit() {
 		def sbInstance = SolutionBundle.get(params.id)
 		
 		render(view: "editsetup", model: [solutionBundleInstance:sbInstance]);
 	}
 	
-	def editsetup = {
+	def editsetup() {
 		redirect(action:"edit",params: params)
 	}
 	
-    def update = {
+    def update() {
 		def solutionBundleInstance = SolutionBundle.get(params.id)
         if (solutionBundleInstance) {
             if (params.version) {
@@ -326,7 +322,7 @@ class SolutionBundleController {
         }
     }
    
-	def deletesetup = {
+	def deletesetup() {
 		def solutionBundleInstance = SolutionBundle.get(params.id)
 		if (solutionBundleInstance) {
 			solutionBundleInstance.delete(flush: true)

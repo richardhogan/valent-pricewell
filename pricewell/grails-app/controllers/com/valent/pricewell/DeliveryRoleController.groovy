@@ -7,18 +7,15 @@ class DeliveryRoleController {
     static allowedMethods = [save: "POST", update: "POST"]
 
 	def sendMailService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		if(params.source == "setup" || params.source == "firstsetup")
 		{
@@ -31,7 +28,7 @@ class DeliveryRoleController {
 				createPermission: PricewellSecurity.isPermitted("deliveryRole:create")]
     }
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
 	}
 	
@@ -49,8 +46,7 @@ class DeliveryRoleController {
 			}
 		
 	  }
-	def isDeliveryRoleDefined =
-	{
+	def isDeliveryRoleDefined() {
 		if(DeliveryRole.list().size() > 0)
 		{
 			render "true"
@@ -61,13 +57,13 @@ class DeliveryRoleController {
 		}
 	}
 
-	def requestForUndefinedTerritories = {
+	def requestForUndefinedTerritories() {
 		def deliveryRoleInstance = DeliveryRole.get(params.deliveryRoleId.toLong())	
 		def serviceInstance = Service.get(params.serviceId.toLong())
 		render(template: "requestToDefineTerritories", model: [deliveryRoleInstance: deliveryRoleInstance, serviceInstance: serviceInstance])
 	}
 	
-	def sendRequest = {
+	def sendRequest() {
 		println params
 		def map = [:]
 		def deliveryRoleInstance = DeliveryRole.get(params.deliveryRoleId)
@@ -91,7 +87,7 @@ class DeliveryRoleController {
 		render "success"
 	}
 	
-    def create = {
+    def create() {
         def deliveryRoleInstance = new DeliveryRole()
         deliveryRoleInstance.properties = params
         if(params.source == "setup" || params.source == "firstsetup")
@@ -103,16 +99,16 @@ class DeliveryRoleController {
 			return [deliveryRoleInstance: deliveryRoleInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
-	def getName = {
+	def getName() {
 		def deliveryRoleInstance = DeliveryRole.get(params.id)
 		render deliveryRoleInstance.name
 	}
 	
-    def save = {
+    def save() {
         def deliveryRoleInstance = new DeliveryRole(params)
 		if(isDeliveryRoleAvailable(params.name))
 		{
@@ -140,7 +136,7 @@ class DeliveryRoleController {
         
     }
 
-    def show = {
+    def show() {
         def deliveryRoleInstance = DeliveryRole.get(params.id)
         if (!deliveryRoleInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'deliveryRole.label', default: 'DeliveryRole'), params.id])}"
@@ -171,11 +167,11 @@ class DeliveryRoleController {
         }
     }
 	
-	def showsetup = {
+	def showsetup() {
 		redirect(action:"show", params: params)
     }
 
-    def edit = {
+    def edit() {
         def deliveryRoleInstance = DeliveryRole.get(params.id)
         if (!deliveryRoleInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'deliveryRole.label', default: 'DeliveryRole'), params.id])}"
@@ -192,11 +188,11 @@ class DeliveryRoleController {
         }
     }
 
-	def editsetup = {
+	def editsetup() {
 		redirect(action:"edit", params: params)
 	}
 	
-    def update = {
+    def update() {
 		def deliveryRoleInstance = DeliveryRole.get(params.id)
         if (deliveryRoleInstance) {
             if (params.version) {
@@ -281,7 +277,7 @@ class DeliveryRoleController {
 	 
 	}
    
-	def deletesetup = {
+	def deletesetup() {
 		def deliveryRoleInstance = DeliveryRole.get(params.id)
 		def name =  deliveryRoleInstance.name
 		
@@ -311,8 +307,7 @@ class DeliveryRoleController {
 		}
 	}
 	
-	def reportsetup = {
-		
+	def reportsetup() {
 		def deliveryRoleInstance = DeliveryRole.get(params.id)
 		List serviceProfileList = new ArrayList()
 		
@@ -325,7 +320,7 @@ class DeliveryRoleController {
 	}
 	
 	
-	def getDeliveryRoleName = {
+	def getDeliveryRoleName() {
 		def deliveryRoleInstance = DeliveryRole.get(params.id)
 		def deliveryRoleName = ""
 		if (deliveryRoleInstance)
@@ -336,7 +331,7 @@ class DeliveryRoleController {
 		render deliveryRoleName
 		
 	}
-    def delete = {
+    def delete() {
         def deliveryRoleInstance = DeliveryRole.get(params.id)
 		def name =  deliveryRoleInstance.name
         if (deliveryRoleInstance) {

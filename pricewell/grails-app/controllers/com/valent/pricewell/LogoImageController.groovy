@@ -24,30 +24,26 @@ class LogoImageController {
 	def fileUploadService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [logoImageInstanceList: LogoImage.list(params), logoImageInstanceTotal: LogoImage.count()]
     }
 
-    def create = {
+    def create() {
         def logoImageInstance = new LogoImage()
         logoImageInstance.properties = params
         return [logoImageInstance: logoImageInstance]
     }
 
-	def renderImage =
-	{
+	def renderImage() {
 		def logoImageInstance = LogoImage.get(params.id)
 		if (logoImageInstance?.image)
 		{
@@ -60,19 +56,18 @@ class LogoImageController {
 		}
 	}
 	
-	def uploadImage = {
+	def uploadImage() {
 		render(template: "create", model: [logoFor: params.logoFor, source: params.source])
 		
 		
 	}
 	
-	def showImage =
-	{
+	def showImage() {
 		def logoImageInstance = LogoImage.get(params.id.toInteger())
 		render(template: "showImage", model: [logoImageInstance: logoImageInstance])
 	}
 	
-	def saveLogo = {
+	def saveLogo() {
 		def logoImageInstance = new LogoImage(params)
 		def map = new HashMap()
 		
@@ -94,7 +89,7 @@ class LogoImageController {
 		}
 	}
 	
-    def save = {
+    def save() {
 		def multipartFile = request.getFile('image')
 		File imageFile = multipartToFile(multipartFile)
 		def filePath = imageFile.getAbsolutePath()
@@ -154,7 +149,7 @@ class LogoImageController {
 		is.close();
 		return bytes;
 	}
-    def show = {
+    def show() {
         def logoImageInstance = LogoImage.get(params.id)
         if (!logoImageInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'logoImage.label', default: 'LogoImage'), params.id])}"
@@ -165,7 +160,7 @@ class LogoImageController {
         }
     }
 
-    def edit = {
+    def edit() {
         def logoImageInstance = LogoImage.get(params.id)
         if (!logoImageInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'logoImage.label', default: 'LogoImage'), params.id])}"
@@ -176,7 +171,7 @@ class LogoImageController {
         }
     }
 
-    def update = {
+    def update() {
         def logoImageInstance = LogoImage.get(params.id)
         if (logoImageInstance) {
             if (params.version) {
@@ -203,7 +198,7 @@ class LogoImageController {
         }
     }
 
-    def delete = {
+    def delete() {
         def logoImageInstance = LogoImage.get(params.id)
         if (logoImageInstance) {
             try {

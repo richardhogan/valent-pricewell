@@ -3,42 +3,20 @@ package com.valent.pricewell
 import com.valent.pricewell.PricewellSecurity
 
 class NavigationController {
-	static navigation = [
-		[group:'navigation', action:'home', order: 0],
-		[action:'reviewBoard', order: 1, title: "Inbox"],
-	/*	[action:'administration', order: 2, isVisible: {PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR")},
-			subItems: [
-						[action:'manageRoles', order:2],
-						[action:'manageUsers', order:10]
-						]], */
-		[action:'deliveryRoles', order: 3, isVisible: {!PricewellSecurity.hasRole("SALES PERSON")}],
-		[action:'portfolio', order: 5, isVisible: {!PricewellSecurity.hasRole("PRODUCT MANAGER") && !PricewellSecurity.hasRole("SALES PERSON") && !PricewellSecurity.hasRole("SERVICE DESIGNER")}],
-		[action:'services', title: 'Service Catalog', order: 10, isVisible: {true}],
-		[action:'reports', order: 25, isVisible: {PricewellSecurity.isPermitted("reports:show")}],
-		[action:'accounts', order: 35, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
-		[action:'contacts', order: 45, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
-		[action:'leads', order: 55, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}],
-		[action:'opportunities', order: 65, isVisible: {PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES PERSON") || PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("SALES MANAGER")}]
-		
-	]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = { }
-	
-	def home = {
+    def index() { }
+	def home() {
 			saveNavigationState()
 			redirect(controller: "home")
 		}
 	
 	
 	
-	def administration = {
+	def administration() {
 		saveNavigationState()
 		if(session["administration"])
 		{
@@ -48,28 +26,28 @@ class NavigationController {
 		redirect(controller: "admins")
 	}
 	
-	def accounts = {
+	def accounts() {
 		saveNavigationState()
 //		
 		redirect(controller: "account", action: "list")
 	}
 	
-	def leads = {
+	def leads() {
 		saveNavigationState()
 //		
 		redirect(controller: "lead", action: "list")
 	}
 	
-	def contacts = {
+	def contacts() {
 		saveNavigationState()
 		redirect(controller: "contact", action: "list")
 	}
 	
-	def opportunities = {
+	def opportunities() {
 		saveNavigationState()
 		redirect(controller: "opportunity", action: "list")
 	}
-	def portfolio = {
+	def portfolio() {
 		saveNavigationState()
 //		if(session["portfolio"])
 //		{
@@ -79,7 +57,7 @@ class NavigationController {
 		redirect(controller: "portfolio", action: "list")
 	}
 	
-	def services = {
+	def services() {
 		saveNavigationState()
 //		if(session["service"])
 //		{
@@ -89,7 +67,7 @@ class NavigationController {
 		redirect(controller: "service")
 	}
 	
-	def reviewBoard = {
+	def reviewBoard() {
 		session["reviewShowSource"] = "reviewBoard";
 		saveNavigationState()
 		if(session["reviewRequest"])
@@ -100,7 +78,7 @@ class NavigationController {
 		redirect(controller: "reviewRequest")
 	}
 	
-	def deliveryRoles = {
+	def deliveryRoles() {
 		saveNavigationState()
 		if(session["deliveryRole"])
 		{
@@ -110,7 +88,7 @@ class NavigationController {
 		redirect(controller: "deliveryRole")
 	}
 	
-	def quoteServices = {
+	def quoteServices() {
 		saveNavigationState()
 		/*if(session["quotation"])
 		{
@@ -120,7 +98,7 @@ class NavigationController {
 		redirect(controller: "quotation")
 	}
 	
-	def reports = {
+	def reports() {
 		saveNavigationState()
 		if(session["reports"])
 		{
@@ -130,11 +108,11 @@ class NavigationController {
 		redirect(controller: "reports", action:"statusOfQuotes")
 	}
 	
-	def manageRoles = {
+	def manageRoles() {
 		redirect(controller: "role")
 	}
 	
-	def manageUsers = {
+	def manageUsers() {
 		redirect(controller: "user")
 	}
 	

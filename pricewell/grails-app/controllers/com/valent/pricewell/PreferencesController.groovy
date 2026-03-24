@@ -2,15 +2,13 @@ package com.valent.pricewell
 
 class PreferencesController {
 
-    def listServiceStages = {     
+    def listServiceStages() {
         [stagingInstanceList: Staging.listAllServiceStages()]
     }
 	
-	def editServiceStages = {
-		
+	def editServiceStages() {
 	}
 	
-	def saveServiceStages = {
-		
+	def saveServiceStages() {
 	}
 }

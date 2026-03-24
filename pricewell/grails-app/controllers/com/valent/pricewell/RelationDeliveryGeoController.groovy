@@ -5,30 +5,28 @@ class RelationDeliveryGeoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", addGeosForDeliveryRole: "POST", updateMultiple: "POST", editMultiple: "POST", deleteMultiple: "POST"]
 	def serviceCatalogService
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         [relationDeliveryGeoInstanceList: RelationDeliveryGeo.list(params), relationDeliveryGeoInstanceTotal: RelationDeliveryGeo.count()]
     }
 	
-	def listForDeliveryRole = {
+	def listForDeliveryRole() {
 		DeliveryRole.get(params.id)?.listForDeliveryRole()
 	}
 	
-	def listForGeo = {
+	def listForGeo() {
 		Geo.get(params.id)?.listForGeo()
 	}
 	
-	def deleteMultiple = {
+	def deleteMultiple() {
 		List checkedRelations = []
 		long deliveryRoleId
 		boolean anyChecked = false
@@ -65,7 +63,7 @@ class RelationDeliveryGeoController {
 		}
 	}
 	
-	def editMultiple = {
+	def editMultiple() {
 		def deliveryRoleInstance = DeliveryRole.get(params.deliveryRoleId)
 		List checkedRelations = []
 		for(String key: params.check.keySet())
@@ -92,7 +90,7 @@ class RelationDeliveryGeoController {
 		}
 	}
 	
-	def updateMultiple = {
+	def updateMultiple() {
 		int entries = params.entries.toInteger()
 		long deliveryRoleId;
 		
@@ -137,8 +135,7 @@ class RelationDeliveryGeoController {
 	}
 	
 	
-	def addGeosForDeliveryRoleSetup = {
-		
+	def addGeosForDeliveryRoleSetup() {
 		def deliveryRoleInstance = DeliveryRole.get(params.deliveryRoleId)
 		
 		List checkedGeos = [] 
@@ -163,8 +160,7 @@ class RelationDeliveryGeoController {
 		
 	}
 	
-	def addGeosForDeliveryRole = {
-		
+	def addGeosForDeliveryRole() {
 		def deliveryRoleInstance = DeliveryRole.get(params.deliveryRoleId)
 		
 		List checkedGeos = [] 
@@ -184,7 +180,7 @@ class RelationDeliveryGeoController {
 		
 	}
 	
-	def saveMultiple = {
+	def saveMultiple() {
 		int entries = params.entries.toInteger()
 		
 		long deliveryRoleId
@@ -208,13 +204,13 @@ class RelationDeliveryGeoController {
 		}
 	}
 
-    def create = {
+    def create() {
         def relationDeliveryGeoInstance = new RelationDeliveryGeo()
         relationDeliveryGeoInstance.properties = params
         return [relationDeliveryGeoInstance: relationDeliveryGeoInstance]
     }
 
-    def save = {
+    def save() {
         def relationDeliveryGeoInstance = new RelationDeliveryGeo(params)
         if (relationDeliveryGeoInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'relationDeliveryGeo.label', default: 'RelationDeliveryGeo'), relationDeliveryGeoInstance.id])}"
@@ -225,7 +221,7 @@ class RelationDeliveryGeoController {
         }
     }
 
-    def show = {
+    def show() {
         def relationDeliveryGeoInstance = RelationDeliveryGeo.get(params.id)
         if (!relationDeliveryGeoInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'relationDeliveryGeo.label', default: 'RelationDeliveryGeo'), params.id])}"
@@ -236,7 +232,7 @@ class RelationDeliveryGeoController {
         }
     }
 
-    def edit = {
+    def edit() {
         def relationDeliveryGeoInstance = RelationDeliveryGeo.get(params.id)
         if (!relationDeliveryGeoInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'relationDeliveryGeo.label', default: 'RelationDeliveryGeo'), params.id])}"
@@ -247,7 +243,7 @@ class RelationDeliveryGeoController {
         }
     }
 
-    def update = {
+    def update() {
         def relationDeliveryGeoInstance = RelationDeliveryGeo.get(params.id)
         if (relationDeliveryGeoInstance) {
             if (params.version) {
@@ -274,7 +270,7 @@ class RelationDeliveryGeoController {
         }
     }
 
-    def delete = {
+    def delete() {
         def relationDeliveryGeoInstance = RelationDeliveryGeo.get(params.id)
         if (relationDeliveryGeoInstance) {
             try {

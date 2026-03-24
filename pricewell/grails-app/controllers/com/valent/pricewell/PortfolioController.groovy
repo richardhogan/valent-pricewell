@@ -10,19 +10,16 @@ class PortfolioController {
 	def sendMailService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
 		redirect(action: "list", params: params)
     }
 	
-	def unassignedPortfolio = {
+	def unassignedPortfolio() {
 		List portfolioList = new ArrayList();
 		def portfolioManagerList = serviceCatalogService.findPortfolioManagers()
 		def usenobody = User.findByUsername("nobody")
@@ -39,7 +36,7 @@ class PortfolioController {
 		
 	}
 	
-	def savePortfolioManager = {
+	def savePortfolioManager() {
 		Portfolio portfolioInstance = Portfolio.get(params.id.toLong())
 		User portfolioManager = User.get(params.portfolioManagerId.toLong())
 		portfolioInstance.portfolioManager = portfolioManager
@@ -49,7 +46,7 @@ class PortfolioController {
 		render "success"	
 	}
 	
-    def list = {
+    def list() {
 		//params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		List serviceProfileInstanceList = serviceCatalogService.findUserPortfolios(user, params)
@@ -63,13 +60,12 @@ class PortfolioController {
 			[portfolioInstanceList: serviceProfileInstanceList, portfolioInstanceTotal: serviceProfileInstanceList.size() , createPermit: isPermitted("create")]
     }
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
 		
 	}
 
-	def isPortfolioDefined =
-	{
+	def isPortfolioDefined() {
 		if(Portfolio.list().size() > 0)
 		{
 			render "true"
@@ -80,7 +76,7 @@ class PortfolioController {
 		}
 	}
 	
-    def create = {
+    def create() {
         def portfolioInstance = new Portfolio()
         portfolioInstance.properties = params
 	
@@ -98,7 +94,7 @@ class PortfolioController {
 			return [portfolioInstance: portfolioInstance, portfolioManagerList: portfolioManagerList]
     }
 	
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 
@@ -116,7 +112,7 @@ class PortfolioController {
 			}
 		
 	  }
-    def save = {
+    def save() {
         def portfolioInstance = new Portfolio(params)
 		portfolioInstance.stagingStatus = "Published"
 		portfolioInstance.dateModified = new Date()
@@ -163,11 +159,11 @@ class PortfolioController {
         
     }
 
-	def getName = {
+	def getName() {
 		def portfolioInstance = Portfolio.get(params.id)
 		render portfolioInstance.portfolioName
 	}
-    def show = {
+    def show() {
         def portfolioInstance = Portfolio.get(params.id)
         if (!portfolioInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'portfolio.label', default: 'Portfolio'), params.id])}"
@@ -191,14 +187,14 @@ class PortfolioController {
         }
     }
 
-	def showsetup = {
+	def showsetup() {
 		redirect(action: "show", params: params)
 	}
 	
-    def edit = {
+    def edit() {
 		if(!isPermitted("update"))
 		{
-			return  response.sendError(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN)
+			return  response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN)
 		}
 		
         def portfolioInstance = Portfolio.get(params.id)
@@ -220,14 +216,14 @@ class PortfolioController {
         }
     }
 
-	def editsetup = {
+	def editsetup() {
 		redirect(action: "edit", params: params)
 	}
 	
-    def update = {
+    def update() {
 		if(!isPermitted("update"))
 		{
-			return  response.sendError(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN)
+			return  response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN)
 		}
 		def previousPM, pm
 		def portfolioInstance = Portfolio.get(params.id)
@@ -327,7 +323,7 @@ class PortfolioController {
 		}
     }
 
-	def deletesetup = {
+	def deletesetup() {
 		def portfolioInstance = Portfolio.get(params.id)
 		def name = portfolioInstance.portfolioName
 		if(portfolioInstance.services.size()==0)
@@ -352,7 +348,7 @@ class PortfolioController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def portfolioInstance = Portfolio.get(params.id)
 		def name = portfolioInstance.portfolioName
         if(portfolioInstance.services.size()==0)

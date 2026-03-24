@@ -9,17 +9,14 @@ class SowIntroductionController {
     static allowedMethods = [save: "POST", update: "POST"]
 
 
-    def index = {
+    def index() {
         redirect(action: "listsetup", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		log.info("${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
 		System.out.println("In list")
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		if(params.source == "setup" || params.source == "firstsetup")
@@ -33,7 +30,7 @@ class SowIntroductionController {
 				createPermission: PricewellSecurity.isPermitted("sowIntroduction:create")]
     }
 	
-	def listsetup = {
+	def listsetup() {
 		System.out.println("In listsetup")
 		redirect(action: "list", params: params)
 	}
@@ -52,8 +49,7 @@ class SowIntroductionController {
 			return false
 		}
 	  }
-	def isSowIntroductionDefined =
-	{
+	def isSowIntroductionDefined() {
 		if(SowIntroduction.list().size() > 0)
 		{
 			render "true"
@@ -64,7 +60,7 @@ class SowIntroductionController {
 		}
 	}
 
-    def create = {
+    def create() {
         def sowIntroductionInstance = new SowIntroduction()
         sowIntroductionInstance.properties = params
         if(params.source == "setup" || params.source == "firstsetup")
@@ -76,16 +72,16 @@ class SowIntroductionController {
 			return [sowIntroductionInstance: sowIntroductionInstance]
     }
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
-	def getName = {
+	def getName() {
 		def sowIntroductionInstance = SowIntroduction.get(params.id)
 		render sowIntroductionInstance.name
 	}
 	
-	def getSowText = {
+	def getSowText() {
 		Map resultMap = new HashMap()
 		resultMap.put("sow_text", "")
 		def sowIntroductionInstance = SowIntroduction.get(params.id)
@@ -96,7 +92,7 @@ class SowIntroductionController {
 		render resultMap as JSON
 	}
 	
-    def save = {
+    def save() {
         def sowIntroductionInstance = new SowIntroduction(params)
 		def geoInstance = Geo.get(params.territoryId)
 		sowIntroductionInstance.geo = geoInstance
@@ -131,7 +127,7 @@ class SowIntroductionController {
 		}
 		sb.append("</ul>");
 	}
-    def show = {
+    def show() {
         def sowIntroductionInstance = SowIntroduction.get(params.id)
         if (!sowIntroductionInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'sowIntroduction.label', default: 'SowIntroduction'), params.id])}"
@@ -162,14 +158,14 @@ class SowIntroductionController {
         }
     }
 	
-	def showsetup = {
+	def showsetup() {
 		redirect(action:"show", params: params)
     }
 
 	
 	
 	
-    def edit = {
+    def edit() {
 		System.out.println("In edit");
         def sowIntroductionInstance = SowIntroduction.get(params.id)
 		
@@ -192,11 +188,11 @@ class SowIntroductionController {
 		}
 	}
 	
-	def editsetup = {
+	def editsetup() {
 		redirect(action:"edit", params: params)
 	}
 	
-	def getTerritory = {
+	def getTerritory() {
 		def sowIntroductionInstance = Geo.get(params.territoryId)
 		if (!sowIntroductionInstance) {
 			//flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'setting.label', default: 'Setting'), params.id])}"
@@ -213,7 +209,7 @@ class SowIntroductionController {
 		
 	}
 	
-    def update = {		
+    def update() {
 		System.out.println("In update");
 		def sowIntroductionInstance = SowIntroduction.get(params.id)
         if (sowIntroductionInstance) {
@@ -270,7 +266,7 @@ class SowIntroductionController {
         }
     }
    
-	def deletesetup = {
+	def deletesetup() {
 		def sowIntroductionInstance = SowIntroduction.get(params.id)
 		def name =  sowIntroductionInstance.name
 		
@@ -300,7 +296,7 @@ class SowIntroductionController {
 		}
 	}	
 	
-	def getSowIntroductionName = {
+	def getSowIntroductionName() {
 		def sowIntroductionInstance = SowIntroduction.get(params.id)
 		def sowIntroductionName = ""
 		if (sowIntroductionInstance)
@@ -311,7 +307,7 @@ class SowIntroductionController {
 		render sowIntroductionName
 		
 	}
-    def delete = {
+    def delete() {
         def sowIntroductionInstance = SowIntroduction.get(params.id)
 		def name =  sowIntroductionInstance.name
         if (sowIntroductionInstance) {

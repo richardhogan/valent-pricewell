@@ -9,24 +9,21 @@ import java.util.TreeSet
 class ServiceProductItemController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceProductItemInstanceList: ServiceProductItem.list(params), serviceProductItemInstanceTotal: ServiceProductItem.count()]
     }
 	
-	def listServiceProducts = {
+	def listServiceProducts() {
 		if(params.serviceProfileId)
 		{
 			def serviceProfile = ServiceProfile.get(params.serviceProfileId)
@@ -34,13 +31,13 @@ class ServiceProductItemController {
 		}
 	}
 
-    def create = {
+    def create() {
         def serviceProductItemInstance = new ServiceProductItem()
         serviceProductItemInstance.properties = params
         return [serviceProductItemInstance: serviceProductItemInstance]
     }
 	
-	def createFromService = {
+	def createFromService() {
 		if(!params.id)
 		{
 			flash.message = "Invalid Request";
@@ -56,7 +53,7 @@ class ServiceProductItemController {
 					 model:[serviceProductItemInstance: serviceProductItemInstance,productList: productList, serviceProfileId: params.id.toLong()])	
 	}
 	
-	def getproductsjson = {
+	def getproductsjson() {
 		ServiceProfile sp = ServiceProfile.get(params.id);
 		def results = []
 		Set ids = new TreeSet();
@@ -78,8 +75,7 @@ class ServiceProductItemController {
 		
 	}
 
-	def saveFromService = {
-		
+	def saveFromService() {
 		def serviceProductItemInstance = new ServiceProductItem()
 		serviceProductItemInstance.properties = params
 		println params
@@ -102,7 +98,7 @@ class ServiceProductItemController {
 		}
     }
 	
-	def editFromService ={
+	def editFromService() {
 			def serviceProductItemInstance = ServiceProductItem.get(params.id)
 			
 			if (!serviceProductItemInstance) {
@@ -117,7 +113,7 @@ class ServiceProductItemController {
 	
 		}
 	
-	def updateFromService = {
+	def updateFromService() {
 		def pid = params.id
 		def serviceProductItemInstance = ServiceProductItem.get(params.id)
 		if (serviceProductItemInstance) {
@@ -147,7 +143,7 @@ class ServiceProductItemController {
 		}
 	}
 	
-    def save = {
+    def save() {
         def serviceProductItemInstance = new ServiceProductItem(params)
         if (serviceProductItemInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceProductItem.label', default: 'ServiceProductItem'), serviceProductItemInstance.id])}"
@@ -158,7 +154,7 @@ class ServiceProductItemController {
         }
     }
 
-    def show = {
+    def show() {
         def serviceProductItemInstance = ServiceProductItem.get(params.id)
         if (!serviceProductItemInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProductItem.label', default: 'ServiceProductItem'), params.id])}"
@@ -169,7 +165,7 @@ class ServiceProductItemController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceProductItemInstance = ServiceProductItem.get(params.id)
         if (!serviceProductItemInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProductItem.label', default: 'ServiceProductItem'), params.id])}"
@@ -180,7 +176,7 @@ class ServiceProductItemController {
         }
     }
 
-    def update = {
+    def update() {
         def serviceProductItemInstance = ServiceProductItem.get(params.id)
         if (serviceProductItemInstance) {
             if (params.version) {
@@ -207,7 +203,7 @@ class ServiceProductItemController {
         }
     }
 
-    def delete = {
+    def delete() {
         def serviceProductItemInstance = ServiceProductItem.get(params.id)
 		def name = serviceProductItemInstance.productName
         if (serviceProductItemInstance) {
@@ -227,7 +223,7 @@ class ServiceProductItemController {
         }
     }
 	
-	def deleteFromService = {
+	def deleteFromService() {
 		def serviceProductItemInstance = ServiceProductItem.get(params.id)
 		def serviceProfile = serviceProductItemInstance.serviceProfile
 		if (serviceProductItemInstance) {

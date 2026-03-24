@@ -7,9 +7,8 @@ import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.ImageOutputStream
 import javax.imageio.ImageIO;
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 import org.springframework.web.multipart.MultipartHttpServletRequest
-import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.springframework.web.multipart.MultipartFile
 
 
 class AccountController {
@@ -20,12 +19,9 @@ class AccountController {
 	def phoneNumberService
 	def salesCatalogService, fileUploadService
 	def sendMailService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
@@ -39,7 +35,7 @@ class AccountController {
 			return false
 	} 
 	
-    def list = {
+    def list() {
 		def accountList = []
 		
 		def unAssignedList = [], assignedList = []
@@ -64,7 +60,7 @@ class AccountController {
         [accountInstanceList: accountList, accountInstanceTotal: accountList?.size(), unAssignedList: unAssignedList]
     }
 
-    def create = {
+    def create() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		//if(user.country != null && user.country != "null" && user.country != "NULL")// && user.primaryTerritory != null && user.primaryTerritory != "null" && user.primaryTerritory != "NULL")
 		def territoryList = new ArrayList()
@@ -94,8 +90,7 @@ class AccountController {
 		}
     }
 	
-	def createAccount = {
-		
+	def createAccount() {
 			def accountInstance = new Account()
 			accountInstance.properties = params
 			//def salesUsers = []
@@ -166,7 +161,7 @@ class AccountController {
 		return queryString
 	}
 	
-	def search = {
+	def search() {
 		String queryString =  buildAccountSearchQuery(params.searchFields)
 		def accountList = Account.findAll(queryString)
 		
@@ -192,7 +187,7 @@ class AccountController {
 		
 	}
 
-	def save = {
+	def save() {
 		def res = "fail"
 		
 		boolean i = false
@@ -451,7 +446,7 @@ class AccountController {
 		 return check
 	}
 	
-    def show = {
+    def show() {
         def accountInstance = Account.get(params.id)
 		if(params.notificationId)
 		{
@@ -479,7 +474,7 @@ class AccountController {
 		return isThere
 	}
 	
-    def edit = {
+    def edit() {
         def accountInstance = Account.get(params.id)
         if (!accountInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'account.label', default: 'Account'), params.id])}"
@@ -494,7 +489,7 @@ class AccountController {
         }
     }
 
-    def update = {
+    def update() {
 		def res = "fail"
 		boolean i = false
 		
@@ -620,7 +615,7 @@ class AccountController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def accountInstance = Account.get(params.id)
         if (accountInstance) {
             try {

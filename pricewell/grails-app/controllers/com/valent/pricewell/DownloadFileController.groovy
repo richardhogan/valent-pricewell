@@ -4,16 +4,13 @@ import com.valent.pricewell.PricewellSecurity
 
 class DownloadFileController {
 
-    def index = { }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
+    def index() { }
 	def debug() {
 		//def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info(" ${actionUri} with params ${params}")
 	}
 	
-	def downloadXmlFile = {
+	def downloadXmlFile() {
 		def filePath = params.filePath
 		def file = new File(filePath) //<-- you'll probably want to pass in the file name dynamically with the 'params' map
 		
@@ -22,8 +19,7 @@ class DownloadFileController {
 		response.outputStream << file.newInputStream()
 	}
 	
-	def downloadDocumentFile = {
-		
+	def downloadDocumentFile() {
 		def filePath = params.filePath
 		def file = new File(filePath) //<-- you'll probably want to pass in the file name dynamically with the 'params' map
 		
@@ -32,11 +28,10 @@ class DownloadFileController {
 		response.outputStream << file.newInputStream()
 	}
 	
-	def downloadPdfFile = {
-		
+	def downloadPdfFile() {
 	}
 	
-	def downloadTextFile = {
+	def downloadTextFile() {
 		def filePath = params.filePath
 		def file = new File(filePath) //<-- you'll probably want to pass in the file name dynamically with the 'params' map
 		

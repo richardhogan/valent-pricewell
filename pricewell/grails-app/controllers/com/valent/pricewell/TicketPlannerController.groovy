@@ -6,7 +6,7 @@ package com.valent.pricewell
 
 class TicketPlannerController {
 	
-    def list = {
+    def list() {
 		println'In List'
 		def portfolioInstance = Portfolio.get(params.portfolioId)
 		println params.parentTask
@@ -24,7 +24,7 @@ class TicketPlannerController {
 		}
     }
 	
-	def create = {
+	def create() {
 		println'In Create'
 		def portfolioInstance = Portfolio.get(params.portfolioId.toLong())
 		println "id " + portfolioInstance
@@ -38,7 +38,7 @@ class TicketPlannerController {
 		}
 	}   
 	
-	def save = {
+	def save() {
 		println"In Save"
 		println 'params : ' + params
 		def ticketPlannerInstance = new TicketPlanner();
@@ -73,7 +73,7 @@ class TicketPlannerController {
 			}
 		}
 	}
-	def edit = {
+	def edit() {
 		println'In Edit'
 		def ticketPlannerInstance = TicketPlanner.get(params.id)
 		println "Test: " +ticketPlannerInstance
@@ -89,7 +89,7 @@ class TicketPlannerController {
 			render(view: "editsetup", model:[ticketPlannerInstance:ticketPlannerInstance,portfolioInstance:portfolioInstance]);
 		}
 	}
-	def update = {
+	def update() {
 		println "In update"
 		def ticketPlannerInstance = TicketPlanner.get(params.id)
 		if (ticketPlannerInstance) {
@@ -144,7 +144,7 @@ class TicketPlannerController {
 			redirect(action: "listsetup")
 		}
 	}
-	def getTaskName = {
+	def getTaskName() {
 		def ticketPlannerInstance = TicketPlanner.get(params.id)
 		render ticketPlannerInstance.taskName
 	}
@@ -158,7 +158,7 @@ class TicketPlannerController {
 		}
 		sb.append("</ul>");
 	}
-	def deletesetup = {
+	def deletesetup() {
 		println 'In delete setup '
 		def ticketPlannerInstance = TicketPlanner.get(params.id)
 		println'id : ' + ticketPlannerInstance

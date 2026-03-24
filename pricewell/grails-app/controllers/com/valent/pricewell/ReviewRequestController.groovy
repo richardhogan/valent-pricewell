@@ -7,20 +7,15 @@ class ReviewRequestController {
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	def sendMailService
 
-	def index = {
-
+	def index() {
 		redirect(action: "inbox", params: params)
 	}
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def inbox = {
-
+	def inbox() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def notificationList = Notification.listUserNotifications(user,null)
@@ -45,25 +40,18 @@ class ReviewRequestController {
 		//reviewRequestList = requestsList//.sort{x,y -> y.dateModified <=> x.dateModified}
 		render(view: "inbox", model: [notificationPending: notificationPending, notificationInstanceList: notificationList, notificationInstanceTotal: notificationList.size(), reviewRequestInstanceList: reviewRequestList, reviewRequestInstanceTotal: reviewRequestList.size(), title: "My Assigned Review Requests", category: "myAssigned", type: "Pending"])
 	}
-
-	static navigation = [
-		[group:'review', action:'myAssigned', order: 0],
-		[action:'mySubmitted', order: 5],
-		[action:'all', order: 10],
-	]
-
-	def list = {
+	def list() {
 		if(params.category != null || params.category != "")
 		{
 			redirect(action: params.category, params: params)
 		}
 		else
 		{
-			render(template: "list", model: [reviewRequestInstanceList: ReviewRequest.list(params), reviewRequestInstanceTotal: ReviewRequest.count(), title: "All Review Requests", , category: "all"])
+			render(template: "list", model: [reviewRequestInstanceList: ReviewRequest.list(params), reviewRequestInstanceTotal: ReviewRequest.count(), title: "All Review Requests", category: "all"])
 		}
 	}
 
-	def myAssigned = {
+	def myAssigned() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def requestsList = ReviewRequest.findAll("FROM ReviewRequest rq WHERE rq.serviceProfile != null ORDER BY dateModified DESC")
 		def reviewRequestList = []
@@ -80,7 +68,7 @@ class ReviewRequestController {
 		render(template: "list", model: [reviewRequestInstanceList: reviewRequestList, reviewRequestInstanceTotal: reviewRequestList.size(), title: "My Assigned Review Requests", category: "myAssigned", type: params.type])
 	}
 
-	def mySubmitted = {
+	def mySubmitted() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def requestsList = ReviewRequest.findAll("FROM ReviewRequest rq WHERE rq.serviceProfile != null ORDER BY dateModified DESC")
 		def reviewRequestList = []
@@ -98,8 +86,7 @@ class ReviewRequestController {
 		render(template: "list", model: [reviewRequestInstanceList: reviewRequestList, reviewRequestInstanceTotal: reviewRequestList.size(), title: "My Submitted Review Requests", category: "mySubmitted", type: params.type])
 	}
 
-	def all = {
-
+	def all() {
 		def reviewRequestList = []
 		for(ReviewRequest rq in ReviewRequest.list())
 		{
@@ -114,19 +101,19 @@ class ReviewRequestController {
 		render(template: "list", model:[reviewRequestInstanceList: reviewRequestList, reviewRequestInstanceTotal: reviewRequestList.size(), title: "All Review Requests", category: "all", type: params.type])
 	}
 
-	def showFromStaging = {
+	def showFromStaging() {
 		def reviewRequestInstance = ReviewRequest.get(params.requestId)
 		if (!reviewRequestInstance) {
 			flash.message = "Error while creating review request"
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId)  // was: new Long(SecurityUtils.subject.principal)
 			[reviewRequestInstance: reviewRequestInstance,submitterLoggedIn: submitterLoggedIn ]
 		}
 	}
 
-	def create = {
+	def create() {
 		def serviceProfileId = params.serviceProfileId
 		def userId = params.userId
 		def reviewRequestInstance = new ReviewRequest()
@@ -137,7 +124,7 @@ class ReviewRequestController {
 
 	}
 
-	def save = {
+	def save() {
 		def res = "fail"
 		println params
 		def serviceProfileId = params.serviceProfileId
@@ -163,7 +150,7 @@ class ReviewRequestController {
 			println reviewRequestInstance
 			NotificationGenerator gen = new NotificationGenerator(g)
 			map = gen.notifyReviewRequestUpdate(reviewRequestInstance, NotificationGenerator.ReviewRequestUpdates.NEW,
-					PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
+					PricewellSecurity.currentUser)  // was: User.get(new Long(SecurityUtils.subject.principal))
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceProfile.id)
 			println map
 			if(params.source == "inbox")
@@ -187,14 +174,14 @@ class ReviewRequestController {
 	}
 
 
-	def show = {
+	def show() {
 		def reviewRequestInstance = ReviewRequest.get(params.id)
 		if (!reviewRequestInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'reviewRequest.label', default: 'ReviewRequest'), params.id])}"
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId)  // was: new Long(SecurityUtils.subject.principal)
 			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =null
 			def listBtn ="yes"
@@ -235,7 +222,7 @@ class ReviewRequestController {
 		}
 	}
 
-	def showFromWizard = {
+	def showFromWizard() {
 		def reviewRequestInstance = ReviewRequest.get(params.id)
 		def serviceProfileInstance = ServiceProfile.get(params.serviceProfileId)
 		if (!reviewRequestInstance) {
@@ -243,7 +230,7 @@ class ReviewRequestController {
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId)  // was: new Long(SecurityUtils.subject.principal)
 			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =
 					new ServiceProfileSecurityProvider(reviewRequestInstance.serviceProfile, user)
@@ -256,14 +243,14 @@ class ReviewRequestController {
 		}
 	}
 
-	def showdialog = {
+	def showdialog() {
 		def reviewRequestInstance = ReviewRequest.get(params.id)
 		if (!reviewRequestInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'reviewRequest.label', default: 'ReviewRequest'), params.id])}"
 			redirect(action: "list")
 		}
 		else {
-			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId  // was: new Long(PricewellSecurity.principalId  // was: SecurityUtils.subject.principal))
+			boolean submitterLoggedIn = (reviewRequestInstance?.submitter.id == PricewellSecurity.principalId)  // was: new Long(SecurityUtils.subject.principal)
 			User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			ServiceProfileSecurityProvider profileSecurity =
 					new ServiceProfileSecurityProvider(reviewRequestInstance.serviceProfile, user)
@@ -273,7 +260,7 @@ class ReviewRequestController {
 
 
 
-	def edit = {
+	def edit() {
 		println params.category +" "+ params.type +" "+ params.id
 		boolean hideUpperNav = false
 		def reviewRequestInstance = ReviewRequest.get(params.id)
@@ -302,7 +289,7 @@ class ReviewRequestController {
 		}
 	}
 
-	def update = {
+	def update() {
 		def reviewRequestInstance = ReviewRequest.get(params.id)
 		if (reviewRequestInstance) {
 			if (params.version) {
@@ -331,7 +318,7 @@ class ReviewRequestController {
 		}
 	}
 
-	def delete = {
+	def delete() {
 		def reviewRequestInstance = ReviewRequest.get(params.id)
 		if (reviewRequestInstance) {
 			try {

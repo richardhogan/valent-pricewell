@@ -14,11 +14,11 @@ import javax.management.RuntimeErrorException
 
 import org.xhtmlrenderer.pdf.ITextRenderer
 import org.springframework.web.multipart.MultipartFile
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import grails.util.Holders
+import org.json.JSONArray
+import org.json.JSONObject
 //import org.json.simple.parser.JSONParser
-import org.codehaus.groovy.grails.web.json.parser.JSONParser
+import org.json.JSONObject
 
 import com.google.gson.Gson
 import com.valent.pricewell.Staging.StagingObjectType
@@ -37,12 +37,9 @@ class QuotationController {
 	def fileUploadService, cwimportService, salesCatalogService, bootstrapProcessService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST", savesowtag: "POST"]
 
-	def index = {
+	def index() {
 		redirect(action: "list", params: params)
 	}
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
@@ -64,7 +61,7 @@ class QuotationController {
 		return exist;
 	}
 
-	def hasProjectParameters = {
+	def hasProjectParameters() {
 		def quotationInstance = Quotation.get(params.id)
 		
 		if(quotationInstance?.projectParameters?.size() > 0)
@@ -75,7 +72,7 @@ class QuotationController {
 			render "false"
 	}
 	
-	def list = {
+	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = quotationService.findUserQuote(user)
@@ -88,13 +85,12 @@ class QuotationController {
 		[quotationInstanceList: quotationList, quotationInstanceTotal: quotationList.size()]
 	}
 
-	def goToOpportunity = {
+	def goToOpportunity() {
 		Quotation quotationInstance = Quotation.get(params.id)
 		redirect(controller: "opportunity", action: "show", id: quotationInstance?.opportunity?.id, params: [quoteId: quotationInstance?.id, filePath: params.filePath])
 	}
 	
-	def quotationWorkflowSettingSave = {
-		
+	def quotationWorkflowSettingSave() {
 		String selectedWorkflow = params.get("workflowValue")
 		
 		//def val = Setting.()
@@ -118,7 +114,7 @@ class QuotationController {
 		//redirect (controller: "setup" , action : "firstsetup")
 	}
 	
-	def listPendingJSON = {
+	def listPendingJSON() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotationList = quotationService.findPendingUserQuotes(user)
 
@@ -146,7 +142,7 @@ class QuotationController {
 		render jsonData as JSON
 	}
 
-	def create = {
+	def create() {
 		def quotationInstance = new Quotation()
 		quotationInstance.properties = params
 
@@ -185,14 +181,14 @@ class QuotationController {
 		render (template: "create", model: [quotationInstance: quotationInstance, validityDays: validityDays])
 	}
 
-	def getServiceTicketConfiguration = {
+	def getServiceTicketConfiguration() {
 		def quotationInstance = Quotation.get(params.id.toLong())
 		
 		def configurationMap = cwimportService.getTicketConfiguration()
 		render (view: "serviceTicketConfiguration", model: [quotationInstance: quotationInstance, serviceBoard: configurationMap['serviceBoard'], serviceStatus: configurationMap['serviceStatus'], serviceType: configurationMap['serviceType'], serviceSource: configurationMap['serviceSource'], priority: configurationMap['priority']])
 	}
 	
-	def getRelatedConfiguration = {
+	def getRelatedConfiguration() {
 		def board = params.board
 		def configurationMap = cwimportService.getBoardRelatedConfiguration(board)
 		
@@ -206,7 +202,7 @@ class QuotationController {
 		render dataMap as JSON
 	}
 	
-	def createServiceTicket = {
+	def createServiceTicket() {
 		Quotation quotationInstance = Quotation.get(params.quotationId.toLong())
 		def dataMap = [:]
 		dataMap["board"] = params.board
@@ -233,12 +229,12 @@ class QuotationController {
 		render data as JSON
 	}
 	
-	def addSOWIntroductionAndMilestones = {
+	def addSOWIntroductionAndMilestones() {
 		def quotationInstance = Quotation.get(params.id.toLong())
 		render(template: "addSOWIntroductionAndMilestones", model:[quotationInstance: quotationInstance])
 	}
 	
-	def saveSOWIntroductionAndMilestones = {
+	def saveSOWIntroductionAndMilestones() {
 		def quotationInstance = Quotation.get(params.id.toLong())
 		def value = params.sowIntroduction
 		
@@ -396,7 +392,7 @@ class QuotationController {
 			
 	}
 	
-	def save = {
+	def save() {
 		def quotationInstance = new Quotation()
 		quotationInstance.properties = params
 		quotationInstance.createdDate = new Date()
@@ -449,13 +445,13 @@ class QuotationController {
 		
 	}
 
-	def listPart = {
+	def listPart() {
 		def opp = Opportunity.get(params.opportunityId);
 		//boolean isForConnectwise = salesCatalogService.isClass("com.connectwise.integration.ConnectwiseExporterService", grailsApplication)
 		render(template: "listPart", model: [opportunityInstance: opp])//, isForConnectwise: isForConnectwise]  )
 	}
 
-	def changeServiceQuotationStatus = {
+	def changeServiceQuotationStatus() {
 		def quotationInstance = Quotation.get(params.id.toLong())
 		session["quotationId"] = quotationInstance?.id
 		if (!quotationInstance) {
@@ -513,7 +509,7 @@ class QuotationController {
 		}
 	}
 	
-	def cancelServiceQuotationStatus = {
+	def cancelServiceQuotationStatus() {
 		def quotationInstance = Quotation.get(params.id.toLong())
 		session["quotationId"] = quotationInstance?.id
 		if (!quotationInstance) {
@@ -579,7 +575,7 @@ class QuotationController {
 		}
 	}
 	
-	def show = {
+	def show() {
 		def quotationInstance = Quotation.get(params.id)
 
 		session["quotationId"] = quotationInstance?.id
@@ -686,7 +682,7 @@ class QuotationController {
 	/**
 	 * Params: id & confidence
 	 */
-	def saveConfidence = {
+	def saveConfidence() {
 		Quotation quotationInstance = Quotation.get(params.id)
 		if(quotationInstance){
 			quotationInstance = quotationService.saveConfidence(quotationInstance, new BigDecimal(params.confidence));
@@ -697,14 +693,14 @@ class QuotationController {
 	/**
 	 * params: id
 	 */
-	def getForcastValue = {
+	def getForcastValue() {
 		def quotationInstance = Quotation.get(params.id)
 		if(quotationInstance){
 			render quotationInstance.forecastValue
 		}
 	}
 	
-	def refreshStages = {
+	def refreshStages() {
 		def quotationInstance = Quotation.get(params.id)
 		if(quotationInstance){
 			render(template: "showInfo", model: [quotationInstance: quotationInstance, readOnly: false])
@@ -717,7 +713,7 @@ class QuotationController {
 	 * type: type of staging, quotation or contract, if params not set to contract then default is quotation
 	 * changeToId: StageId to change to
 	 */
-	def changeStage = {
+	def changeStage() {
 		if(params.id && params.changeToId && params.type){
 
 			def quotationInstance = Quotation.get(params.id.toLong())
@@ -779,12 +775,12 @@ class QuotationController {
 		}
 	}
 
-	def showInfo = {
+	def showInfo() {
 		def quotationInstance = Quotation.get(params.id)
 		render(template: "showInfo", model: ['quotationInstance': quotationInstance, readOnly: false] )
 	}
 
-	def showPart = {
+	def showPart() {
 		def quotationInstance = Quotation.get(params.id)
 		session["quotationId"] = quotationInstance?.id
 		if (!quotationInstance) {
@@ -849,14 +845,13 @@ class QuotationController {
 		return discountReject
 	}
 
-	def export = {
+	def export() {
 		def quotationInstance = Quotation.get(params.id)
 		def serquo = quotationService.getActiveServiceOfQuotation(quotationInstance)//q.serviceQuotations
 		render(view: "/quotation/export", model: [quotationInstance: quotationInstance, serviceQuotations: serquo])
 	}
 
-	def previewQuotation = {
-
+	def previewQuotation() {
 		Quotation q =  Quotation.get(params.id)
 		def serquo = quotationService.getActiveServiceOfQuotation(q)//q.serviceQuotations
 		HashSet set = new HashSet()
@@ -867,8 +862,7 @@ class QuotationController {
 		render (template: "previewQuotation", model: ['content': content, qpId: q.id])
 	}
 
-	def exportPDF = {
-
+	def exportPDF() {
 		byte[] b
 		//println params.qpId
 		Quotation q =  Quotation.get(params.qpId)
@@ -922,8 +916,7 @@ class QuotationController {
 	//def germanCharsReplace = ["&auml;":"&#228;", "&euro;": "&#8364;", "&szlig;": "&#223;", "&eacute;": "&#233;", "&ouml;": "&#246;"]
 	def germanCharsReplace = ["&Auml;":"&#196;","&auml;":"&#228;","&Eacute;":"&#201;","&eacute;":"&#233;","&Ouml;":"&#214;","&ouml;":"&#246;","&Uuml;":"&#220;","&uuml;":"&#252;","&szlig;":"&#223;","&euro;" :"&#128;","&pound;":"&#163;"]
 
-	def exportSOWInPDF = {
-
+	def exportSOWInPDF() {
 		def q = Quotation.get(params.sowId.toLong());
 		String sowLabel =  getSOWLabel(q);
 
@@ -980,7 +973,7 @@ class QuotationController {
 	}
 
 
-	def editsowtag = {
+	def editsowtag() {
 		def q = Quotation.get(params.qid);
 		String tagName = params.tag;
 		String tagTitle = params.title;
@@ -997,7 +990,7 @@ class QuotationController {
 		render(template: "editsowtag", model: ["sowTag": sowTag, "createFlg": params.createFlg, tagTitle: tagTitle]);
 	}
 
-	def savesowtag = {
+	def savesowtag() {
 		def q = null;
 
 		if(params.createFlg == "true"){
@@ -1020,7 +1013,7 @@ class QuotationController {
 		render (template: "sowPreview", model: ['sowContent': sowPreview, 'sowId': q.id, sowLabel: sowLabel, quotation: q])
 	}
 
-	def cancelsavesowtag = {
+	def cancelsavesowtag() {
 		def q = Quotation.get(params.id);
 		def sowPreview = generateSOWForQuotation(q)
 		String sowLabel =  getSOWLabel(q);
@@ -1028,7 +1021,7 @@ class QuotationController {
 	}
 
 
-	def previewSOW = {
+	def previewSOW() {
 		Quotation q =  Quotation.get(new Long(params.id));
 		String sowLabel =  getSOWLabel(q);
 		def sowPreview = generateSOWForQuotation(q)
@@ -1040,7 +1033,7 @@ class QuotationController {
 		
 	}
 
-	def finalPreviewSOW = {
+	def finalPreviewSOW() {
 		Quotation q =  Quotation.get(new Long(params.id));
 		String sowLabel =  getSOWLabel(q);
 		def sowPreview = generateSOWForQuotation(q)
@@ -1055,7 +1048,7 @@ class QuotationController {
 		}
 	}
 	
-	def gm = {
+	def gm() {
 		System.out.println("sow test comming here")
 		try
 		{
@@ -1074,7 +1067,7 @@ class QuotationController {
 		
 	}
 
-	def checkSowTemplateAvailable = {
+	def checkSowTemplateAvailable() {
 		Quotation quotationInstance =  Quotation.get(new Long(params.id));
 		boolean isSOWTemplateThere = false
 		Map resultMap = new HashMap()
@@ -1099,7 +1092,7 @@ class QuotationController {
 		render resultMap as JSON
 	}
 	
-	def generatesow = {
+	def generatesow() {
 		try
 		{
 			Quotation quotationInstance =  Quotation.get(new Long(params.id))
@@ -1135,7 +1128,7 @@ class QuotationController {
 		return false
 	}
 	
-	def showGenerateSOWStages = {
+	def showGenerateSOWStages() {
 		String source = params.source
 		
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -1202,12 +1195,12 @@ class QuotationController {
 		}
 	}
 	
-	def saveSOWMilestone = {
+	def saveSOWMilestone() {
 		Quotation quotationInstance = Quotation.get(params.id)
 		render createQuotationMilestones(quotationInstance, params)
 	}
 	
-	def saveGenerateSOWStages = {
+	def saveGenerateSOWStages() {
 		String source = params.source
 		
 		//println source
@@ -1363,8 +1356,7 @@ class QuotationController {
 		return str
 	}
 	
-	def buildJsonObjectForQuotationProperties = 
-	{
+	def buildJsonObjectForQuotationProperties() {
 		Quotation quotationInstance =  Quotation.get(new Long(params.id));
 		/*boolean isSampleSOWThere = false
 		
@@ -1427,7 +1419,7 @@ class QuotationController {
 		}*/
 	}
 	
-	def storeSOWJsonAndGenerateSOW = {
+	def storeSOWJsonAndGenerateSOW() {
 		Quotation quotationInstance =  Quotation.get(new Long(params.id));
 		JSONObject sowJsonObject = null, sowPhaseJsonObject = null, rolesByPhaseJsonObject= null
 		
@@ -1463,8 +1455,7 @@ class QuotationController {
 		
 	}
 	
-	def generateDucumentOfSOW = 
-	{
+	def generateDucumentOfSOW() {
 		Quotation quotationInstance =  Quotation.get(new Long(params.id));
 		/*boolean isSampleSOWThere = false
 		
@@ -1666,7 +1657,7 @@ class QuotationController {
 	}
 
 
-	def edit = {
+	def edit() {
 		def quotationInstance = Quotation.get(params.id)
 		String text = quotationInstance.templateText;
 
@@ -1683,7 +1674,7 @@ class QuotationController {
 		}
 	}
 
-	def quotationServiceBegin = {
+	def quotationServiceBegin() {
 		redirect(controller: "service", action:"search", params: ["mode": "sales"])
 	}
 
@@ -1714,7 +1705,7 @@ class QuotationController {
 
 	}
 
-	def discount = {
+	def discount() {
 		Quotation quotationInstance = null;
 
 		if(params.quotationId)//(session["quotationId"])
@@ -1810,8 +1801,7 @@ class QuotationController {
 		redirect(action: "discount", params: [quotationId: quotationInstance.id])
 	}
 	
-	def discountRequest =
-	{
+	def discountRequest() {
 		Quotation quotationInstance = null;
 
 		if(session["quotationId"])
@@ -1829,7 +1819,7 @@ class QuotationController {
 		}
 	}
 
-	def addExpense = {
+	def addExpense() {
 		Quotation quotationInstance = null;
 
 		if(session["quotationId"])
@@ -1847,8 +1837,7 @@ class QuotationController {
 		}
 	}
 
-	def saveExpense =
-	{
+	def saveExpense() {
 		Quotation quotationInstance = null;
 
 		if(session["quotationId"])
@@ -1889,8 +1878,7 @@ class QuotationController {
 		}
 	}
 
-	def showExpense =
-	{
+	def showExpense() {
 		Quotation quotationInstance = null;
 
 		if(session["quotationId"])
@@ -1908,8 +1896,7 @@ class QuotationController {
 		}
 	}
 
-	def deleteExpense =
-	{
+	def deleteExpense() {
 		Quotation quotationInstance = null;
 
 		if(session["quotationId"])
@@ -1951,8 +1938,7 @@ class QuotationController {
 		}
 	}
 
-	def sendDiscountNotification =
-	{
+	def sendDiscountNotification() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		Quotation quotationInstance = Quotation.get(params.id)
 
@@ -2042,8 +2028,7 @@ class QuotationController {
 		return receiverUsers
 	}
 
-	def saveDiscount = {
-
+	def saveDiscount() {
 		Quotation quotationInstance = null;
 		def map = [:]
 		
@@ -2114,8 +2099,7 @@ class QuotationController {
 		}
 	}
 
-	def rejectDiscount =
-	{
+	def rejectDiscount() {
 		Quotation quotationInstance = null;
 		def map = [:]
 		def res = "fail"
@@ -2160,7 +2144,7 @@ class QuotationController {
 			redirect(action: "list")
 		}
 	}
-	def update = {
+	def update() {
 		def quotationInstance = Quotation.get(params.id)
 		if (quotationInstance) {
 			if (params.version) {
@@ -2199,7 +2183,7 @@ class QuotationController {
 		}
 	}
 
-	def delete = {
+	def delete() {
 		def quotationInstance = Quotation.get(params.id.toInteger())
 		
 		if (quotationInstance)
@@ -2231,7 +2215,7 @@ class QuotationController {
 		}
 	}
 
-	def VSOEDiscount = {
+	def VSOEDiscount() {
 		Date endDate = null
 		Map totaldiscount = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -2250,8 +2234,7 @@ class QuotationController {
 		render (view: "/reports/VSOEDiscounting", model: [totaldiscount: totaldiscount])
 	}
 
-	def dealStatusChart =
-	{
+	def dealStatusChart() {
 		Date endDate = null
 		Map quoteTypesMap = [:]
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))

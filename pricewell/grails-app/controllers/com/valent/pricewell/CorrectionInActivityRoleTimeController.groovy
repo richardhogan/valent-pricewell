@@ -12,23 +12,20 @@ class CorrectionInActivityRoleTimeController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def priceCalculationService, quotationService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [correctionInActivityRoleTimeInstanceList: CorrectionInActivityRoleTime.list(params), correctionInActivityRoleTimeInstanceTotal: CorrectionInActivityRoleTime.count()]
     }
 
-    def create = {
+    def create() {
 		def activityRoleTime = ActivityRoleTime.get(params.roleTimeId.toLong())
 		def serviceQuotation = ServiceQuotation.get(params.sqId.toLong())
 		def extraUnits = Integer.parseInt(params.extraUnits)
@@ -41,8 +38,7 @@ class CorrectionInActivityRoleTimeController {
     }
 
 	
-    def save = {
-		
+    def save() {
 		ActivityRoleTime activityRoleTime = ActivityRoleTime.get(params.roleTimeId.toLong())
 		ServiceQuotation serviceQuotation = ServiceQuotation.get(params.sqId.toLong())
 		
@@ -85,7 +81,7 @@ class CorrectionInActivityRoleTimeController {
         }
     }
 	
-    def show = {
+    def show() {
         def correctionInActivityRoleTimeInstance = CorrectionInActivityRoleTime.get(params.id)
         if (!correctionInActivityRoleTimeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'correctionInActivityRoleTime.label', default: 'CorrectionInActivityRoleTime'), params.id])}"
@@ -96,8 +92,7 @@ class CorrectionInActivityRoleTimeController {
         }
     }
 
-    def edit = {
-		
+    def edit() {
 		ServiceQuotation serviceQuotation = ServiceQuotation.get(params.sqId.toLong())
 		def extraUnits = Integer.parseInt(params.extraUnits)
 		
@@ -112,7 +107,7 @@ class CorrectionInActivityRoleTimeController {
         }
     }
 
-    def update = {
+    def update() {
 		//println params.extraUnits+"correction" 
         CorrectionInActivityRoleTime correctionInActivityRoleTimeInstance = CorrectionInActivityRoleTime.get(params.id)
 		ServiceQuotation serviceQuotation = ServiceQuotation.get(params.sqId.toLong())
@@ -166,7 +161,7 @@ class CorrectionInActivityRoleTimeController {
         }
     }
 
-    def delete = {
+    def delete() {
         def correctionInActivityRoleTimeInstance = CorrectionInActivityRoleTime.get(params.id)
         if (correctionInActivityRoleTimeInstance) {
             try {

@@ -1,7 +1,6 @@
 package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class ContactController {
 
 	def salesServicesService
@@ -12,18 +11,15 @@ class ContactController {
 	def sendMailService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
 		//def accountList = Account.findAll("FROM Account ac")
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def leadList = [], contactList = []
@@ -176,7 +172,7 @@ class ContactController {
 		return queryString
 	}
 	
-	def search = {
+	def search() {
 		String queryString =  buildContactSearchQuery(params.searchFields)
 		def contactList = Contact.findAll(queryString)
 		List assignedList = new ArrayList(), unAssignedList = new ArrayList()
@@ -205,7 +201,7 @@ class ContactController {
 		
 	}
 	
-	def addContactFromAccount = {
+	def addContactFromAccount() {
 		def contactInstance = new Contact()
 		contactInstance.properties = params
 		
@@ -216,7 +212,7 @@ class ContactController {
 		render(template: "/contact/addContact",  model: [contactInstance: contactInstance, accountId: params.accountId, salesUsers: salesUsers.toList()])
 	}
 
-	def addContactFromOpportunity = {
+	def addContactFromOpportunity() {
 		def contactInstance = new Contact()
 		contactInstance.properties = params
 		
@@ -227,7 +223,7 @@ class ContactController {
 		render(template: "create",  model: [contactInstance: contactInstance, sourceFrom: params.sourceFrom, accountId: params.accountId, salesUsers: salesUsers.toList()])
 	}
 	
-    def create = {
+    def create() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -259,8 +255,7 @@ class ContactController {
 		}
     }
 	
-	def accountFromContact = 
-	{
+	def accountFromContact() {
 		def option = params.option
 		if(option == "select")
 		{
@@ -273,7 +268,7 @@ class ContactController {
 		render(template: "/contact/getAccount",  model: [option: option])
 	}
 
-    def save = {
+    def save() {
 		def res = "fail"
 		boolean i = false
 		
@@ -410,7 +405,7 @@ class ContactController {
 		 return check
 	}
 	
-    def show = {
+    def show() {
         def contactInstance = Contact.get(params.id)
 		if(params.notificationId)
 		{
@@ -427,7 +422,7 @@ class ContactController {
         }
     }
 
-    def edit = {
+    def edit() {
         def contactInstance = Contact.get(params.id)
         if (!contactInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
@@ -442,7 +437,7 @@ class ContactController {
         }
     }
 
-    def update = {
+    def update() {
 		def res = "fail"
 		boolean i = false
 		
@@ -562,7 +557,7 @@ class ContactController {
 			
 	}
 	
-    def delete = {
+    def delete() {
         def contactInstance = Contact.get(params.id)
         if (contactInstance) {
             try {

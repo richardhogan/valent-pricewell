@@ -6,24 +6,21 @@ import grails.converters.JSON
 class ProjectParameterController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [projectParameterInstanceList: ProjectParameter.list(params), projectParameterInstanceTotal: ProjectParameter.count()]
     }
 	
-	def listProjectParameters = {
+	def listProjectParameters() {
 		if(params.quotationId)
 		{
 			Quotation quotationInstance = Quotation.get(params.quotationId)
@@ -38,7 +35,7 @@ class ProjectParameterController {
 		}
 	}
 
-	def getProjectParameterText = {
+	def getProjectParameterText() {
 		Map resultMap = new HashMap()
 		resultMap.put("project_parameter_text", "")
 		def projectParameterInstance = ProjectParameter.get(params.id)
@@ -49,14 +46,13 @@ class ProjectParameterController {
 		render resultMap as JSON
 	}
 	
-    def create = {
+    def create() {
         def projectParameterInstance = new ProjectParameter()
         projectParameterInstance.properties = params
         return [projectParameterInstance: projectParameterInstance]
     }
 
-	def createFromQuotationSow = {
-		
+	def createFromQuotationSow() {
 		if(params.quotationId)
 		{
 			Quotation quotationInstance = Quotation.get(params.quotationId)
@@ -73,7 +69,7 @@ class ProjectParameterController {
 		
 	}
 	
-    def save = {
+    def save() {
         def projectParameterInstance = new ProjectParameter(params)
         if (projectParameterInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'projectParameter.label', default: 'ProjectParameter'), projectParameterInstance.id])}"
@@ -84,7 +80,7 @@ class ProjectParameterController {
         }
     }
 	
-	def saveFromQuotationSow = {
+	def saveFromQuotationSow() {
 		if(params.quotationId)
 		{
 			Quotation quotationInstance = Quotation.get(params.quotationId)
@@ -106,7 +102,7 @@ class ProjectParameterController {
 		}
 	}
 
-    def show = {
+    def show() {
         def projectParameterInstance = ProjectParameter.get(params.id)
         if (!projectParameterInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'projectParameter.label', default: 'ProjectParameter'), params.id])}"
@@ -117,7 +113,7 @@ class ProjectParameterController {
         }
     }
 
-    def edit = {
+    def edit() {
         def projectParameterInstance = ProjectParameter.get(params.id)
         if (!projectParameterInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'projectParameter.label', default: 'ProjectParameter'), params.id])}"
@@ -128,7 +124,7 @@ class ProjectParameterController {
         }
     }
 	
-	def editFromQuotationSow = {
+	def editFromQuotationSow() {
 		def projectParameterInstance = ProjectParameter.get(params.id)
 		if (!projectParameterInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'projectParameter.label', default: 'ProjectParameter'), params.id])}"
@@ -139,7 +135,7 @@ class ProjectParameterController {
 		}
 	}
 
-    def update = {
+    def update() {
         def projectParameterInstance = ProjectParameter.get(params.id)
         if (projectParameterInstance) {
             if (params.version) {
@@ -166,7 +162,7 @@ class ProjectParameterController {
         }
     }
 
-	def updateFromQuotationSow = {
+	def updateFromQuotationSow() {
 		def projectParameterInstance = ProjectParameter.get(params.id)
 		if (projectParameterInstance) {
 			if (params.version) {
@@ -193,7 +189,7 @@ class ProjectParameterController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def projectParameterInstance = ProjectParameter.get(params.id)
         if (projectParameterInstance) {
             try {
@@ -212,7 +208,7 @@ class ProjectParameterController {
         }
     }
 	
-	def deleteFromQuotationSow = {
+	def deleteFromQuotationSow() {
 		def projectParameterInstance = ProjectParameter.get(params.id)
 		def quotationInstance = Quotation.get(projectParameterInstance?.quotation?.id)
 		

@@ -11,25 +11,21 @@ import java.util.Date;
 class CwController {
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	def cwimportService, sendMailService, connectwiseCatalogService, dateService, salesCatalogService, fieldMappingService
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def index = {
+	def index() {
 		cwimportService.importOpportunities("https://test.connectwise.com");///v4_6_release
 	}
 	
-	def importOpportunities = {
+	def importOpportunities() {
 		UpdateRecord lastUpdateRecord = connectwiseCatalogService.getLastUpdateDateOfConnectwiseImportOpportunity()
 		render(view: "importOpportunities", model:[lastUpdateRecord: lastUpdateRecord])
 	}
 
-	def saveOpportunitiesFromConnectwise = {
-		
+	def saveOpportunitiesFromConnectwise() {
 		//println params
 		Map importMap = new HashMap()
 		/*importMap['allowedOpportunityStatus'] = connectwiseCatalogService.generateStatusList(params.status.toString())
@@ -88,7 +84,7 @@ class CwController {
 				//connectwiseCatalogService.saveTimestampForConnectwiseImportOpportunity(importMap['startDate'], importMap['endDate'])
 				comment = "Total number of opportunity imported : "+importedOpportunities?.size()
 				log.info "[Log Time: ${new Date()}] - Total number of opportunity imported : from ${importedOpportunities?.size()} Connectwise CRM."
-				connectwiseCatalogService.saveUpdateRecordForConnectwiseImportOpportunity(lastUpdateRecord?.lastUpdateDate, , importMap['endDate'], comment)//importMap['startDate']+1, importMap['endDate'], comment)
+				connectwiseCatalogService.saveUpdateRecordForConnectwiseImportOpportunity(lastUpdateRecord?.lastUpdateDate, importMap['startDate'] ? importMap['startDate']+1 : null, importMap['endDate'], comment)
 			}
 			else
 			{
@@ -143,7 +139,7 @@ class CwController {
 		
 	}
 	
-	def saveTerritoryMapping = {
+	def saveTerritoryMapping() {
 		List opportunityIds = connectwiseCatalogService.generateOpportunityIdsList(params.opportunityIds.toString())
 		def responseContent = params.responseContent
 		

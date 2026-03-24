@@ -9,35 +9,32 @@ import java.util.TreeSet
 class ProductPricelistController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [productPricelistInstanceList: ProductPricelist.list(params), productPricelistInstanceTotal: ProductPricelist.count()]
     }
 
-	def listforproduct = {
+	def listforproduct() {
 		def product = Product.get(params.id)
 		render(template: "list", model: ["productInstance": product])
 	}
 
-    def create = {
+    def create() {
         def productPricelistInstance = new ProductPricelist()
         productPricelistInstance.properties = params
 		render(template: "create", model: ["productPricelistInstance": productPricelistInstance, "productId": params.pid])
     }
 
-    def save = {
+    def save() {
         def productPricelistInstance = new ProductPricelist(params)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		productPricelistInstance.modifiedBy = user;
@@ -50,7 +47,7 @@ class ProductPricelistController {
         }
     }
 
-    def show = {
+    def show() {
         def productPricelistInstance = ProductPricelist.get(params.id)
         if (!productPricelistInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'productPricelist.label', default: 'ProductPricelist'), params.id])}"
@@ -61,7 +58,7 @@ class ProductPricelistController {
         }
     }
 
-	def edit = {
+	def edit() {
         def productPricelistInstance = ProductPricelist.get(params.id)
         if (!productPricelistInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'productPricelist.label', default: 'ProductPricelist'), params.id])}"
@@ -72,7 +69,7 @@ class ProductPricelistController {
         }
     }
 
-    def update = {
+    def update() {
         def productPricelistInstance = ProductPricelist.get(params.id)
         if (productPricelistInstance) {
             if (params.version) {
@@ -101,7 +98,7 @@ class ProductPricelistController {
         }
     }
 
-	def getgeostoaddjson = {
+	def getgeostoaddjson() {
 		def product = Product.get(params.id);
 		def results = []
 		Set ids = new TreeSet();
@@ -123,7 +120,7 @@ class ProductPricelistController {
 		
 	}
 
-    def delete = {
+    def delete() {
         def productPricelistInstance = ProductPricelist.get(params.id)
 		def pid = productPricelistInstance.product.id
         if (productPricelistInstance) {

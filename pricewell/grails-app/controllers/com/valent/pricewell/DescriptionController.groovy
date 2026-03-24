@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class DescriptionController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [descriptionInstanceList: Description.list(params), descriptionInstanceTotal: Description.count()]
     }
 
-    def create = {
+    def create() {
         def descriptionInstance = new Description()
         descriptionInstance.properties = params
         return [descriptionInstance: descriptionInstance]
     }
 
-    def save = {
+    def save() {
         def descriptionInstance = new Description(params)
         if (descriptionInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'description.label', default: 'Description'), descriptionInstance.id])}"
@@ -39,7 +36,7 @@ class DescriptionController {
         }
     }
 
-    def show = {
+    def show() {
         def descriptionInstance = Description.get(params.id)
         if (!descriptionInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'description.label', default: 'Description'), params.id])}"
@@ -50,7 +47,7 @@ class DescriptionController {
         }
     }
 
-    def edit = {
+    def edit() {
         def descriptionInstance = Description.get(params.id)
         if (!descriptionInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'description.label', default: 'Description'), params.id])}"
@@ -61,7 +58,7 @@ class DescriptionController {
         }
     }
 
-    def update = {
+    def update() {
         def descriptionInstance = Description.get(params.id)
         if (descriptionInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class DescriptionController {
         }
     }
 
-    def delete = {
+    def delete() {
         def descriptionInstance = Description.get(params.id)
         if (descriptionInstance) {
             try {

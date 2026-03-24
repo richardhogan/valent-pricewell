@@ -5,9 +5,8 @@ import com.valent.pricewell.PricewellSecurity
 class CommonSalesController {
 
 	def salesCatalogService
-    def index = { }
-	
-	def getUserTerritories = {
+    def index() { }
+	def getUserTerritories() {
 		User user = null
 		if(params.id && params.id != null)
 		{

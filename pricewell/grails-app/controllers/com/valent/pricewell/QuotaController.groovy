@@ -10,20 +10,17 @@ class QuotaController {
 	def opportunityService
 	def sendMailService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def quotaInstanceList = new ArrayList(), tmpList = new ArrayList()
@@ -72,12 +69,11 @@ class QuotaController {
 		return [myAssigned: myAssigned, mySubmitted: mySubmitted]
 	}
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
 	}
 	
-	def getQuotaAssignedVsQuotaAchivementChartData = 
-	{
+	def getQuotaAssignedVsQuotaAchivementChartData() {
 		Map dateMap = dateService.getTimespanForQuota(params.range)
 		def territoryInstance = null
 
@@ -104,8 +100,7 @@ class QuotaController {
 		//render(view: "/reports/quotaAssignedVsQuotaAchivementGraph", model: [quotaData: quotaData])
 	}
 	
-	def getQuotaAssignedVsQuotaAchivementPerPersonChartData =
-	{
+	def getQuotaAssignedVsQuotaAchivementPerPersonChartData() {
 		Map dateMap = dateService.getTimespanForQuota(params.range)
 		def territoryInstance = null
 		
@@ -121,7 +116,7 @@ class QuotaController {
 		render(view: "/reports/quotaAssignedVsQuotaAchivementPerPerson", model: [quotaPerPersons: quotaPerPersons])
 	}
 	
-    def create = {
+    def create() {
         def quotaInstance = new Quota()
         quotaInstance.properties = params
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -150,7 +145,7 @@ class QuotaController {
 			
     }
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
@@ -278,8 +273,7 @@ class QuotaController {
 		return totalSubmitted
 	}
 	
-    def save = {
-		
+    def save() {
 		boolean isQuotaAvailable = isQuotaAvailableInAssignedUser(params)//check if quota is available in specified date range
 		boolean isInRange = true
 		Map checkRangeMap = [:];
@@ -336,7 +330,7 @@ class QuotaController {
         
     }
 
-    def show = {
+    def show() {
         def quotaInstance = Quota.get(params.id)
         if (!quotaInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'quota.label', default: 'Quota'), params.id])}"
@@ -354,7 +348,7 @@ class QuotaController {
         }
     }
 
-    def edit = {
+    def edit() {
         Quota quotaInstance = Quota.get(params.id)
         if (!quotaInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'quota.label', default: 'Quota'), params.id])}"
@@ -374,11 +368,11 @@ class QuotaController {
         }
     }
 
-	def editsetup = {
+	def editsetup() {
 		redirect(action: "edit", params: params)
 	}
 	
-    def update = {
+    def update() {
         def quotaInstance = Quota.get(params.id)
 		boolean isChanged = false
         if (quotaInstance) {
@@ -479,7 +473,7 @@ class QuotaController {
         }
     }
 
-    def delete = {
+    def delete() {
         def quotaInstance = Quota.get(params.id)
         if (quotaInstance) {
             try {
@@ -509,8 +503,7 @@ class QuotaController {
         }
     }
 	
-	def deletesetup =
-	{
+	def deletesetup() {
 		def quotaInstance = Quota.get(params.id)
 		if (quotaInstance) {
 			try {

@@ -4,16 +4,13 @@ import com.valent.pricewell.PricewellSecurity
 import grails.converters.JSON
 class ErrorsController {
 
-    def index = { }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
+    def index() { }
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def handle = {
+	def handle() {
 		def exception = request.exception.cause.class
 		
 		

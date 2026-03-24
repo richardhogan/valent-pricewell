@@ -5,32 +5,28 @@ class ServiceActivityController {
 
 	def serviceCatalogService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceActivityInstanceList: ServiceActivity.list(params), serviceActivityInstanceTotal: ServiceActivity.count()]
     }
 	
-	def listSelectedDeliverableActivities = {
+	def listSelectedDeliverableActivities() {
 		if(params.selectCustomerDeliverableId)
 		{
 			redirect(action: "listDeliverableActivities", id: params.selectCustomerDeliverableId)
 		}
 	}
 	
-	def listDeliverableActivities = {
-		
+	def listDeliverableActivities() {
 		//println "listDeliverableActivities"
 		if(params.id)
 		{
@@ -60,7 +56,7 @@ class ServiceActivityController {
 		}
 	}
 	
-	def changeOrders = {
+	def changeOrders() {
 		if(params.id)
 		{
 			def del = ServiceDeliverable.get(params.id);
@@ -70,8 +66,7 @@ class ServiceActivityController {
 		}
 	}
 	
-	def upOrder = {
-		
+	def upOrder() {
 		if(params.id)
 		{
 			
@@ -112,8 +107,7 @@ class ServiceActivityController {
 		
 	}
 	
-	def downOrder = {
-		
+	def downOrder() {
 		if(params.id)
 		{		
 			def del = ServiceDeliverable.get(params.id);
@@ -153,13 +147,13 @@ class ServiceActivityController {
 	}
 	
 
-    def create = {
+    def create() {
         def serviceActivityInstance = new ServiceActivity()
         serviceActivityInstance.properties = params
         return [serviceActivityInstance: serviceActivityInstance]
     }
 	
-	def newActivityFromDeliverable = {
+	def newActivityFromDeliverable() {
 		if(params.id)
 		{
 			def del = ServiceDeliverable.get(params.id)
@@ -172,8 +166,7 @@ class ServiceActivityController {
 		}
 	}
 	
-	def saveFromDeliverable = 
-	{
+	def saveFromDeliverable() {
 		if(params.serviceDeliverableId)
 		{
 			def del = ServiceDeliverable.get(params.serviceDeliverableId)
@@ -222,7 +215,7 @@ class ServiceActivityController {
 		}
 	}
 
-	def getActivityTaskList = {
+	def getActivityTaskList() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		serviceCatalogService.correctServiceActivityTaskSequenceOrder(serviceActivityInstance)
 		//println serviceActivityInstance?.activityTasks
@@ -230,7 +223,7 @@ class ServiceActivityController {
 	}
 	
 	
-	def isRoleDefined = {
+	def isRoleDefined() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		if(serviceActivityInstance?.rolesRequired.size() > 0)
 			render "success"
@@ -238,12 +231,12 @@ class ServiceActivityController {
 			render "fail"
 	}
 	
-	def showActivity = {
+	def showActivity() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		render(template:'showActivity', model:[serviceActivityInstance: serviceActivityInstance])
 	}
 	
-    def save = {
+    def save() {
         def serviceActivityInstance = new ServiceActivity(params)
         if (serviceActivityInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceActivity.label', default: 'ServiceActivity'), serviceActivityInstance.id])}"
@@ -254,7 +247,7 @@ class ServiceActivityController {
         }
     }
 	
-	def show = {
+	def show() {
         def serviceActivityInstance = ServiceActivity.get(params.id)
         if (!serviceActivityInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceActivity.label', default: 'ServiceActivity'), params.id])}"
@@ -265,7 +258,7 @@ class ServiceActivityController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceActivityInstance = ServiceActivity.get(params.id)
         if (!serviceActivityInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceActivity.label', default: 'ServiceActivity'), params.id])}"
@@ -276,7 +269,7 @@ class ServiceActivityController {
         }
     }
 	
-	def editInfo = {
+	def editInfo() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category != null ORDER BY sa.category ASC")
 
@@ -285,7 +278,7 @@ class ServiceActivityController {
 		
 	}
 	
-	def editFromDeliverable = {
+	def editFromDeliverable() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		if (!serviceActivityInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceActivity.label', default: 'ServiceActivity'), params.id])}"
@@ -299,7 +292,7 @@ class ServiceActivityController {
 		}
 	}
 	
-	def displayActivityTasks = {
+	def displayActivityTasks() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		List taskIdList = new ArrayList()
 		
@@ -312,7 +305,7 @@ class ServiceActivityController {
 		render(template: "displayActivityTasks", model: [serviceActivityInstance: serviceActivityInstance, activityTaskList: serviceActivityInstance?.activityTasks?.sort{it.sequenceOrder}, activityTaskIds: taskIdList.toArray().toString()])
 	}
 	
-	def updateFromDeliverable = {
+	def updateFromDeliverable() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		if (serviceActivityInstance) {
 			if (params.version) {
@@ -392,7 +385,7 @@ class ServiceActivityController {
 		serviceActivityInstance.save(flush:true);
 	}
 
-    def update = {
+    def update() {
         def serviceActivityInstance = ServiceActivity.get(params.id)
         if (serviceActivityInstance) {
             if (params.version) {
@@ -419,7 +412,7 @@ class ServiceActivityController {
         }
     }
 
-    def delete = {
+    def delete() {
         def serviceActivityInstance = ServiceActivity.get(params.id)
         if (serviceActivityInstance) {
             try {
@@ -438,7 +431,7 @@ class ServiceActivityController {
         }
     }
 	
-	def deleteFromDeliverable = {
+	def deleteFromDeliverable() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		def name =  serviceActivityInstance.name
 		def del = serviceActivityInstance.serviceDeliverable

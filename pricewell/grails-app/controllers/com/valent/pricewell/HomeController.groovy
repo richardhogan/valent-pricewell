@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.LoginRecord
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 import java.text.DateFormat
@@ -25,9 +26,6 @@ class HomeController {
 	def dateService
 	
 	public static String DEFAULTUSERROLE  = 'DEFAULTUSERROLE';
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
@@ -39,8 +37,7 @@ class HomeController {
 		return dateString.substring(0, length-5)
 	}
 	
-	def index = {	
-		
+	def index() {
 		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		if( session.getAttribute(DEFAULTUSERROLE) != null ){
@@ -371,19 +368,19 @@ class HomeController {
 		
 	}
 	
-	def adminHome = {
+	def adminHome() {
 		render(view: "admin")
 	}
 
-	def productManagerHome = {
+	def productManagerHome() {
 		render(view:"pm")
 	}
 
-	def serviceDesignerHome = {
+	def serviceDesignerHome() {
 		render(view:"sd")
 	}
 
-	def salesPersonHome = {
+	def salesPersonHome() {
 		render(view:"sales")
 	}
 	
@@ -521,15 +518,14 @@ class HomeController {
 		return false
 	}
 
-	def changerole = {
+	def changerole() {
 		String currentRole = params.role;
 		
 		session.setAttribute("PARAMETERROLE", currentRole);
 		redirect(action: "updaterole");
 	}
 	
-	def updaterole = {
-		
+	def updaterole() {
 		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
 		String previousRole = "DEFAULT";

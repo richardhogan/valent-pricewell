@@ -7,30 +7,27 @@ class ServiceProfileController {
 	def priceCalculationService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceProfileInstanceList: ServiceProfile.list(params), serviceProfileInstanceTotal: ServiceProfile.count()]
     }
 
-    def create = {
+    def create() {
         def serviceProfileInstance = new ServiceProfile()
         serviceProfileInstance.properties = params
         return [serviceProfileInstance: serviceProfileInstance]
     }
 
-    def save = {
+    def save() {
         def serviceProfileInstance = new ServiceProfile(params)
         if (serviceProfileInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceProfile.label', default: 'ServiceProfile'), serviceProfileInstance.id])}"
@@ -41,7 +38,7 @@ class ServiceProfileController {
         }
     }
 
-    def show = {
+    def show() {
         def serviceProfileInstance = ServiceProfile.get(params.id)
         if (!serviceProfileInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfile.label', default: 'ServiceProfile'), params.id])}"
@@ -54,7 +51,7 @@ class ServiceProfileController {
 	
 	
 
-    def edit = {
+    def edit() {
         def serviceProfileInstance = ServiceProfile.get(params.id)
         if (!serviceProfileInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfile.label', default: 'ServiceProfile'), params.id])}"
@@ -65,7 +62,7 @@ class ServiceProfileController {
         }
     }
 
-    def update = {
+    def update() {
         def serviceProfileInstance = ServiceProfile.get(params.id)
         if (serviceProfileInstance) {
             if (params.version) {
@@ -92,7 +89,7 @@ class ServiceProfileController {
         }
     }
 
-    def delete = {
+    def delete() {
         def serviceProfileInstance = ServiceProfile.get(params.id)
         if (serviceProfileInstance) {
             try {

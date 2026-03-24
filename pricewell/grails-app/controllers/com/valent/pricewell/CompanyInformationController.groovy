@@ -5,15 +5,12 @@ import com.valent.pricewell.PricewellSecurity
 class CompanyInformationController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 
-	def index = {
+	def index() {
 		if(CompanyInformation.list().size()!=0) {
 			for(CompanyInformation ci in CompanyInformation.list()) {
 				redirect(action: "show", id: ci.id)
@@ -29,8 +26,7 @@ class CompanyInformationController {
 		return companyInformationInstance?.baseCurrency
 	}
 	
-	def isInfoDefined =
-	{
+	def isInfoDefined() {
 		if(CompanyInformation.list().size() > 0)
 		{
 			render "true"
@@ -49,18 +45,17 @@ class CompanyInformationController {
 			return false
 	}
 	
-	def list = {
+	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[companyInformationInstanceList: CompanyInformation.list(params), companyInformationInstanceTotal: CompanyInformation.count()]
 	}
 	
-	def addLogo = {
+	def addLogo() {
 		def companyInformationInstance = CompanyInformation.get(params.id)
 		[companyInformationInstance: companyInformationInstance]
 	}
 	
-	def createInstanceInfo = {
-		
+	def createInstanceInfo() {
 		Setting instanceSetting = Setting.findByName("instanceName")
 		
 		if(params.source == "firstsetup")
@@ -82,7 +77,7 @@ class CompanyInformationController {
 		}
 	}
 	
-	def saveInstanceInfo = {
+	def saveInstanceInfo() {
 		if(params.instanceName)
 		{
 			Setting instanceSetting = new Setting(name: "instanceName", value: params.instanceName).save()
@@ -91,7 +86,7 @@ class CompanyInformationController {
 		else render "none"
 	}
 	
-	def showInstanceInfo = {
+	def showInstanceInfo() {
 		Setting instanceSetting = Setting.findByName("instanceName")
 		if(instanceSetting != null)
 		{
@@ -100,7 +95,7 @@ class CompanyInformationController {
 		else render "none"
 	}
 	
-	def editInstanceInfo = {
+	def editInstanceInfo() {
 		if(params.instanceId)
 		{
 			Setting instanceSetting = Setting.get(params.instanceId?.toLong())
@@ -113,7 +108,7 @@ class CompanyInformationController {
 		else render "none"
 	}
 	
-	def updateInstanceInfo = {
+	def updateInstanceInfo() {
 		if(params.instanceId)
 		{
 			Setting instanceSetting = Setting.get(params.instanceId?.toLong())
@@ -128,7 +123,7 @@ class CompanyInformationController {
 		else render "none"
 	}
 	
-	def create = {
+	def create() {
 		def companyInformationInstance = new CompanyInformation()
 		companyInformationInstance.properties = params
 		//render(template: "create", model: [companyInformationInstance: companyInformationInstance])
@@ -136,7 +131,7 @@ class CompanyInformationController {
 		model: [companyInformationInstance: companyInformationInstance]
 	}
 
-	def createFromSetup = {
+	def createFromSetup() {
 		def companyInformationInstance = new CompanyInformation()
 		companyInformationInstance.properties = params
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
@@ -144,7 +139,7 @@ class CompanyInformationController {
 	}
 
 
-	def save = {
+	def save() {
 		//def res = "fail"
 		def companyInformationInstance = new CompanyInformation(params)
 
@@ -206,14 +201,12 @@ class CompanyInformationController {
 		
 	}
 
-	def showLogo = 
-	{
+	def showLogo() {
 		def companyInformationInstance = CompanyInformation.get(params.id.toInteger())
 		render(template: "showLogo", model: [companyInformationInstance: companyInformationInstance])
 	}
 	
-	def renderImage =
-	{
+	def renderImage() {
 		def companyInformationInstance = CompanyInformation.get(params.id)
 		if (companyInformationInstance?.logo)
 		{
@@ -226,7 +219,7 @@ class CompanyInformationController {
 		}
 	}
 
-	def show = {
+	def show() {
 		def companyInformationInstance = CompanyInformation.get(params.id)
 
 		if (!companyInformationInstance) {
@@ -244,7 +237,7 @@ class CompanyInformationController {
 		}
 	}
 
-	def showsetup = {
+	def showsetup() {
 		def companyInformationInstance = CompanyInformation.list().get(0);
 
 		if (!companyInformationInstance) {
@@ -261,7 +254,7 @@ class CompanyInformationController {
 		}
 	}
 
-	def edit = {
+	def edit() {
 		def companyInformationInstance = CompanyInformation.get(params.id)
 		if (!companyInformationInstance) {
 			//flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'companyInformation.label', default: 'CompanyInformation'), params.id])}"
@@ -279,7 +272,7 @@ class CompanyInformationController {
 		}
 	}
 
-	def update = {
+	def update() {
 		def res = "fail"
 		def companyInformationInstance = CompanyInformation.get(params.id)
 		if (companyInformationInstance) {
@@ -357,7 +350,7 @@ class CompanyInformationController {
 		//render res
 	}
 
-	def delete = {
+	def delete() {
 		def res = "fail"
 		def companyInformationInstance = CompanyInformation.get(params.id)
 		if (companyInformationInstance) {

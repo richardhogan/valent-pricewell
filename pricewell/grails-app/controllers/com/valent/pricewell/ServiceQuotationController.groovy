@@ -1,8 +1,8 @@
 package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.json.JSONArray
+import org.json.JSONObject
 
 import grails.converters.JSON
 
@@ -12,31 +12,28 @@ class ServiceQuotationController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", map: "GET"]
     private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
 	private static int DECIMALS = 0;
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
-	def index = {
+	def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		println ServiceQuotation.list(params)
         [serviceQuotationInstanceList: ServiceQuotation.list(params), serviceQuotationInstanceTotal: ServiceQuotation.count()]
     }
 
-    def create = {
+    def create() {
         def serviceQuotationInstance = new ServiceQuotation()
         serviceQuotationInstance.properties = params
         return [serviceQuotationInstance: serviceQuotationInstance]
     }
 	
-	def addServiceToQuote = {
+	def addServiceToQuote() {
 		if(session["quotationId"])
 		{
 			Quotation quotationInstance = Quotation.get(session["quotationId"])
@@ -58,7 +55,7 @@ class ServiceQuotationController {
 		}
 	}
 	
-	def map = {
+	def map() {
 		Quotation quotationInstance = Quotation.get(params.id)
 		Map tempMap = buildSessionList(quotationInstance)
 		
@@ -190,8 +187,7 @@ class ServiceQuotationController {
 	
 	}
 	
-	def upOrder = {
-		
+	def upOrder() {
 		if(params.quotationId)
 		{
 			
@@ -235,8 +231,7 @@ class ServiceQuotationController {
 		
 	}
 	
-	def downOrder = {
-		
+	def downOrder() {
 		if(params.quotationId)
 		{
 			def quotation = Quotation.get(params.quotationId)
@@ -277,8 +272,7 @@ class ServiceQuotationController {
 		}
 	}
 	
-	def changeOrders = {
-		
+	def changeOrders() {
 		if(params.quotationId)
 		{
 			def quotation = Quotation.get(params.quotationId)
@@ -289,8 +283,7 @@ class ServiceQuotationController {
 		}
 	}
 	
-	def displayUnitOfSaleAndBaseUnits = 
-	{
+	def displayUnitOfSaleAndBaseUnits() {
 		Map resultMap = new HashMap()
 		def serviceQuotationInstance = new ServiceQuotation()
 		serviceQuotationInstance.properties = params
@@ -316,7 +309,7 @@ class ServiceQuotationController {
 		render resultMap as JSON    
 	}
 	
-	def displayCalculatedPrice = {
+	def displayCalculatedPrice() {
 		def serviceQuotationInstance = new ServiceQuotation()
 		//println "Extra Units :"+ params.addtionalExtraUnit;
 		int addtionalExtraUnit=Integer.parseInt(params.addtionalExtraUnit)
@@ -372,11 +365,10 @@ class ServiceQuotationController {
 		return [servicePrice: servicePrice, extraIncrement: extraIncrement]
 	}
 	
-	def jt = {
-		
+	def jt() {
 	}
 	
-	def clearTotal = {
+	def clearTotal() {
 		def serviceQuotationInstance = new ServiceQuotation()
 		serviceQuotationInstance.properties = params
 		serviceQuotationInstance.totalUnits = 0
@@ -390,7 +382,7 @@ class ServiceQuotationController {
 		
 	}
 	
-	def displayCalculatedPriceInEdit = {
+	def displayCalculatedPriceInEdit() {
         ServiceQuotation serviceQuotationInstance = ServiceQuotation.get(params.id)
 		//println serviceQuotationInstance
 		//serviceQuotationInstance.properties = params
@@ -434,7 +426,7 @@ class ServiceQuotationController {
 		
 	}
 
-    def save = {
+    def save() {
         ServiceQuotation serviceQuotationInstance = new ServiceQuotation(params)
 		serviceQuotationInstance.stagingStatus = Staging.findByName("new")
 		serviceQuotationInstance.oldStage = "new"
@@ -458,15 +450,14 @@ class ServiceQuotationController {
 			//quotationService.processAndSaveChanges(serviceQuotationInstance?.quotation)
 			//redirect(action: "show", controller: "quotation", id: serviceQuotationInstance?.quotation?.id, params: ["tab": "show"])
 			//render(template: "/quotation/showPart", model: [quotationInstance: Quotation.get(serviceQuotationInstance?.quotation.id), serviceQuotations: quotationService.getActiveServiceOfQuotation(quotationInstance)] )
-			redirect(action: "show", controller: "quotation", id: serviceQuotationInstance?.quotation?.id,, params: [source: 'fromOpportunity',addtionalExtraUnit:ExtraUnit])  
+			redirect(action: "show", controller: "quotation", id: serviceQuotationInstance?.quotation?.id, params: [source: 'fromOpportunity',addtionalExtraUnit:ExtraUnit])  
         }
         else {
             render(view: "create", model: [serviceQuotationInstance: serviceQuotationInstance])
         }
     }
 
-    def show = {
-		
+    def show() {
         def serviceQuotationInstance = ServiceQuotation.get(params.id)
         if (!serviceQuotationInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceQuotation.label', default: 'ServiceQuotation'), params.id])}"
@@ -477,7 +468,7 @@ class ServiceQuotationController {
         }
     }
 
-    def edit = {
+    def edit() {
         ServiceQuotation serviceQuotationInstance = ServiceQuotation.get(params.sqid)
 		   
 		String activityId = "null"   
@@ -512,7 +503,7 @@ class ServiceQuotationController {
 		
     }
 
-    def update = {
+    def update() {
         def serviceQuotationInstance = ServiceQuotation.get(params.sqid)
 		 if (serviceQuotationInstance) {
             if (params.version) {
@@ -559,7 +550,7 @@ class ServiceQuotationController {
         }
     }
 	
-    def delete = {
+    def delete() {
         def serviceQuotationInstance = ServiceQuotation.get(params.sqid)
 		long qid = serviceQuotationInstance.quotation.id
         if (serviceQuotationInstance) {

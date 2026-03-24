@@ -11,19 +11,16 @@ class GeoGroupController {
 	def serviceCatalogService
 	def salesCatalogService
 	def sendMailService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 	
-	def unassignedGeo = {
+	def unassignedGeo() {
 		List geoList = new ArrayList();
 		
 		for(GeoGroup geo : GeoGroup.list())
@@ -34,7 +31,7 @@ class GeoGroupController {
 		render(template: "unassignedGeoGroup", model: [geoList: geoList])
 	}
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def geoGroupInstanceList = new ArrayList()
 		if(PricewellSecurity.hasRole("GENERAL MANAGER"))
@@ -59,12 +56,11 @@ class GeoGroupController {
     }
 	
 
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
     }
 	
-	def isGeoGroupDefined =
-	{
+	def isGeoGroupDefined() {
 		if(GeoGroup.list().size() > 0)
 		{
 			render "true"
@@ -75,7 +71,7 @@ class GeoGroupController {
 		}
 	}
 	
-	def create = {
+	def create() {
         def geoGroupInstance = new GeoGroup()
         geoGroupInstance.properties = params
 		def generalManagerList = new ArrayList()
@@ -97,12 +93,11 @@ class GeoGroupController {
     }
 	
 
-	def createsetup = {
+	def createsetup() {
 		redirect(action:"create", params: params)
 	}
 	
-	def getTerritories =
-	{
+	def getTerritories() {
 		def geoGroupInstance = null
 		if(params.geoId != null)
 		{
@@ -147,7 +142,7 @@ class GeoGroupController {
 		
 	  }
 	
-	def save = {
+	def save() {
         def geoGroupInstance = new GeoGroup(params)
 		
 		
@@ -206,7 +201,7 @@ class GeoGroupController {
     }
 	
 
-    def show = {
+    def show() {
         def geoGroupInstance = GeoGroup.get(params.id)
 		if(params.notificationId)
 		{
@@ -223,7 +218,7 @@ class GeoGroupController {
         }
     }
 	
-	def edit = {
+	def edit() {
         def geoGroupInstance = GeoGroup.get(params.id)
         if (!geoGroupInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'geo.label', default: 'Geo'), params.id])}"
@@ -253,17 +248,16 @@ class GeoGroupController {
         }
     }
 
- 	def editsetup = {
+ 	def editsetup() {
 		 redirect(action: "edit", params: params)
     }
 	
-	def getName = 
-	{
+	def getName() {
 		def geoGroupInstance = GeoGroup.get(params.id)
 		render geoGroupInstance.name
 	}
 	
-    def update = {
+    def update() {
         def geoGroupInstance = GeoGroup.get(params.id)
 		
 		def oldName = geoGroupInstance?.name
@@ -422,7 +416,7 @@ class GeoGroupController {
 		return territoryIds
 	}
     
-	def delete = {
+	def delete() {
         def geoGroupInstance = GeoGroup.get(params.id)
 		def name = geoGroupInstance.name
         if (geoGroupInstance) 
@@ -452,8 +446,7 @@ class GeoGroupController {
         }
     }
 	
-	def deletesetup = 
-	{
+	def deletesetup() {
 		//redirect(action: "delete", params: params)
 		def geoGroupInstance = GeoGroup.get(params.id)
 		def name = geoGroupInstance.name

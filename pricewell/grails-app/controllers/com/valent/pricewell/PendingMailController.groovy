@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class PendingMailController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [pendingMailInstanceList: PendingMail.list(params), pendingMailInstanceTotal: PendingMail.count()]
     }
 
-    def create = {
+    def create() {
         def pendingMailInstance = new PendingMail()
         pendingMailInstance.properties = params
         return [pendingMailInstance: pendingMailInstance]
     }
 
-    def save = {
+    def save() {
         def pendingMailInstance = new PendingMail(params)
         if (pendingMailInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'pendingMail.label', default: 'PendingMail'), pendingMailInstance.id])}"
@@ -39,7 +36,7 @@ class PendingMailController {
         }
     }
 
-    def show = {
+    def show() {
         def pendingMailInstance = PendingMail.get(params.id)
         if (!pendingMailInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'pendingMail.label', default: 'PendingMail'), params.id])}"
@@ -50,7 +47,7 @@ class PendingMailController {
         }
     }
 
-    def edit = {
+    def edit() {
         def pendingMailInstance = PendingMail.get(params.id)
         if (!pendingMailInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'pendingMail.label', default: 'PendingMail'), params.id])}"
@@ -61,7 +58,7 @@ class PendingMailController {
         }
     }
 
-    def update = {
+    def update() {
         def pendingMailInstance = PendingMail.get(params.id)
         if (pendingMailInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class PendingMailController {
         }
     }
 
-    def delete = {
+    def delete() {
         def pendingMailInstance = PendingMail.get(params.id)
         if (pendingMailInstance) {
             try {

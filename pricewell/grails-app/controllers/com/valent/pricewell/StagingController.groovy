@@ -8,31 +8,26 @@ class StagingController {
 
 	def serviceStagingService
 	def sendMailService
-	def index = {
+	def index() {
 		redirect(action: "list", params: params)
 	}
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 
-	def list = {
+	def list() {
 		def stagingInstanceList = []
 		stagingInstanceList = Staging.findAll("FROM Staging st WHERE st.entity = 'SERVICE' ")
 		session["stagingType"] = "service"
 		[stagingInstanceList: stagingInstanceList, title: "Service Staging List"]
 	}
 	
-	def workflowsetting = {
-		
+	def workflowsetting() {
 		redirect (controller : "service", action : "selectionOfWorkflow")
 	}
 	
-	def workflowsettingSave = {
-		
+	def workflowsettingSave() {
 		String selectedWorkflow = params.get("workflowValue")
 		
 		//def val = Setting.()
@@ -57,9 +52,7 @@ class StagingController {
 	}
 	
 
-	def listsetup = {
-		
-				
+	def listsetup() {
 		def stagingInstanceList = []
 		stagingInstanceList = Staging.findAll("FROM Staging st WHERE st.entity = 'SERVICE' ")
 		session["stagingType"] = "service"
@@ -67,9 +60,7 @@ class StagingController {
 	}
 	
 	//For Admin Workflow setup
-	def stageList = {
-		
-		
+	def stageList() {
 		def stagesList = SubStages.findAll("FROM SubStages st WHERE st.staging.entity = 'SERVICE'")
 		/*
 		println "In stageList"
@@ -81,8 +72,7 @@ class StagingController {
 		
 	}
 	
-	def updateStageName = {
-		
+	def updateStageName() {
 		SubStages subStage = SubStages.get(params.id)
 		
 		if(subStage != null)
@@ -104,8 +94,7 @@ class StagingController {
 		
 	}
 	
-	def editStageName = {
-		
+	def editStageName() {
 		SubStages subStage = SubStages.get(params.id?.toLong())
 		
 		render(template:"editStageName", model:[subStage: subStage])
@@ -114,11 +103,11 @@ class StagingController {
 	
 	
 
-	def stagingList = {
+	def stagingList() {
 		redirect(action: "updateList", params: [type: session["stagingType"]])
 	}
 
-	def updateList = {
+	def updateList() {
 		def stagingInstanceList = []
 		def query = "FROM Staging st "
 		def title = ""
@@ -198,7 +187,7 @@ class StagingController {
 		}
 	}
 
-	def listServiceStages = {
+	def listServiceStages() {
 		def currentStage;
 		if(params.stageId) {
 			currentStage = Staging.get(params.stageId)
@@ -206,7 +195,7 @@ class StagingController {
 		[stagingInstanceList: Staging.listServiceStages ("NEW_STAGE"), currentStage: currentStage]
 	}
 
-	def changeStaging = {
+	def changeStaging() {
 		def currentStage;
 		def nextStage;
 		def stagingLogInstance = new StagingLog()
@@ -242,8 +231,7 @@ class StagingController {
 	}
 
 
-	def reviewRequestFromStaging={
-
+	def reviewRequestFromStaging() {
 		def map = [:]
 		def res = "fail"
 		if(!params.serviceProfileId || !params.nextStageId){
@@ -296,7 +284,7 @@ class StagingController {
 		{
 			NotificationGenerator gen = new NotificationGenerator(g)
 			map = gen.notifyReviewRequestUpdate(request1, NotificationGenerator.ReviewRequestUpdates.NEW,
-					PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal)))
+					PricewellSecurity.currentUser)  // was: User.get(new Long(SecurityUtils.subject.principal))
 			
 			sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceProfile.id)
 
@@ -339,7 +327,7 @@ class StagingController {
 
 
 	/*
-	 def saveStagingChange= {
+	 def saveStagingChange() {
 	 if(!params.serviceProfileId || !params.nextStageId){
 	 flash.message = "Service Profile is not provided properly or some parameters are not valid"
 	 //TODO: Redirect properly
@@ -382,19 +370,19 @@ class StagingController {
 	 }
 	 } */
 
-	def create = {
+	def create() {
 		def stagingInstance = new Staging()
 		stagingInstance.properties = params
 		return [stagingInstance: stagingInstance]
 	}
 
-	def createsetup = {
+	def createsetup() {
 		def stagingInstance = new Staging()
 		stagingInstance.properties = params
 		render(template: "createsetup", model: [stagingInstance: stagingInstance])
 	}
 
-	def save = {
+	def save() {
 		def res = "fail"
 		def stagingInstance = new Staging()
 		println params
@@ -411,7 +399,7 @@ class StagingController {
 		render res
 	}
 
-	def show = {
+	def show() {
 		def stagingInstance = Staging.get(params.id)
 		if (!stagingInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'staging.label', default: 'Staging'), params.id])}"
@@ -423,7 +411,7 @@ class StagingController {
 		}
 	}
 
-	def showsetup = {
+	def showsetup() {
 		def stagingInstance = Staging.get(params.id)
 		if (!stagingInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'staging.label', default: 'Staging'), params.id])}"
@@ -435,7 +423,7 @@ class StagingController {
 		}
 	}
 
-	def edit = {
+	def edit() {
 		def stagingInstance = Staging.get(params.id)
 		if (!stagingInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'staging.label', default: 'Staging'), params.id])}"
@@ -446,7 +434,7 @@ class StagingController {
 		}
 	}
 
-	def editsetup = {
+	def editsetup() {
 		def stagingInstance = Staging.get(params.id)
 		if (!stagingInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'staging.label', default: 'Staging'), params.id])}"
@@ -458,7 +446,7 @@ class StagingController {
 	}
 
 
-	def update = {
+	def update() {
 		def res = "fail"
 		def stagingInstance = Staging.get(params.id)
 		if (stagingInstance) {
@@ -491,7 +479,7 @@ class StagingController {
 		render res
 	}
 
-	def deletesetup = {
+	def deletesetup() {
 		def stagingInstance = Staging.get(params.id)
 		if (stagingInstance) {
 			try {
@@ -509,7 +497,7 @@ class StagingController {
 		}
 	}
 
-	def delete = {
+	def delete() {
 		def stagingInstance = Staging.get(params.id)
 		if (stagingInstance) {
 			try {

@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 
 
 class OpportunityController {
@@ -23,25 +22,22 @@ class OpportunityController {
 	def salesCatalogService, fieldMappingService
 	def quotationService
 	def sendMailService, cwimportService, connectwiseCatalogService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 	
-	def createServiceTicket = {
+	def createServiceTicket() {
 		Opportunity opportunityInstance = Opportunity.get(params.id)
 		cwimportService.showReportingApiFields(opportunityInstance)
 		render "success"
 	}
 	
-	def tmp = {
+	def tmp() {
 		//def data = Opportunity.findAll("FROM Opportunity op  WHERE op.geo.id = 4 AND op.dateCreated BETWEEN 'Tue Jun 26 00:00:00 IST 2012' AND 'Wed Jun 26 00:00:00 IST 2013' ORDER BY dateModified DESC")
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -365)
@@ -60,8 +56,7 @@ class OpportunityController {
         [opportunityInstanceList: Opportunity.list(params), opportunityInstanceTotal: Opportunity.count()]
     }*/
 	
-	def getAccountContacts = 
-	{
+	def getAccountContacts() {
 		def account = Account.get(params.id)
 		
 		render(template: "/opportunity/accountContactList",  model: [contactList: account?.contacts])
@@ -83,7 +78,7 @@ class OpportunityController {
 		return exist;
 	}
 	
-	def list = {
+	def list() {
 		/*def opportunityList = [];
 		opportunityList = retrieveOpportunityList("pending",[:]);
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -109,7 +104,7 @@ class OpportunityController {
 		
 	}
 	
-	def closedWonOpportunity = {
+	def closedWonOpportunity() {
 		def opportunityList = [];
 		
 		opportunityList = retrieveOpportunityList("closedWon", [:]);
@@ -122,7 +117,7 @@ class OpportunityController {
 			render(view: "list", model: [listType: 'won', accountList: accountList, opportunityInstanceList: opportunityList, opportunityInstanceTotal: opportunityList?.size(), title: "Won Opportunities"])
 		}
 	}
-	def closedLostOpportunity = {
+	def closedLostOpportunity() {
 		def opportunityList = [];
 		
 		opportunityList = retrieveOpportunityList("closedLost", [:]);
@@ -135,7 +130,7 @@ class OpportunityController {
 			render(view: "list", model: [listType: 'lost', accountList: accountList, opportunityInstanceList: opportunityList, opportunityInstanceTotal: opportunityList?.size(), title: "Lost Opportunities"])
 		}
 	}
-	def pendingOpportunity = {
+	def pendingOpportunity() {
 		def opportunityList = [];
 		
 		opportunityList = retrieveOpportunityList("pending", [:]);
@@ -219,7 +214,7 @@ class OpportunityController {
 		return filteredData;
 	}
 	
-	def search = {
+	def search() {
 		Map searchFields = buildOpportunitySearchMap(params.searchFields)
 		
 		if(searchFields && searchFields.size() > 0 && searchFields["name"].toString().length() > 0)
@@ -252,7 +247,7 @@ class OpportunityController {
 		return searchFieldsMap
 	}
 
-    def create = {
+    def create() {
         def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -285,7 +280,7 @@ class OpportunityController {
 		}
     }
 
-	def addOpportunityFromAccount = {
+	def addOpportunityFromAccount() {
 		def opportunityInstance = new Opportunity()
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		opportunityInstance.properties = params
@@ -303,8 +298,7 @@ class OpportunityController {
 		render(template: "/opportunity/addOpportunity",  model: [salesUsers: salesUsers.toList(), opportunityInstance: opportunityInstance, contactList: account?.contacts, accountId: params.accountId, createdFrom: 'account', territoryList: territoryList])
 	}
 	
-    def save = {
-		
+    def save() {
         def opportunityInstance = new Opportunity(params)
 		def accountInstance = null
 		def leadInstance = null
@@ -412,8 +406,7 @@ class OpportunityController {
         }
     }
 	
-	def showStage = {
-		
+	def showStage() {
 		String source = params.source
 		
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -437,8 +430,7 @@ class OpportunityController {
 		
 	}
 	
-	def changeStage =
-	{
+	def changeStage() {
 		def probability = 0
 		Staging nextStage = null
 		Staging newStage = null
@@ -563,7 +555,7 @@ class OpportunityController {
 		}
 	}
 	
-    def show = {
+    def show() {
         def opportunityInstance = Opportunity.get(params.id)
 		def loginUserId =  PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		
@@ -631,8 +623,7 @@ class OpportunityController {
         }
     }
 
-	def addSalesforceTerritoryAndContact = 
-	{
+	def addSalesforceTerritoryAndContact() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
@@ -641,7 +632,7 @@ class OpportunityController {
 		render(view: "addSalesforceTerritoryAndContact", model: [opportunityInstance: opportunityInstance, territoryList: territoryList]);
 	}
 	
-	def mapTerritory = {
+	def mapTerritory() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
@@ -664,7 +655,7 @@ class OpportunityController {
 		render(view: "mapTerritory", model: [opportunityInstance: opportunityInstance, territoryList: territoryList, connectwiseTerritory: connectwiseTerritory]);
 	}
 	
-	def saveTerritoryMapping = {
+	def saveTerritoryMapping() {
 		Opportunity opportunityInstance =	 Opportunity.get(params.id)
 		def result = "fail"
 		if(opportunityInstance)
@@ -701,8 +692,7 @@ class OpportunityController {
 		render result
 	}
 	
-	def createNote = {
-		
+	def createNote() {
 	   def opportunityInstance = Opportunity.get(params.opportunityId)
 	   def comment  = params.comment
 	   
@@ -724,7 +714,7 @@ class OpportunityController {
 		
 	}
 	
-	def refreshNotes = {
+	def refreshNotes() {
 		def opp = Opportunity.get(params.opportunityId);
 		
 		def loginUserId =  PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -733,8 +723,7 @@ class OpportunityController {
 	}
 	
 	
-	def deleteNote = {
-		
+	def deleteNote() {
 		def res = opportunityService.deleteNote(params.noteId)
 		
 		if(res)
@@ -753,8 +742,7 @@ class OpportunityController {
 		}
 	}
 	
-	def editNote = {
-		
+	def editNote() {
 		def res = opportunityService.editNote(params.noteId, params.comment)
 		
 		if(res)
@@ -773,7 +761,7 @@ class OpportunityController {
 		}
 	}
 	
-	def addTerritory = {
+	def addTerritory() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def opportunityInstance = Opportunity.get(params.id)
 		def territoryList = new ArrayList()
@@ -782,7 +770,7 @@ class OpportunityController {
 		render(view: "addTerritory", model: [opportunityInstance: opportunityInstance, territoryList: territoryList]);
 	}
 	
-	def saveTerritory = {
+	def saveTerritory() {
 		def opportunityInstance = Opportunity.get(params.id)
 		def territory = Geo.get(params.territoryId)
 		
@@ -800,8 +788,7 @@ class OpportunityController {
 		redirect(action: "show", id: opportunityInstance.id)
 	}
 	
-	def getFormatedDate = 
-	{
+	def getFormatedDate() {
 		def opportunityInstance = Opportunity.get(params.id)
 		
 		def dateFormat = opportunityInstance?.geo?.dateFormat
@@ -837,7 +824,7 @@ class OpportunityController {
 		render closeDate
 	}
 	
-    def edit = {
+    def edit() {
         def opportunityInstance = Opportunity.get(params.id)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = salesCatalogService.findUserTerritories(opportunityInstance?.assignTo)
@@ -887,7 +874,7 @@ class OpportunityController {
         }
     }
 
-    def update = {
+    def update() {
         def opportunityInstance = Opportunity.get(params.id)
 		def salesUsers = []
 		salesUsers = reviewService.findSalesUsers()
@@ -978,7 +965,7 @@ class OpportunityController {
         }
     }
 
-    def delete = {
+    def delete() {
 		def opportunityInstance = Opportunity.get(params.id)
 		def name = opportunityInstance.name
         if (opportunityInstance) {

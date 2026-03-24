@@ -12,24 +12,21 @@ class ServiceActivityTaskController {
 
 	def serviceCatalogService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceActivityTaskInstanceList: ServiceActivityTask.list(params), serviceActivityTaskInstanceTotal: ServiceActivityTask.count()]
     }
 	
-	def updateSequenceOrder = {
+	def updateSequenceOrder() {
 		ServiceActivityTask serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
 		
 		if(serviceActivityTaskInstance){
@@ -41,8 +38,7 @@ class ServiceActivityTaskController {
 		
 	}
 	
-	def listServiceActivityTasks = {
-		
+	def listServiceActivityTasks() {
 		def serviceActivity = null
 		if(params.activityId != "" && params.activityId != null && params.activityId != "null" && params.activityId != "new")
 		{
@@ -58,13 +54,13 @@ class ServiceActivityTaskController {
 		render(template: "activityTaskList", model: [serviceActivityTaskList: serviceActivityTaskList, activityId: serviceActivity?.id ])
 	}
 	
-	def create = {
+	def create() {
         def serviceActivityTaskInstance = new ServiceActivityTask()
         serviceActivityTaskInstance.properties = params
         return [serviceActivityTaskInstance: serviceActivityTaskInstance]
     }
 	
-	def createFromServiceActivity = {
+	def createFromServiceActivity() {
 		def serviceActivity = null
 		def templateRender = "create"
 		if(params.activityId != "" && params.activityId != null && params.activityId != "null" && params.activityId != "new")
@@ -78,7 +74,7 @@ class ServiceActivityTaskController {
 		//return [serviceActivityTaskInstance: serviceActivityTaskInstance]
 	}
 
-    def save = {
+    def save() {
 		Map resultMap = [:]
 		def serviceActivity = null
 		if(params.activityId != "" && params.activityId != null && params.activityId != "null" && params.activityId != "new")
@@ -111,7 +107,7 @@ class ServiceActivityTaskController {
         }
     }
 	
-	def changeOrders = {
+	def changeOrders() {
 		if(params.activityTasks)
 		{
 			String tasks = params.activityTasks.replaceAll("\"", "").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "")
@@ -123,8 +119,7 @@ class ServiceActivityTaskController {
 		}
 	}
 
-	def upOrder = {
-		
+	def upOrder() {
 		if(params.activityTasks)
 		{
 			String tasks = params.activityTasks.replaceAll("\"", "").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "")
@@ -168,8 +163,7 @@ class ServiceActivityTaskController {
 		
 	}
 
-	def downOrder = {
-		
+	def downOrder() {
 		if(params.activityTasks)
 		{
 			String tasks = params.activityTasks.replaceAll("\"", "").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "")
@@ -213,7 +207,7 @@ class ServiceActivityTaskController {
 		
 	}
 	
-    def show = {
+    def show() {
         def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
         if (!serviceActivityTaskInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceActivityTask.label', default: 'ServiceActivityTask'), params.id])}"
@@ -224,7 +218,7 @@ class ServiceActivityTaskController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
         if (!serviceActivityTaskInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceActivityTask.label', default: 'ServiceActivityTask'), params.id])}"
@@ -235,7 +229,7 @@ class ServiceActivityTaskController {
         }
     }
 
-	def editFromServiceActivity = {
+	def editFromServiceActivity() {
 		def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
 		def serviceActivity = null
 		
@@ -255,7 +249,7 @@ class ServiceActivityTaskController {
 		}
 	}
 	
-    def update = {
+    def update() {
         def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
 		Map resultMap = new HashMap()
         if (serviceActivityTaskInstance) {
@@ -293,7 +287,7 @@ class ServiceActivityTaskController {
         }
     }
 
-    def delete = {
+    def delete() {
         def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
         if (serviceActivityTaskInstance) {
             try {
@@ -312,7 +306,7 @@ class ServiceActivityTaskController {
         }
     }
 	
-	def deleteFromServiceActivity = {
+	def deleteFromServiceActivity() {
 		def serviceActivityTaskInstance = ServiceActivityTask.get(params.id)
 		if (serviceActivityTaskInstance) {
 			try {

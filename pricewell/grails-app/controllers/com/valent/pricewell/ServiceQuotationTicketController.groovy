@@ -6,35 +6,32 @@ class ServiceQuotationTicketController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def cwimportService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceQuotationTicketInstanceList: ServiceQuotationTicket.list(), serviceQuotationTicketInstanceTotal: ServiceQuotationTicket.count()]
     }
 
-	def importClosedTicket = {
+	def importClosedTicket() {
 		cwimportService.findServiceTickets("closed")
 		render "success"
 	}
 	
-    def create = {
+    def create() {
         def serviceQuotationTicketInstance = new ServiceQuotationTicket()
         serviceQuotationTicketInstance.properties = params
         return [serviceQuotationTicketInstance: serviceQuotationTicketInstance]
     }
 
-    def save = {
+    def save() {
         def serviceQuotationTicketInstance = new ServiceQuotationTicket(params)
         if (serviceQuotationTicketInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceQuotationTicket.label', default: 'ServiceQuotationTicket'), serviceQuotationTicketInstance.id])}"
@@ -45,7 +42,7 @@ class ServiceQuotationTicketController {
         }
     }
 
-    def show = {
+    def show() {
         def serviceQuotationTicketInstance = ServiceQuotationTicket.get(params.id)
         if (!serviceQuotationTicketInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceQuotationTicket.label', default: 'ServiceQuotationTicket'), params.id])}"
@@ -56,7 +53,7 @@ class ServiceQuotationTicketController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceQuotationTicketInstance = ServiceQuotationTicket.get(params.id)
         if (!serviceQuotationTicketInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceQuotationTicket.label', default: 'ServiceQuotationTicket'), params.id])}"
@@ -67,7 +64,7 @@ class ServiceQuotationTicketController {
         }
     }
 
-	def correctTicketId = {
+	def correctTicketId() {
 		def serviceQuotationTicketInstance = ServiceQuotationTicket.get(params.id)
 		if (!serviceQuotationTicketInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceQuotationTicket.label', default: 'ServiceQuotationTicket'), params.id])}"
@@ -78,7 +75,7 @@ class ServiceQuotationTicketController {
 		}
 	}
 	
-    def update = {
+    def update() {
         def serviceQuotationTicketInstance = ServiceQuotationTicket.get(params.id)
         if (serviceQuotationTicketInstance) {
             if (params.version) {
@@ -105,7 +102,7 @@ class ServiceQuotationTicketController {
         }
     }
 
-    def delete = {
+    def delete() {
         def serviceQuotationTicketInstance = ServiceQuotationTicket.get(params.id)
         if (serviceQuotationTicketInstance) {
             try {

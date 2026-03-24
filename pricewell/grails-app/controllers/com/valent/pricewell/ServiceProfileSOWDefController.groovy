@@ -4,24 +4,21 @@ import com.valent.pricewell.PricewellSecurity
 class ServiceProfileSOWDefController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceProfileSOWDefInstanceList: ServiceProfileSOWDef.list(params), serviceProfileSOWDefInstanceTotal: ServiceProfileSOWDef.count()]
     }
 
-	def listServiceProfileSOWDefinition = {
+	def listServiceProfileSOWDefinition() {
 		def pid = params.serviceProfileId
 		
 		if(params.serviceProfileId)
@@ -58,7 +55,7 @@ class ServiceProfileSOWDefController {
 		}
 	}
 	
-	def getDefaultSOWDefinition = {
+	def getDefaultSOWDefinition() {
 		if(params.id)
 		{
 			def serviceProfileInstance = ServiceProfile.get(params.id)
@@ -81,8 +78,7 @@ class ServiceProfileSOWDefController {
 		}
 	}
 	
-	def getTerritorySOWDefinition = {
-		
+	def getTerritorySOWDefinition() {
 		def sowDefinitionList = []
 		if(params.serviceProfileId)
 		{
@@ -109,13 +105,13 @@ class ServiceProfileSOWDefController {
 		//return sowDefinitionList
 	}
 	
-    def create = {
+    def create() {
         def serviceProfileSOWDefInstance = new ServiceProfileSOWDef()
         serviceProfileSOWDefInstance.properties = params
         return [serviceProfileSOWDefInstance: serviceProfileSOWDefInstance]
     }
 	
-	def createFromService = {
+	def createFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Invalid Request";
@@ -133,7 +129,7 @@ class ServiceProfileSOWDefController {
 					model:[serviceProfileSOWDefInstance: serviceProfileSOWDefInstance, serviceProfileId: params.serviceProfileId, definitionList: definitionList, defaultSowLanguageTemplate: defaultSowLanguageTemplate])
 	}
 
-    def save = {
+    def save() {
         def serviceProfileSOWDefInstance = new ServiceProfileSOWDef(params)
         if (serviceProfileSOWDefInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), serviceProfileSOWDefInstance.id])}"
@@ -144,7 +140,7 @@ class ServiceProfileSOWDefController {
         }
     }
 
-	def saveFromService = {
+	def saveFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Argument is not valid"
@@ -232,7 +228,7 @@ class ServiceProfileSOWDefController {
 		println partString + available
 		return available
 	}
-    def show = {
+    def show() {
         def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
         if (!serviceProfileSOWDefInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), params.id])}"
@@ -243,8 +239,7 @@ class ServiceProfileSOWDefController {
         }
     }
 
-	def editFromService = {
-		
+	def editFromService() {
 		def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
 		if (!serviceProfileSOWDefInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), params.id])}"
@@ -260,7 +255,7 @@ class ServiceProfileSOWDefController {
 		
 	}
 	
-	def editDefaultSOWDefinition = {
+	def editDefaultSOWDefinition() {
 		def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
 		if (!serviceProfileSOWDefInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), params.id])}"
@@ -275,7 +270,7 @@ class ServiceProfileSOWDefController {
 		}
 	}
 	
-    def edit = {
+    def edit() {
         def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
         if (!serviceProfileSOWDefInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), params.id])}"
@@ -286,7 +281,7 @@ class ServiceProfileSOWDefController {
         }
     }
 
-	def updateFromService = {
+	def updateFromService() {
 		def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
 		if (serviceProfileSOWDefInstance) {
 			if (params.version) {
@@ -312,7 +307,7 @@ class ServiceProfileSOWDefController {
 
 	}
 	
-    def update = {
+    def update() {
         def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
         if (serviceProfileSOWDefInstance) {
             if (params.version) {
@@ -339,7 +334,7 @@ class ServiceProfileSOWDefController {
         }
     }
 
-	def deleteFromService = {
+	def deleteFromService() {
 		def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
 		
 		if (serviceProfileSOWDefInstance) {
@@ -360,7 +355,7 @@ class ServiceProfileSOWDefController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def serviceProfileSOWDefInstance = ServiceProfileSOWDef.get(params.id)
         if (serviceProfileSOWDefInstance) {
             try {

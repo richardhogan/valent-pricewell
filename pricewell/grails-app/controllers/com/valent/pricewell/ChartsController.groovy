@@ -8,25 +8,21 @@ import java.text.SimpleDateFormat
 
 class ChartsController {
 
-    def index = { }
+    def index() { }
 	def chartService
 	def opportunityService
 	def dateService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 		
-	def refreshUnassignedExceptionReport = 
-	{
+	def refreshUnassignedExceptionReport() {
 		Map unassignedExceptionReport = chartService.getUnassignedExceptionReport()
 		render (template: "/reports/unassignExceptionReport", model: [unassignException: unassignedExceptionReport])
 	}
 	
-	def drilldownServiceVariance = {
+	def drilldownServiceVariance() {
 		//println params
 		Opportunity opportunity = Opportunity.get(params.opportunityId?.toLong())
 		Service service = Service.findByServiceName(params.serviceName?.toString())
@@ -35,7 +31,7 @@ class ChartsController {
 		render (template: "/reports/drilldownServiceVariance", model: [activityRoleHoursMap: activityRoleHoursMap])
 	}
 	
-	def drilldownActivityRoleTime = {
+	def drilldownActivityRoleTime() {
 		//println params
 		Opportunity opportunity = Opportunity.get(params.opportunityId?.toLong())
 		Service service = Service.findByServiceName(params.serviceName?.toString())
@@ -45,7 +41,7 @@ class ChartsController {
 		render (template: "/reports/drilldownActivityRoleTime", model: [activityRoleHoursMap: activityRoleHoursMap])
 	}
 	
-	def getOpportunityServiceVariance = {
+	def getOpportunityServiceVariance() {
 		Opportunity opportunity = Opportunity.get(params.opportunityId?.toLong())
 		
 		Map serviceVarianceMap = new HashMap()
@@ -70,8 +66,7 @@ class ChartsController {
 		return currency
 	}
 	
-	def quarterlySales = {
-		
+	def quarterlySales() {
 		Geo territory = null
 		/*if(params.end != null && params.end != "null")
 		{
@@ -85,9 +80,7 @@ class ChartsController {
 		
 		render (view: "/reports/quarterlyTotalSalesBySalesUser", model: ['quarterlyTotalSalesMap': quarterlyTotalSalesMap, 'currency': getCurrency()])
 	}
-	def quarterlySaleswithDate = {
-		
-
+	def quarterlySaleswithDate() {
 		Geo territory = null
 		PricewellUtils.Println("Territory_Id",params.territory_id)
 		if(params.territory_id)
@@ -98,7 +91,7 @@ class ChartsController {
 		
 		render (view: "/reports/quarterlyTotalSalesBySalesUser", model: ['quarterlyTotalSalesMap': quarterlyTotalSalesMap, 'currency': getCurrency()])
 	}
-	def dealStatusAging = {
+	def dealStatusAging() {
 		Map dateMapping=[:]
 		Map pendingDaysMap=[:]
 		Geo territory = null
@@ -123,7 +116,7 @@ class ChartsController {
 	}
 	/*********************************Service Sold As Per Portfolio*********************************************/
 		
-	def serviceSoldPerPortfolio = {
+	def serviceSoldPerPortfolio() {
 		Date endDate = null
 		Map serviceSoldPerPortfolioMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -156,7 +149,7 @@ class ChartsController {
 		render returnMap as JSON
 	}	
 	
-	def itCostPerQuotationAndPortfolio = {
+	def itCostPerQuotationAndPortfolio() {
 		Date endDate = null
 		Map itCostPerQuotationMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -189,7 +182,7 @@ class ChartsController {
 	}
 	
 	/****************************************Opportunity Funnel Chart*******************************************/
-	def opportunityFunnelChart = {
+	def opportunityFunnelChart() {
 		Date endDate = null
 		Map opportunityFunnelData = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -211,7 +204,7 @@ class ChartsController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/****************************************Service Funnel Chart*******************************************/
-	def serviceFunnelChart = {
+	def serviceFunnelChart() {
 		Date endDate = null
 		Map serviceFunnelData = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -232,7 +225,7 @@ class ChartsController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/****************************************Lead Funnel Chart*******************************************/
-	def leadFunnelChart = {
+	def leadFunnelChart() {
 		Date endDate = null
 		Map leadFunnelData = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -250,7 +243,7 @@ class ChartsController {
 		
 		render (view: "/reports/leadFunnel", model: [leadFunnelData: leadFunnelData])
 	}
-	def leadFunnelChartWithDate = {
+	def leadFunnelChartWithDate() {
 		Date endDate = null
 		Map leadFunnelData = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -271,7 +264,7 @@ class ChartsController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 	/*****************************************VSOE Discounting Chart********************************************/
-	def VSOEDiscount = {
+	def VSOEDiscount() {
 		Date endDate = null
 		Map totaldiscount = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -293,7 +286,7 @@ class ChartsController {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**************************************Sales Total Units Sold Graph****************************************/
-	def salesTotalUnitsSoldGraph = {
+	def salesTotalUnitsSoldGraph() {
 		Date endDate = null
 		Map salesTotalUnitsByServiceMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -332,7 +325,7 @@ class ChartsController {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/*******************************************Total Sales Sold Graph****************************************/
-	def totalSalesSoldGraph = {
+	def totalSalesSoldGraph() {
 		Date endDate = null
 		Map salesSoldByServicesMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -379,7 +372,7 @@ class ChartsController {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/***************************************** Total Product Sold Graph****************************************/
-	def totalProductSoldGraph = {
+	def totalProductSoldGraph() {
 		Date endDate = null
 		Map productsSoldByServiceMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -425,11 +418,10 @@ class ChartsController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**********************************Deal Status Chart********************************************************/
-	def dealStatusChart =
-	{
+	def dealStatusChart() {
 		Date endDate = null
 		Map quoteTypesMap = [:]
-				PricewellUtils.Println("In deal status Chart"+PricewellSecurity.principalId  // was: SecurityUtils.subject.principal)  
+				PricewellUtils.Println("In deal status Chart"+PricewellSecurity.principalId)  // was: SecurityUtils.subject.principal
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = dateFormat.parse(params.start);
@@ -452,8 +444,7 @@ class ChartsController {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/*******************************Quota Assigned Vs Quota Achievement Graph*********************************/
-	def getQuotaAssignedVsQuotaAchivementChartData =
-	{
+	def getQuotaAssignedVsQuotaAchivementChartData() {
 		Map dateMap = dateService.getTimespanForQuota(params.range)
 		def territoryInstance = null
 
@@ -480,8 +471,7 @@ class ChartsController {
 		}
 		//render(view: "/reports/quotaAssignedVsQuotaAchivementGraph", model: [quotaData: quotaData])
 	}
-	def getQuotaAssignedVsQuotaAchivementChartDataWithDate =
-	{
+	def getQuotaAssignedVsQuotaAchivementChartDataWithDate() {
 			PricewellUtils.Println("Charts Controller", "AssignedVsQuotaAchivement")    
 		Map dateMap = dateService.getTimespanForQuotaWithDate(params.start,params.end)
 		def territoryInstance = null
@@ -516,8 +506,7 @@ class ChartsController {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/*******************************************Quota Assigned Vs Quota Achievement Per Person Graph********/
-	def getQuotaAssignedVsQuotaAchivementPerPersonChartData =
-	{
+	def getQuotaAssignedVsQuotaAchivementPerPersonChartData() {
 		Map dateMap = dateService.getTimespanForQuota(params.range)
 		def territoryInstance = null
 		
@@ -532,8 +521,7 @@ class ChartsController {
 			
 		render(view: "/reports/quotaAssignedVsQuotaAchivementPerPerson", model: [quotaPerPersons: quotaPerPersons])
 	}
-	def getQuotaAssignedVsQuotaAchivementPerPersonChartDataWithDate =
-	{
+	def getQuotaAssignedVsQuotaAchivementPerPersonChartDataWithDate() {
 		PricewellUtils.Println("Charts Controller", "after")
 		PricewellUtils.Println("Charts Controller", params.start)
 		Map dateMap = dateService.getTimespanForQuotaWithDate(params.start,params.end)  
@@ -553,8 +541,7 @@ class ChartsController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/////////////////////////Admin Dash Board//////////////////////Recent User Activity/////////////////////
-	def recentUserActivity=
-	{
+	def recentUserActivity() {
 		Map dateMap=[:]
 		if(params.end!=null && params.end!='null')
 		{
@@ -565,8 +552,7 @@ class ChartsController {
 		}
 	
 	/////////////////Admin DashBoard////////////////Account Status by Role///////////////////
-	def accountStatusbyRole=
-	{
+	def accountStatusbyRole() {
 		Map dateMap=[:]
 		if(params.end!=null && params.end!='null')
 		{
@@ -581,8 +567,7 @@ class ChartsController {
 		}
 	}
 	/////////////Admin DashBoard/////////////////Service Variance////////////////////////
-	def salesVarianceWithDate=
-	{
+	def salesVarianceWithDate() {
 		Map dateMap=[:]
 		Map serviceVarianceMap = new HashMap()
 		if(params.opportunityId!=null && params.opportunityId!='null' )

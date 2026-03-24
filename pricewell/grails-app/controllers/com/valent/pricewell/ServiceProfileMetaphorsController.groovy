@@ -4,24 +4,21 @@ import com.valent.pricewell.PricewellSecurity
 class ServiceProfileMetaphorsController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceProfileMetaphorsInstanceList: ServiceProfileMetaphors.list(params), serviceProfileMetaphorsInstanceTotal: ServiceProfileMetaphors.count()]
     }
 	
-	def listMetaphors = {
+	def listMetaphors() {
 		def serviceProfileInstance = ServiceProfile.get(params.serviceProfileId)
 		
 		List metaphorsList = getServiceProfileMetaphorsByType(serviceProfileInstance, params.metaphorType)
@@ -37,13 +34,13 @@ class ServiceProfileMetaphorsController {
 		
 	}
 
-    def create = {
+    def create() {
         def serviceProfileMetaphorsInstance = new ServiceProfileMetaphors()
         serviceProfileMetaphorsInstance.properties = params
         return [serviceProfileMetaphorsInstance: serviceProfileMetaphorsInstance]
     }
 
-	def createFromService = {
+	def createFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Invalid Request";
@@ -58,7 +55,7 @@ class ServiceProfileMetaphorsController {
 		render(template: "createMetaphors",	model:[serviceProfileMetaphorsInstance: serviceProfileMetaphorsInstance, serviceProfileId: params.serviceProfileId, metaphorsList: metaphorsList, metaphorType: params.metaphorType, entityName: correctEntityName(params.entityName)])
 	}
 	
-    def save = {
+    def save() {
         def serviceProfileMetaphorsInstance = new ServiceProfileMetaphors(params)
         if (serviceProfileMetaphorsInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceProfileMetaphors.label', default: 'ServiceProfileMetaphors'), serviceProfileMetaphorsInstance.id])}"
@@ -69,8 +66,7 @@ class ServiceProfileMetaphorsController {
         }
     }
 
-	def saveFromService = {
-		
+	def saveFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Argument is not valid"
@@ -115,7 +111,7 @@ class ServiceProfileMetaphorsController {
 		}
 	}
 	
-    def show = {
+    def show() {
         def serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id)
         if (!serviceProfileMetaphorsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileMetaphors.label', default: 'ServiceProfileMetaphors'), params.id])}"
@@ -126,7 +122,7 @@ class ServiceProfileMetaphorsController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id)
         if (!serviceProfileMetaphorsInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileMetaphors.label', default: 'ServiceProfileMetaphors'), params.id])}"
@@ -137,8 +133,7 @@ class ServiceProfileMetaphorsController {
         }
     }
 
-	def editFromService = {
-		
+	def editFromService() {
 		def serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id.toLong())
 		if (!serviceProfileMetaphorsInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef'), params.id])}"
@@ -153,7 +148,7 @@ class ServiceProfileMetaphorsController {
 		
 	}
 	
-    def update = {
+    def update() {
         def serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id)
         if (serviceProfileMetaphorsInstance) {
             if (params.version) {
@@ -180,7 +175,7 @@ class ServiceProfileMetaphorsController {
         }
     }
 	
-	def updateFromService = {
+	def updateFromService() {
 		ServiceProfileMetaphors serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id)
 		ServiceProfile serviceProfile = ServiceProfile.get(params.serviceProfileId.toLong())
 		if (serviceProfileMetaphorsInstance) {
@@ -211,7 +206,7 @@ class ServiceProfileMetaphorsController {
 		}
 	}
 
-	def deleteFromService = {
+	def deleteFromService() {
 		ServiceProfileMetaphors serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id.toLong())
 		
 		if (serviceProfileMetaphorsInstance) {
@@ -237,7 +232,7 @@ class ServiceProfileMetaphorsController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def serviceProfileMetaphorsInstance = ServiceProfileMetaphors.get(params.id)
         if (serviceProfileMetaphorsInstance) {
             try {

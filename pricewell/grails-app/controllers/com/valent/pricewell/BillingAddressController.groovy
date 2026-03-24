@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class BillingAddressController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [billingAddressInstanceList: BillingAddress.list(params), billingAddressInstanceTotal: BillingAddress.count()]
     }
 
-    def create = {
+    def create() {
         def billingAddressInstance = new BillingAddress()
         billingAddressInstance.properties = params
         return [billingAddressInstance: billingAddressInstance]
     }
 
-    def save = {
+    def save() {
         def billingAddressInstance = new BillingAddress(params)
         if (billingAddressInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'billingAddress.label', default: 'BillingAddress'), billingAddressInstance.id])}"
@@ -39,7 +36,7 @@ class BillingAddressController {
         }
     }
 
-    def show = {
+    def show() {
         def billingAddressInstance = BillingAddress.get(params.id)
         if (!billingAddressInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'billingAddress.label', default: 'BillingAddress'), params.id])}"
@@ -50,7 +47,7 @@ class BillingAddressController {
         }
     }
 
-    def edit = {
+    def edit() {
         def billingAddressInstance = BillingAddress.get(params.id)
         if (!billingAddressInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'billingAddress.label', default: 'BillingAddress'), params.id])}"
@@ -61,7 +58,7 @@ class BillingAddressController {
         }
     }
 
-    def update = {
+    def update() {
         def billingAddressInstance = BillingAddress.get(params.id)
         if (billingAddressInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class BillingAddressController {
         }
     }
 
-    def delete = {
+    def delete() {
         def billingAddressInstance = BillingAddress.get(params.id)
         if (billingAddressInstance) {
             try {

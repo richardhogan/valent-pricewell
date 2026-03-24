@@ -18,18 +18,15 @@ class LeadController {
 	def leadService
 	def reviewService
 	def sendMailService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def list = {
+    def list() {
 		//Method used to cache, refresh cache and search on cache collection and sort filtered data..
 		//1) Flag to tell whether refresh cache or not. session["leadlist-refresh"]
 		//2) If refresh flag is set then retrieve from database all data for login user and save in cache, session["leadlist-original"]
@@ -136,11 +133,11 @@ class LeadController {
         
     }
 	
-	def pending = {
+	def pending() {
 		redirect(action: "list")
 	}
 	
-	def converted = {
+	def converted() {
 		def leadList = []
 		leadList = Lead.findAll("FROM Lead l WHERE l.stagingStatus.name = 'converted'")
 		
@@ -157,7 +154,7 @@ class LeadController {
 		
 	}
 
-    def create = {
+    def create() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
@@ -310,7 +307,7 @@ class LeadController {
 		return queryString
 	}
 	
-	def search = {
+	def search() {
 		//String queryString =  buildLeadSearchQuery(params.searchFields)
 		//def leadList = Lead.findAll(queryString)
 		
@@ -374,7 +371,7 @@ class LeadController {
 		return searchFieldsMap
 	}
 
-    def save = {
+    def save() {
 				def res = "fail"
 				boolean i = false
 				def mobile = null
@@ -462,8 +459,7 @@ class LeadController {
 
 	}
 	
-	def showStage = {
-		
+	def showStage() {
 		String source = params.source
 		
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -520,8 +516,7 @@ class LeadController {
 		}
 	}
 	
-	def changeStage = 
-	{
+	def changeStage() {
 		def leadInstance = Lead.get(params.id)
 		Staging newStage = null
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -556,7 +551,7 @@ class LeadController {
 		}
 	}
 	
-    def show = {
+    def show() {
         def leadInstance = Lead.get(params.id)
 		if(params.notificationId)
 		{
@@ -575,7 +570,7 @@ class LeadController {
         }
     }
 
-    def edit = {
+    def edit() {
         def leadInstance = Lead.get(params.id)
         if (!leadInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'lead.label', default: 'Lead'), params.id])}"
@@ -590,8 +585,7 @@ class LeadController {
         }
     }
 
-    def update = {
-		
+    def update() {
 				def res = "fail"
 				boolean i = false
 				def mobile = null
@@ -698,7 +692,7 @@ class LeadController {
 		
 	}
 	
-    def delete = {
+    def delete() {
         def leadInstance = Lead.get(params.id)
         if (leadInstance) {
             try {
@@ -719,13 +713,12 @@ class LeadController {
         }
     }
 	
-	def leadConverter = {
+	def leadConverter() {
 		def leadInstance = Lead.get(params.id)
 		render(template: "leadConverter", model: [leadInstance: leadInstance])
 	}
 	
-	def leadReject = 
-	{
+	def leadReject() {
 		def res = "fail"
 		def leadInstance = Lead.get(params.id)
 		if(leadInstance)
@@ -777,8 +770,7 @@ class LeadController {
 		 return check
 	}
 	
-	def convertToContact = 
-	{
+	def convertToContact() {
 		def res = "fail"
 		def leadInstance = Lead.get(params.id)
 		if(leadInstance)

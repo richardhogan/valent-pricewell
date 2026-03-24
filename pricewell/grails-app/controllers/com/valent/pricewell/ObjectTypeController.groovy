@@ -6,24 +6,21 @@ class ObjectTypeController {
 
 	def defaultEntityOperationService
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [objectTypeInstanceList: ObjectType.list(params), objectTypeInstanceTotal: ObjectType.count()]
     }
 
-	def listsetup = {
+	def listsetup() {
 		List objectTypes = []
 		String title = ""
 		if(params.type == "serviceDeliverable" || params.type[0] == "serviceDeliverable")
@@ -61,7 +58,7 @@ class ObjectTypeController {
 		render(template: "listsetup", model: [objectTypes: objectTypes, title: title, type: params.type, changeOrder: false])
 	}
 	
-	def changeOrders = {
+	def changeOrders() {
 		List objectTypes = []
 		String title = ""
 		
@@ -76,7 +73,7 @@ class ObjectTypeController {
 		render(template: "listsetup", model: [objectTypes: objectTypes.sort{it.sequenceOrder}, title: title, type: params.type, changeOrder: true])
 	}
 	
-	def saveOrder = {
+	def saveOrder() {
 		if(params.id)
 		{
 			def deliverablePhaseInstance = ObjectType.get(params.id)
@@ -121,14 +118,14 @@ class ObjectTypeController {
 		redirect(action: "changeOrders", params: [source: "firstsetup", type: params.type])
 	}
 	
-	def create = {
+	def create() {
         def objectTypeInstance = new ObjectType()
         objectTypeInstance.properties = params
 		
 		return [objectTypeInstance: objectTypeInstance]
     }
 	
-	def createsetup = {
+	def createsetup() {
 		def objectTypeInstance = new ObjectType()
 		objectTypeInstance.properties = params
 		
@@ -140,7 +137,7 @@ class ObjectTypeController {
 		
 	}
 
-	def createForSingleType = {
+	def createForSingleType() {
 		def objectTypeInstance = new ObjectType()
 		String updateId = ""
 		if(params.updateId != "" && params.updateId != "" )
@@ -158,7 +155,7 @@ class ObjectTypeController {
 		
 	}
 	
-    def save = {
+    def save() {
         def objectTypeInstance = new ObjectType(params)
         if (objectTypeInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'objectType.label', default: 'ObjectType'), objectTypeInstance.id])}"
@@ -169,8 +166,7 @@ class ObjectTypeController {
         }
     }
 	
-	def checkForTypeAvailability = 
-	{
+	def checkForTypeAvailability() {
 		if(defaultEntityOperationService.isEntityTypeNameAvailable(params))
 		{
 			render "name_available"
@@ -181,7 +177,7 @@ class ObjectTypeController {
 		}
 	}
 	
-	def saveType = {
+	def saveType() {
 		def objectTypeInstance = new ObjectType(params)
 		
 		def type = (params.type?.toString() == "SERVICE_DELIVERABLE") ? "serviceDeliverable" :
@@ -213,7 +209,7 @@ class ObjectTypeController {
 		}
 	}
 
-    def show = {
+    def show() {
         def objectTypeInstance = ObjectType.get(params.id)
         if (!objectTypeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'objectType.label', default: 'ObjectType'), params.id])}"
@@ -224,7 +220,7 @@ class ObjectTypeController {
         }
     }
 
-    def edit = {
+    def edit() {
         def objectTypeInstance = ObjectType.get(params.id)
         if (!objectTypeInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'objectType.label', default: 'ObjectType'), params.id])}"
@@ -235,7 +231,7 @@ class ObjectTypeController {
         }
     }
 	
-	def editsetup = {
+	def editsetup() {
 		def objectTypeInstance = ObjectType.get(params.id?.toLong())
 		if (!objectTypeInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'objectType.label', default: 'ObjectType'), params.id])}"
@@ -253,7 +249,7 @@ class ObjectTypeController {
 		}
 	}
 
-    def update = {
+    def update() {
         def objectTypeInstance = ObjectType.get(params.id)
         if (objectTypeInstance) {
             if (params.version) {
@@ -280,7 +276,7 @@ class ObjectTypeController {
         }
     }
 	
-	def updateType = {
+	def updateType() {
 		def objectTypeInstance = ObjectType.get(params.id?.toLong())
 		
 		if (objectTypeInstance) {
@@ -315,7 +311,7 @@ class ObjectTypeController {
 		}
 	}
 
-    def delete = {
+    def delete() {
         def objectTypeInstance = ObjectType.get(params.id)
         if (objectTypeInstance) {
             try {
@@ -334,7 +330,7 @@ class ObjectTypeController {
         }
     }
 	
-	def deletesetup = {
+	def deletesetup() {
 		ObjectType objectTypeInstance = ObjectType.get(params.id.toLong())
 		
 		def type = (objectTypeInstance.type?.toString() == "SERVICE_DELIVERABLE") ? "serviceDeliverable" :

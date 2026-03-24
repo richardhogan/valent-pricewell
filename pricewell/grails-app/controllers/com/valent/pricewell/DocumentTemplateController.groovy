@@ -14,9 +14,6 @@ class DocumentTemplateController {
     def index() {
         redirect(action: "list", params: params)
     }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")

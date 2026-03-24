@@ -4,30 +4,27 @@ import com.valent.pricewell.PricewellSecurity
 class TimeStampSaverObjectController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [timeStampSaverObjectInstanceList: TimeStampSaverObject.list(params), timeStampSaverObjectInstanceTotal: TimeStampSaverObject.count()]
     }
 
-    def create = {
+    def create() {
         def timeStampSaverObjectInstance = new TimeStampSaverObject()
         timeStampSaverObjectInstance.properties = params
         return [timeStampSaverObjectInstance: timeStampSaverObjectInstance]
     }
 
-    def save = {
+    def save() {
         def timeStampSaverObjectInstance = new TimeStampSaverObject(params)
         if (timeStampSaverObjectInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'timeStampSaverObject.label', default: 'TimeStampSaverObject'), timeStampSaverObjectInstance.id])}"
@@ -38,7 +35,7 @@ class TimeStampSaverObjectController {
         }
     }
 
-    def show = {
+    def show() {
         def timeStampSaverObjectInstance = TimeStampSaverObject.get(params.id)
         if (!timeStampSaverObjectInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'timeStampSaverObject.label', default: 'TimeStampSaverObject'), params.id])}"
@@ -49,7 +46,7 @@ class TimeStampSaverObjectController {
         }
     }
 
-    def edit = {
+    def edit() {
         def timeStampSaverObjectInstance = TimeStampSaverObject.get(params.id)
         if (!timeStampSaverObjectInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'timeStampSaverObject.label', default: 'TimeStampSaverObject'), params.id])}"
@@ -60,7 +57,7 @@ class TimeStampSaverObjectController {
         }
     }
 
-    def update = {
+    def update() {
         def timeStampSaverObjectInstance = TimeStampSaverObject.get(params.id)
         if (timeStampSaverObjectInstance) {
             if (params.version) {
@@ -87,7 +84,7 @@ class TimeStampSaverObjectController {
         }
     }
 
-    def delete = {
+    def delete() {
         def timeStampSaverObjectInstance = TimeStampSaverObject.get(params.id)
         if (timeStampSaverObjectInstance) {
             try {

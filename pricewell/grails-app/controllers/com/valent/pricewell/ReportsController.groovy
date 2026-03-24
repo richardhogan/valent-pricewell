@@ -1,26 +1,23 @@
 package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
-import com.ibm.icu.text.SimpleDateFormat
+import java.text.SimpleDateFormat
 import grails.converters.JSON
 
 
 class ReportsController {
 
 	def reviewService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = { 
+    def index() {
         redirect(action: "statusOfQuotes", params: params)
 		}
 	
-	def statusOfQuotes = {
+	def statusOfQuotes() {
 		 List quotesList = null
 		 
 		 Geo geoInstance = null
@@ -61,15 +58,13 @@ class ReportsController {
 		 [quotationInstanceList: quotesList,qoutesColumns: qoutesColumns,quotesValues: quotesValues, totalQuotes: totalQuotes, geoInstance: geoInstance]
 	}
 	
-	def productManagerestimateveriance = {
-		
+	def productManagerestimateveriance() {
 		def productManagerEstimatedVeriance = []
 		productManagerEstimatedVeriance = reviewService.findEstimateVarianceForPMs()
 		[ productManagerEstimatedVeriance: productManagerEstimatedVeriance]
 	}
 	
-	def pmVarianceData = {
-		
+	def pmVarianceData() {
 		def productManagerEstimatedVeriance = []
 		productManagerEstimatedVeriance = reviewService.findEstimateVarianceForPMs()
 		
@@ -77,8 +72,7 @@ class ReportsController {
 		
 	}
 	
-	def designestimatesample = {
-		
+	def designestimatesample() {
 		def serviceDesignerEstimatedVeriance = []
 		serviceDesignerEstimatedVeriance = [
 	                
@@ -113,8 +107,7 @@ class ReportsController {
 		[ serviceDesignerEstimatedVeriance: serviceDesignerEstimatedVeriance]
 	}
 	
-	def totalUnitsSold = 
-	{
+	def totalUnitsSold() {
 		def seqList = ServiceQuotation.findAll("FROM ServiceQuotation sq WHERE sq.quotation.contractStatus.name = 'Accepted'")
 		Set serviceSet = new HashSet()
 		int totalUnits = 0
@@ -141,7 +134,7 @@ class ReportsController {
 		render(view: "totalunitssoldsample", model: [totalUnitSoldForService: totalUnitSoldForService])
 	}
 	
-	def VSOEDiscount = {
+	def VSOEDiscount() {
 		println params.fromDate
 		println params.toDate
 		Map totaldiscount = [:]
@@ -149,8 +142,7 @@ class ReportsController {
 		render (template: "VSOEDiscounting", model: [totaldiscount: totaldiscount])
 	}
 	
-	def dealStatusChart =
-	{
+	def dealStatusChart() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = dateFormat.parse(params.start);

@@ -1,10 +1,12 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.Role
+import grails.util.Holders
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
 import grails.converters.JSON
 
-import com.ibm.icu.text.SimpleDateFormat
+import java.text.SimpleDateFormat
 import com.valent.pricewell.ServiceProfile.ServiceProfileType
 import com.valent.pricewell.ServiceProfileMetaphors.MetaphorsType
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +22,6 @@ class ServiceController {
 	def exportService, serviceExportService, serviceImportService
 	def sendMailService, reviewService, readImportedFileService, defaultEntityOperationService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST", search: ["POST", "GET"]]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
@@ -34,15 +33,7 @@ class ServiceController {
 	
 	public static def importServiceStages = [["init", "Initialization"], ["concept", "Conceptulization"], ["design", "Design"], ["publish", "Publish"]]
 
-	static navigation = [
-		[group:'my', action:'currentlyAvailable', title: "Published", order: 10],
-		[group:'my', action:'inStaging', title: 'Develop',  order: 15],
-		[group:'my', action:'endOfLife', title: 'Removed', order: 20],
-		[group:'my', action:'myServices', title: 'All', order: 20],
-		[group: 'all', action:'search', order: 30,title: 'Search' ]
-	]
-
-	def index = {
+	def index() {
 		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("PORTFOLIO MANAGER") )
 		{
 			redirect(action: "catalog", params: params)
@@ -57,7 +48,7 @@ class ServiceController {
 		}
 	}
 	
-	def unassignedServiceProductManager = {
+	def unassignedServiceProductManager() {
 		List serviceListNotAssignToProductManager = new ArrayList();
 		def usenobody = User.findByUsername("nobody")
 		//println usenobody
@@ -76,9 +67,7 @@ class ServiceController {
 	
 	}
 	
-	def saveProductManagerfromException = {
-		
-		
+	def saveProductManagerfromException() {
 		ServiceProfile serviceProfileInstance = ServiceProfile.get(params.id.toLong())
 		User productManager = User.get(params.productManagerId.toLong())
 		serviceProfileInstance.service.productManager = productManager
@@ -89,7 +78,7 @@ class ServiceController {
 		render "success"
 		
 	}
-	def unassignedServiceDesigner = {
+	def unassignedServiceDesigner() {
 		List serviceListNotAssignToServiceDesigner = new ArrayList();
 		def usenobody = User.findByUsername("nobody")
 		//println usenobody
@@ -114,9 +103,7 @@ class ServiceController {
 		
 	}
 	
-	def saveServiceDesignerfromException = {
-		
-		
+	def saveServiceDesignerfromException() {
 		ServiceProfile serviceProfileInstance = ServiceProfile.get(params.id.toLong())
 		User serviceDesigner = User.get(params.serviceDesignerId.toLong())
 		serviceProfileInstance.serviceDesignerLead = serviceDesigner
@@ -126,19 +113,19 @@ class ServiceController {
 		render "success"
 		
 	}
-	def serviceExceptionReport = {
+	def serviceExceptionReport() {
 		Map report = [:]
 		report = serviceCatalogService.getServiceExceptionReport()
 		render(template: "/reports/exceptionReport", model: [serviceList: report['serviceList'], deliveryRoleList: report['deliveryRoleList'], reportType: "serviceException"])
 	}
 	
-	def productExceptionReport = {
+	def productExceptionReport() {
 		Map  productException = [:]
 		productException = serviceCatalogService.getProductExceptionReport()
 		render(template: "/reports/exceptionReport", model: [serviceList: productException['serviceList'], productList: productException['productList'], reportType: "productException"])
 	}
 	
-	def serviceExport = {
+	def serviceExport() {
 		def map = [:]
 		ServiceProfile sProfile = ServiceProfile.get(params.serviceProfileId)
 		def filePath = serviceExportService.exportService(sProfile)
@@ -150,9 +137,7 @@ class ServiceController {
 	}
 	
 	
-	def selectionOfWorkflow =
-	{
-		
+	def selectionOfWorkflow() {
 		List stagingInstanceList = Staging.listServiceStages ("NEW_STAGE")
 		List<Staging> customizableStages = new ArrayList<Staging>()
 		
@@ -171,8 +156,7 @@ class ServiceController {
 	}
 	
 	
-	def importFile =
-	{
+	def importFile() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
@@ -180,8 +164,7 @@ class ServiceController {
 		render(view: "importServiceFile", model: [portfolioList: portfolioList])
 	}
 	
-	def serviceImport = {
-		
+	def serviceImport() {
 		def resultMap = [:]
 		
 		MultipartFile file = request.getFile('file')
@@ -239,9 +222,7 @@ class ServiceController {
 		
 	}
 	
-	def saveImport = 
-	{
-		
+	def saveImport() {
 		List services = [], unAvailableDeliveryRoles = [], mappedArray = []
 		/*if(params.source == "checkedDeliveryRole")
 		{
@@ -329,7 +310,7 @@ class ServiceController {
 		render rmap as JSON
 	}
 	
-	def serviceQuickFix = {
+	def serviceQuickFix() {
 		ServiceProfile serviceProfileInstance = ServiceProfile.get(params.serviceProfileId)
 		serviceProfileInstance.newProfile = null
 		serviceProfileInstance.oldProfile = null
@@ -338,17 +319,17 @@ class ServiceController {
 		
 	}
 	
-	def myServices = {
+	def myServices() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 
 		def servicesList = serviceCatalogService.findUserServicesByStaging(user, null)
 
 		render(view:"list",
-				model: [serviceInstanceList: servicesList, serviceInstanceTotal: servicesList.size(), title: "My All Services", , createPermit: isPermitted("create", 0)])
+				model: [serviceInstanceList: servicesList, serviceInstanceTotal: servicesList.size(), title: "My All Services", createPermit: isPermitted("create", 0)])
 	}
 
-	def look = {
+	def look() {
 		ServiceProfile profile = ServiceProfile.get(params.id);
 
 		int index=0;
@@ -371,7 +352,7 @@ class ServiceController {
 		render(view: "/activityRoleTime/list", model: [serviceActivityInstance: serviceActivity]);
 	}
 
-	def currentlyAvailable = {
+	def currentlyAvailable() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def servicesList = serviceCatalogService.findUserServicesByStaging(user, ServiceProfileType.PUBLISHED)
@@ -380,7 +361,7 @@ class ServiceController {
 				model: [serviceInstanceList: servicesList, serviceInstanceTotal: servicesList.size(), title: "My Published Services", createPermit: isPermitted("create", 0)])
 	}
 
-	def inStaging = {
+	def inStaging() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
@@ -388,10 +369,10 @@ class ServiceController {
 
 		boolean instage = true
 		render(view:"list",
-				model: [instage: instage, serviceInstanceList: servicesList, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "My Services In Development", , createPermit: isPermitted("create", 0)])
+				model: [instage: instage, serviceInstanceList: servicesList, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "My Services In Development", createPermit: isPermitted("create", 0)])
 	}
 
-	def allInStaging = {
+	def allInStaging() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def c = ServiceProfile.createCriteria()
 		ServiceProfileType type = ServiceProfileType.DEVELOP
@@ -401,10 +382,10 @@ class ServiceController {
 
 		boolean instage = true
 		render(view:"list",
-				model: [instage: instage, showSearch: instage, serviceInstanceList: servicesList, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "All Services In Development", , createPermit: isPermitted("create", 0)])
+				model: [instage: instage, showSearch: instage, serviceInstanceList: servicesList, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "All Services In Development", createPermit: isPermitted("create", 0)])
 	}
 
-	def allInEndOfLife = {
+	def allInEndOfLife() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def c = ServiceProfile.createCriteria()
 		ServiceProfileType type = ServiceProfileType.INACTIVE
@@ -418,7 +399,7 @@ class ServiceController {
 				model: [serviceInstanceList: servicesList, showSearch: instage, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "All Removed Services", createPermit: isPermitted("create", 0)])
 	}
 
-	def endOfLife = {
+	def endOfLife() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
@@ -428,7 +409,7 @@ class ServiceController {
 				model: [serviceInstanceList: servicesList, portfolioList: portfolioList, serviceInstanceTotal: servicesList.size(), title: "My Removed Services", createPermit: isPermitted("create", 0)])
 	}
 
-	def catalog = {
+	def catalog() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
 		
@@ -436,7 +417,7 @@ class ServiceController {
 		[serviceInstanceList: services, portfolioList: portfolioList, createPermit: isPermitted("create", 0),  title: "My Published Services"]
 	}
 
-	def allInCatalog = {
+	def allInCatalog() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
 
@@ -446,7 +427,7 @@ class ServiceController {
 				model: [serviceInstanceList: services, portfolioList: portfolioList, createPermit: isPermitted("create", 0), title: "All Published Services"])
 	}
 
-	def refreshPricelist = {
+	def refreshPricelist() {
 		def services = Service.listPublished()
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		for(Service service in services)
@@ -458,15 +439,14 @@ class ServiceController {
 	}
 
 
-	def searchServices = {
+	def searchServices() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		render(view:"list",
-				model: [serviceInstanceList: ServiceProfile.list(params), serviceInstanceTotal: servicesList.size(), title: "Search Services", showSearch: true, , createPermit: isPermitted("create", 0)])
+				model: [serviceInstanceList: ServiceProfile.list(params), serviceInstanceTotal: servicesList.size(), title: "Search Services", showSearch: true, createPermit: isPermitted("create", 0)])
 	}
 
 	/*   Card#594 */
-	def search = {
-
+	def search() {
 		String queryString = serviceCatalogService.buildServiceSearchQuery(params.searchFields,(params.mode == "sales"))
 
 		def servicesList = ServiceProfile.findAll(queryString)
@@ -490,12 +470,11 @@ class ServiceController {
 	}
 	/*   Card#594 */
 
-	def list = {
+	def list() {
 		redirect(action: "myServices", params: params)
 	}
 
-	def addDeliverable =
-	{
+	def addDeliverable() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		def deliverablesList = serviceProfileInstance.listCustomerDeliverables(params)
 		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
@@ -503,8 +482,7 @@ class ServiceController {
 		render(template: "/serviceDeliverable/newCustomerDeliverable", model: [serviceProfileId: serviceProfileInstance.id, deliverablesList: deliverablesList, deliverableTypes: deliverableTypes]);
 	}
 	
-	def addActivity =
-	{
+	def addActivity() {
 		def del = ServiceDeliverable.get(params.deliverableId.toInteger())
 		println del
 		
@@ -513,7 +491,7 @@ class ServiceController {
 	}
 
 //*****************************old import method*****************************************************
-	def importService = { //old import method
+	def importService() { //old import method
 		def serviceInstance = new Service()
 		
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -527,7 +505,7 @@ class ServiceController {
 			
 	} 
 	
-	def showImportStages = {
+	def showImportStages() {
 		String source = params.source
 		
 		def importStep = importServiceStageSteps[source]
@@ -642,7 +620,7 @@ class ServiceController {
 			
 	}
 	
-	def create = {
+	def create() {
 		def serviceInstance = new Service()
 		//tmp
 		serviceInstance.portfolio = Portfolio.get(1)
@@ -674,8 +652,7 @@ class ServiceController {
 			
 	}
 
-	def conceptapproved = {
-
+	def conceptapproved() {
 		def serviceProfile = null;
 		if(params.serviceProfileId)
 		{
@@ -703,7 +680,7 @@ class ServiceController {
 
 	}
 
-	def pricelist = {
+	def pricelist() {
 		String queryString = serviceCatalogService.buildServiceSearchQuery(params.searchFields, true)
 		long geoId = 0
 
@@ -727,7 +704,7 @@ class ServiceController {
 			def servicesList = ServiceProfile.executeQuery(queryString)
 
 			if(params?.format && params.format != "html"){
-				response.contentType =  ConfigurationHolder.config.grails.mime.types[params.format]
+				response.contentType =  Holders.config.grails.mime.types[params.format]
 				response.setHeader("Content-disposition", "attachment; filename=pricelist.${params.extension}")
 
 				def results = []
@@ -790,7 +767,7 @@ class ServiceController {
 		}
 	}
 
-	def pricelistJSON = {
+	def pricelistJSON() {
 		String queryString = serviceCatalogService.buildServiceSearchQuery(params.searchFields, true)
 		long geoId = 0
 
@@ -853,7 +830,7 @@ class ServiceController {
 		}
 	}
 
-	def hasDeliverables = {
+	def hasDeliverables() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 
 		boolean val = false;
@@ -865,7 +842,7 @@ class ServiceController {
 		render val
 	}
 	
-	def hasSOWDefinition = {
+	def hasSOWDefinition() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		
 		boolean hasDefaultSOWDefinition = false;
@@ -885,7 +862,7 @@ class ServiceController {
 		render hasDefaultSOWDefinition
 	}
 
-	def hasServiceProductItem = {
+	def hasServiceProductItem() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		
 		boolean available = false;
@@ -899,7 +876,7 @@ class ServiceController {
 		render available
 	}
 	
-	def hasActivityRoleDefine = {
+	def hasActivityRoleDefine() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 
 		boolean val = false;
@@ -931,15 +908,13 @@ class ServiceController {
 		render val
 	}
 
-	def editDefinition =
-	{
+	def editDefinition() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		render(template: "editDefinition", model: [serviceProfileInstance: serviceProfileInstance])
 		return;
 	}
 
-	def saveDefinition =
-	{
+	def saveDefinition() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 
 		if (serviceProfileInstance) {
@@ -965,9 +940,7 @@ class ServiceController {
 		}
 	}
 	
-	def show = 
-	{
-		
+	def show() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def selectedTab = (params.selectedTab? params.selectedTab: 'deliverables')
 		def serviceProfile = null;
@@ -1092,7 +1065,7 @@ class ServiceController {
 
 	}
 
-	def serviceStage = {
+	def serviceStage() {
 		def serviceProfile = null;
 		if(params.serviceProfileId)
 		{
@@ -1181,8 +1154,7 @@ class ServiceController {
 		return assignPortfolioManager
 	}
 	
-	def showServiceImportStages = {
-		
+	def showServiceImportStages() {
 		String source = params.source
 		
 		//def importStep = importServiceStageSteps[source]
@@ -1304,14 +1276,13 @@ class ServiceController {
 					break;
 		}
 	}
-	def loadExtraUnit = {
+	def loadExtraUnit() {
 		println 'In loadExtraUnit Method'
 		
 		render (template:"../service/stage/createExtraUnit")
 	}
 	
-	def showStage = {
-		
+	def showStage() {
 		String source = params.source
 
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
@@ -1453,7 +1424,7 @@ class ServiceController {
 		}
 	}
 	
-	def publishImportService = {
+	def publishImportService() {
 		def res = "fail"
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		
@@ -1529,7 +1500,7 @@ class ServiceController {
 	}
 
 	
-	def changeCustomizeServiceStage = {
+	def changeCustomizeServiceStage() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		if(serviceProfileInstance)
 		{
@@ -1555,7 +1526,7 @@ class ServiceController {
 		}
 	}
 	
-	def changeBackCustomizeServiceStage = {
+	def changeBackCustomizeServiceStage() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		if(serviceProfileInstance)
 		{
@@ -1574,7 +1545,7 @@ class ServiceController {
 	}
 	
 	
-	def changeImportServiceStage = {
+	def changeImportServiceStage() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		if(serviceProfileInstance)
 		{
@@ -1604,7 +1575,7 @@ class ServiceController {
 		}
 	}
 	
-	def changeBackImportServiceStage = {
+	def changeBackImportServiceStage() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		if(serviceProfileInstance)
 		{
@@ -1625,7 +1596,7 @@ class ServiceController {
 		}
 	}
 	
-	def getOtherPortfolios = {
+	def getOtherPortfolios() {
 		//----------
 		def serviceProfile = ServiceProfile.get(params.serviceProfileId)
 		def portfolioList = []
@@ -1638,7 +1609,7 @@ class ServiceController {
 		render(template: "getOtherPortfolios", model: [portfolioList: portfolioList, serviceProfile: serviceProfile])
 	}
 	
-	def saveOtherPortfolios = {
+	def saveOtherPortfolios() {
 		def serviceInstance = Service.get(params.serviceId)
 		def portfolio = Portfolio.get(params.PortfolioId)
 		Map map1 = [:],map2 = [:]
@@ -1661,8 +1632,7 @@ class ServiceController {
 			return "failed"
 	}
 	
-	def saveProductManager =
-	{
+	def saveProductManager() {
 		def result = "fail"
 		def serviceProfile = ServiceProfile.get(params.serviceProfileId)
 		def serviceInstance = Service.get(serviceProfile?.service?.id)
@@ -1695,8 +1665,7 @@ class ServiceController {
 		render result
 	}
 	
-	def saveServiceDesigner =
-	{
+	def saveServiceDesigner() {
 		def result = "fail"
 		params.currentStep = params.step_number.toInteger() + 1;
 		ServiceProfile serviceProfileInstance  = updateServiceProfile(params);
@@ -1719,7 +1688,7 @@ class ServiceController {
 		return false
 	}
 	
-	def isServiceAvailable = {
+	def isServiceAvailable() {
 		String placeWhereAvailable = ""
 		Map resultMap = new HashMap()
 		
@@ -1762,8 +1731,7 @@ class ServiceController {
 		render resultMap as JSON
 	}
 	
-	def saveStage = {
-
+	def saveStage() {
 		//We can cache this
 		def res = "fail"
 		
@@ -1982,7 +1950,7 @@ class ServiceController {
 		return null//serviceInstance;
 	}
 
-	def save = {
+	def save() {
 		def serviceInstance = new Service()
 		serviceInstance.properties[
 					'serviceName',
@@ -2022,7 +1990,7 @@ class ServiceController {
 		}
 	}
 
-	def createNewVersion = {
+	def createNewVersion() {
 		if(!params.id)
 		{
 			//TODO: Handle validation failure
@@ -2067,8 +2035,7 @@ class ServiceController {
 
 	}
 
-	def showAfterStageChange = {
-
+	def showAfterStageChange() {
 		if(params.nextStageId){
 			Staging stage = Staging.get(params.nextStageId);
 			if(stage.name == 'designapproved' || stage.name == 'salesapproval'){
@@ -2088,8 +2055,7 @@ class ServiceController {
 		}
 	}
 
-	def makeInactive = {
-
+	def makeInactive() {
 		if(!params.id)
 		{
 			//TODO: Handle validation failure
@@ -2111,8 +2077,7 @@ class ServiceController {
 		redirect(action: "index")
 	}
 	
-	def makeDevServiceInactive = {
-		
+	def makeDevServiceInactive() {
 		if(!params.id)
 		{
 			println "No Service has been received for inactivating"
@@ -2145,14 +2110,13 @@ class ServiceController {
 		session["serviceUpdatePermit"] =  isPermitted("update", 0) && serviceProfile.type == ServiceProfile.ServiceProfileType.DEVELOP
 	}
 
-	def edit = {
-
+	def edit() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 	
 
 		if(!isPermitted("update", 0))
 		{
-			return  response.sendError(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN)
+			return  response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN)
 		}
 
 		if (!serviceProfileInstance) {
@@ -2173,7 +2137,7 @@ class ServiceController {
 
 		if(!isPermitted("update", 0))
 		{
-			return  response.sendError(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN)
+			return  response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN)
 		}
 
 		Service serviceInstance = serviceProfileInstance.service
@@ -2240,8 +2204,7 @@ class ServiceController {
 		return null;
 	}
 
-	def update = {
-
+	def update() {
 		ServiceProfile serviceProfileInstance = updateServiceProfile(params)
 		if(serviceProfileInstance){
 			//flash.message = "${message(code: 'default.updated.message', args: [message(code: 'serviceProfile.label', default: 'ServiceProfile'), serviceProfileInstance.id])}"
@@ -2254,7 +2217,7 @@ class ServiceController {
 
 	}
 
-	def removeService = {
+	def removeService() {
 		ServiceProfile serviceProfileInstance = ServiceProfile.get(params.serviceProfileId)
 		/*if(serviceProfileInstance)
 		{
@@ -2451,7 +2414,7 @@ class ServiceController {
 		return serviceProfile
 	} 
 	
-	def delete = {
+	def delete() {
 		def serviceInstance = Service.get(params.id)
 		if (serviceInstance) {
 			try {
@@ -2470,7 +2433,7 @@ class ServiceController {
 		}
 	}
 
-	def calculateMargin = {
+	def calculateMargin() {
 		if(params.profileId && params.marginFields.geoId)
 		{
 			def serviceProfileInstance = ServiceProfile.get(params.profileId?.toLong())
@@ -2491,7 +2454,7 @@ class ServiceController {
 		}
 	}
 
-	def salesTotalUnitsSoldGraph = {
+	def salesTotalUnitsSoldGraph() {
 		Date endDate = null
 		Map salesTotalUnitsByServiceMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -2509,7 +2472,7 @@ class ServiceController {
 		render (view: "/reports/salesTotalUnitsByServiceOffering", model: [salesTotalUnitsByServiceMap: salesTotalUnitsByServiceMap])
 	}
 	
-	def totalSalesSoldGraph = {
+	def totalSalesSoldGraph() {
 		Date endDate = null
 		Map salesSoldByServicesMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -2535,7 +2498,7 @@ class ServiceController {
 		render (view: "/reports/salesSoldInBaseCurrencyByServiceOffering", model: [salesSoldByServicesMap: salesSoldByServicesMap, currency: currency])
 	}
 	
-	def totalProductSoldGraph = {
+	def totalProductSoldGraph() {
 		Date endDate = null
 		Map productsSoldByServiceMap = [:]
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -2578,7 +2541,7 @@ class ServiceController {
 		return false
 	}
 	
-	def checkIsDeletable = {
+	def checkIsDeletable() {
 		ServiceProfile serviceProfileInstance = ServiceProfile.get(params.serviceProfileId.toLong())
 		Map resultMap = new HashMap()
 		
@@ -2646,8 +2609,7 @@ class ServiceController {
 	}
 	
 	/*   Card#594 */
-	def searchCatalog = {
-		
+	def searchCatalog() {
 		String queryString = serviceCatalogService.buildServiceSearchCatalogQuery(params.searchFields)
 				def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 				def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
@@ -2672,12 +2634,12 @@ class ServiceController {
 				model: [serviceInstanceList: services, portfolioList: portfolioList, 
 					serviceInstanceTotal: services.size(), 
 					title: title, showSearch: true, 
-					searchFields: params.searchFields, , 
+					searchFields: params.searchFields, 
 					createPermit: isPermitted("create", 0)])
 	}
 	/*   Card#594 */
 	
-	def createCopyServiceProfile = {
+	def createCopyServiceProfile() {
 		ServiceProfile serviceProfile = ServiceProfile.get(params.id)
 		Service service = Service.get(serviceProfile?.service?.id)
 		
@@ -2692,15 +2654,14 @@ class ServiceController {
 		redirect(action: "show", params: [serviceProfileId: copyServiceProfile.ident()])
 	}
 	
-	def userrolesection = {
+	def userrolesection() {
 		Long id = PricewellSecurity.principalId  // was: SecurityUtils.getSubject()?.getPrincipal()
 
 		def user = User.get(id)
 		render(view: "/user/userroleselection", model: [roles: UserRole.findAllByUser(user)*.role])
 	}
 	
-	def generatePdfSOW =
-	{
+	def generatePdfSOW() {
 		Map resultMap=new HashMap()
 		Geo geo  = Geo.get(new Long(params.geoId));
 		boolean isSampleSOWThere = false

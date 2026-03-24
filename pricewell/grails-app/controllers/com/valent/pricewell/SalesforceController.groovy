@@ -6,24 +6,19 @@ import grails.converters.JSON
 import java.text.SimpleDateFormat
 class SalesforceController {
 
-    def index = { }
-	
+    def index() { }
 	def salesforceCatalogService, sfimportService, sendMailService, dateService
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def importOpportunities = {
+	def importOpportunities() {
 		UpdateRecord lastUpdateRecord = salesforceCatalogService.getLastUpdateDateOfSalesforceImportOpportunity()
 		render(view: "importOpportunities", model:[lastUpdateRecord: lastUpdateRecord])
 	}
 	
-	def saveOpportunitiesFromSalesforce = {
-		
+	def saveOpportunitiesFromSalesforce() {
 		Map importMap = new HashMap()
 		
 		Date startDate = null, endDate = null

@@ -5,30 +5,27 @@ import com.valent.pricewell.PricewellSecurity
 class UpdateRecordController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [updateRecordInstanceList: UpdateRecord.list(params), updateRecordInstanceTotal: UpdateRecord.count()]
     }
 
-    def create = {
+    def create() {
         def updateRecordInstance = new UpdateRecord()
         updateRecordInstance.properties = params
         return [updateRecordInstance: updateRecordInstance]
     }
 
-    def save = {
+    def save() {
         def updateRecordInstance = new UpdateRecord(params)
         if (updateRecordInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'updateRecord.label', default: 'UpdateRecord'), updateRecordInstance.id])}"
@@ -39,7 +36,7 @@ class UpdateRecordController {
         }
     }
 
-    def show = {
+    def show() {
         def updateRecordInstance = UpdateRecord.get(params.id)
         if (!updateRecordInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'updateRecord.label', default: 'UpdateRecord'), params.id])}"
@@ -50,7 +47,7 @@ class UpdateRecordController {
         }
     }
 
-    def edit = {
+    def edit() {
         def updateRecordInstance = UpdateRecord.get(params.id)
         if (!updateRecordInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'updateRecord.label', default: 'UpdateRecord'), params.id])}"
@@ -61,7 +58,7 @@ class UpdateRecordController {
         }
     }
 
-    def update = {
+    def update() {
         def updateRecordInstance = UpdateRecord.get(params.id)
         if (updateRecordInstance) {
             if (params.version) {
@@ -88,7 +85,7 @@ class UpdateRecordController {
         }
     }
 
-    def delete = {
+    def delete() {
         def updateRecordInstance = UpdateRecord.get(params.id)
         if (updateRecordInstance) {
             try {

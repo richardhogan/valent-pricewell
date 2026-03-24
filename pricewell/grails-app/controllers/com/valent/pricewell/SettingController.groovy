@@ -12,19 +12,15 @@ class SettingController {
 	def salesCatalogService
 	def sowSupportParameter
 	def fileUploadService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def sowSettings = 
-	{
+	def sowSettings() {
 		def map = [:]
 		for(Setting s: Setting.list()){
 			map[s.name] = s.value
@@ -33,14 +29,12 @@ class SettingController {
 		[map:map]
 	}
 	
-	def importSOWTemplate = 
-	{
+	def importSOWTemplate() {
 		Geo geoInstance = Geo.get(params.id.toLong())
 		render(view: "importSOW", model: [geoInstance: geoInstance])
 	}
 	
-	def saveimportedSOW = 
-	{
+	def saveimportedSOW() {
 		def map = [:]
 		Geo geoInstance = Geo.get(params.id.toLong())
 		
@@ -56,7 +50,7 @@ class SettingController {
 		render map as JSON
 	}
 	
-	def SOWTemplates = {
+	def SOWTemplates() {
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories()
 		
@@ -85,7 +79,7 @@ class SettingController {
 		render(view: "SOWTemplates", model: [territoryInstance: territoryInstance, definedTerritories: definedTerritories, undefinedTerritories: undefinedTerritories])
 	}
 	
-	def getTerritorySOWTemplate = {
+	def getTerritorySOWTemplate() {
 		def geoInstance = Geo.get(params.territoryId)
 		def ssptype = SowSupportParameter.get(params.type)
 		if (!geoInstance) {
@@ -122,7 +116,7 @@ class SettingController {
 		
 	}
 	
-	def downloadSOWPreview = {
+	def downloadSOWPreview() {
 		def geoInstance = Geo.get(params.id)
 		if (!geoInstance) {
 			println "sorry not downloaded..."
@@ -139,8 +133,7 @@ class SettingController {
 		}
 	}
 	
-	def settings = 
-	{
+	def settings() {
 		for(EmailSetting es in EmailSetting.list())
 		{
 			if(es.secret == null)
@@ -182,7 +175,7 @@ class SettingController {
 		render(template: "settings", model: [map: map])
 	}*/
 	
-	def saveSettings = {
+	def saveSettings() {
 		def map = [:]
 		for(Setting s: Setting.list()){
 			map[s.name] = s
@@ -240,13 +233,11 @@ class SettingController {
 	}
 
 	
-	def territorySettings = 
-	{
+	def territorySettings() {
 		[params: params]	
 	}
 	
-	def settingsetup = 
-	{
+	def settingsetup() {
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories()
 		
@@ -268,8 +259,7 @@ class SettingController {
 		render(template: "settingsetup", model: [territoryInstance: territoryInstance, definedTerritories: definedTerritories, undefinedTerritories: undefinedTerritories])
 	}
 	
-	def getTerritorySetting = 
-	{
+	def getTerritorySetting() {
 		def geoInstance = Geo.get(params.territoryId)
 		if (!geoInstance) {
             //flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'setting.label', default: 'Setting'), params.id])}"
@@ -307,18 +297,18 @@ class SettingController {
 	}
 	
 	
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [settingInstanceList: Setting.list(params), settingInstanceTotal: Setting.count()]
     }
 
-    def create = {
+    def create() {
         def settingInstance = new Setting()
         settingInstance.properties = params
         return [settingInstance: settingInstance]
     }
 
-    def save = {
+    def save() {
         def settingInstance = new Setting(params)
         if (settingInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'setting.label', default: 'Setting'), settingInstance.id])}"
@@ -329,7 +319,7 @@ class SettingController {
         }
     }
 
-    def show = {
+    def show() {
         def settingInstance = Setting.get(params.id)
         if (!settingInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'setting.label', default: 'Setting'), params.id])}"
@@ -340,7 +330,7 @@ class SettingController {
         }
     }
 
-    def edit = {
+    def edit() {
         def settingInstance = Setting.get(params.id)
         if (!settingInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'setting.label', default: 'Setting'), params.id])}"
@@ -351,7 +341,7 @@ class SettingController {
         }
     }
 
-    def update = {
+    def update() {
         def settingInstance = Setting.get(params.id)
         if (settingInstance) {
             if (params.version) {
@@ -378,7 +368,7 @@ class SettingController {
         }
     }
 
-    def delete = {
+    def delete() {
         def settingInstance = Setting.get(params.id)
         if (settingInstance) {
             try {

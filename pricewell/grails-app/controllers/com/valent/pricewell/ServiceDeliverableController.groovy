@@ -6,24 +6,21 @@ class ServiceDeliverableController {
 	def serviceCatalogService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [serviceDeliverableInstanceList: ServiceDeliverable.list(params), serviceDeliverableInstanceTotal: ServiceDeliverable.count()]
     }
 	
-	def listServiceDeliverables = {
+	def listServiceDeliverables() {
 		def pid = params.serviceProfileId
 		
 		if(params.serviceProfileId)
@@ -36,7 +33,7 @@ class ServiceDeliverableController {
 		}
 	}
 
-    def create = {
+    def create() {
         def serviceDeliverableInstance = new ServiceDeliverable()
         serviceDeliverableInstance.properties = params
 		
@@ -44,7 +41,7 @@ class ServiceDeliverableController {
         return [serviceDeliverableInstance: serviceDeliverableInstance, deliverableTypes: deliverableTypes]
     }
 	
-	def createFromService = {
+	def createFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Invalid Request";
@@ -64,8 +61,7 @@ class ServiceDeliverableController {
 					model:[deliverableTypes: deliverableTypes, serviceDeliverableInstance: serviceDeliverableInstance, serviceProfileInstance: serviceProfileInstance, serviceProfileId: params.serviceProfileId, deliverablesList: deliverablesList])
 	}
 	
-	def upOrder = {
-		
+	def upOrder() {
 		if(params.serviceProfileId)
 		{
 			
@@ -109,8 +105,7 @@ class ServiceDeliverableController {
 		
 	}
 	
-	def downOrder = {
-		
+	def downOrder() {
 		if(params.serviceProfileId)
 		{
 			def serviceProfile = ServiceProfile.get(params.serviceProfileId)
@@ -151,8 +146,7 @@ class ServiceDeliverableController {
 		}
 	}
 	
-	def changeOrders = {
-		
+	def changeOrders() {
 		if(params.serviceProfileId)
 		{
 			def serviceProfile = ServiceProfile.get(params.serviceProfileId)
@@ -163,7 +157,7 @@ class ServiceDeliverableController {
 		}
 	}
 	
-	def saveFromService = {
+	def saveFromService() {
 		if(!params.serviceProfileId)
 		{
 			flash.message = "Argument is not valid"
@@ -204,7 +198,7 @@ class ServiceDeliverableController {
 	}
 	
 
-    def save = {
+    def save() {
         def serviceDeliverableInstance = new ServiceDeliverable(params)
 		
         if (serviceDeliverableInstance.save(flush: true)) {
@@ -216,7 +210,7 @@ class ServiceDeliverableController {
         }
     }
 
-    def show = {
+    def show() {
         def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
         if (!serviceDeliverableInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceDeliverable.label', default: 'ServiceDeliverable'), params.id])}"
@@ -227,7 +221,7 @@ class ServiceDeliverableController {
         }
     }
 
-    def edit = {
+    def edit() {
         def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
         if (!serviceDeliverableInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceDeliverable.label', default: 'ServiceDeliverable'), params.id])}"
@@ -238,7 +232,7 @@ class ServiceDeliverableController {
         }
     }
 	
-	def editFromService = {
+	def editFromService() {
 		def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
 		if (!serviceDeliverableInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'serviceDeliverable.label', default: 'ServiceDeliverable'), params.id])}"
@@ -251,7 +245,7 @@ class ServiceDeliverableController {
 		}
 	}
 	
-	def updateFromService = {
+	def updateFromService() {
 		def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
 		if (serviceDeliverableInstance) {
 			if (params.version) {
@@ -280,7 +274,7 @@ class ServiceDeliverableController {
 
 	}
 
-    def update = {
+    def update() {
         def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
         if (serviceDeliverableInstance) {
             if (params.version) {
@@ -307,7 +301,7 @@ class ServiceDeliverableController {
         }
     }
 
-	def deleteFromService = {
+	def deleteFromService() {
 		def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
 		def name = serviceDeliverableInstance.name
 		if (serviceDeliverableInstance) {
@@ -328,7 +322,7 @@ class ServiceDeliverableController {
 			redirect(action: "list")
 		}
 	}
-    def delete = {
+    def delete() {
         def serviceDeliverableInstance = ServiceDeliverable.get(params.id)
 		def name = serviceDeliverableInstance.name
         if (serviceDeliverableInstance) {

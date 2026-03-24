@@ -13,18 +13,15 @@ class GeoController {
 	def salesCatalogService
 	def roleService;
 	def sendMailService
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
-	
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-	def unassignedTerritory = {
+	def unassignedTerritory() {
 		List territoryList = new ArrayList()
 		List geoList = GeoGroup.findAll()
 		
@@ -38,7 +35,7 @@ class GeoController {
 			render(template: "unassignedGeo", model :[territoryList: territoryList, geoList: geoList])
 		else render "noMoreTerritoryLeftToAssign"
 	}
-	def saveGeo = {
+	def saveGeo() {
 		Geo geoInstance = Geo.get(params.id.toLong())
 		GeoGroup geo = GeoGroup.get(params.geoId.toLong())
 		geoInstance.geoGroup = geo
@@ -46,8 +43,7 @@ class GeoController {
 		render "success"
 	}
     
-	def list = {
-		
+	def list() {
 		/*for(Permission perm:  Permission.findByTarget("geo:*")){
 			perm.target = "*"
 			perm.save(flush:true)
@@ -95,8 +91,7 @@ class GeoController {
 	}
 	
 	
-	def isCountryDefined = 
-	{
+	def isCountryDefined() {
 		def territory = Geo.get(params.id.toLong())
 		if(territory?.country != null && territory?.country != "NULL" && territory?.country != "" )
 		{
@@ -124,11 +119,11 @@ class GeoController {
 		return counts
 	}
 	
-	def listsetup = {
+	def listsetup() {
 		redirect(action: "list", params: params)
     }
 	
-    def create = {
+    def create() {
 		def geoInstance = new Geo()
 		GeoGroup geoGroupInstance = null
 		if(params.geoId != null && params.geoId != "" && params.geoId != "null")//in UI GEO = GeoGroup class, territory = Geo class
@@ -155,7 +150,7 @@ class GeoController {
 			return [geoGroupInstance: geoGroupInstance, geoInstance: geoInstance, baseCurrency: getBaseCurrency(), salesManagerList: salesManagerList, salesPersonList: salesPersonList]
     }
 	
-	def getCurrency = {
+	def getCurrency() {
 		Geo geoInstance = Geo.get(params.id)
 		def currency = ""
 		if(geoInstance?.currency != null)
@@ -165,8 +160,7 @@ class GeoController {
 		render currency
 	}
 
-	def getCurrencySymbol = 
-	{
+	def getCurrencySymbol() {
 		def geoInstance = Geo.get(params.id)
 		def symbol = ""
 		if(geoInstance?.currencySymbol != null)
@@ -176,8 +170,7 @@ class GeoController {
 		render symbol
 	}
 	
-	def getDateFormat =
-	{
+	def getDateFormat() {
 		def geoInstance = Geo.get(params.id)
 		def dateFormat = ""
 		if(geoInstance?.dateFormat != null)
@@ -187,7 +180,7 @@ class GeoController {
 		render dateFormat
 	}
 	
-	def createsetup = {
+	def createsetup() {
 		redirect(action: 'create', params: params)
 	}
 	
@@ -214,7 +207,7 @@ class GeoController {
 		
 	  }
 
-    def save = {
+    def save() {
 		def geoInstance = new Geo();
 		if(isTerritoryAvailable(params.geoName))
 		{
@@ -308,8 +301,7 @@ class GeoController {
 		sb.append("</ul>");
 	}
 
-	def saveTerritorySettings = 
-	{
+	def saveTerritorySettings() {
 		def res = "fail"
 		HashMap map = new HashMap();
 		def geoInstance = Geo.get(params.id)
@@ -358,7 +350,7 @@ class GeoController {
 		}
 	}
 	
-    def show = {
+    def show() {
         def geoInstance = Geo.get(params.id)
 		if(params.notificationId)
 		{
@@ -383,11 +375,11 @@ class GeoController {
         }
     }
 
-	def showsetup = {
+	def showsetup() {
         redirect(action: "show", params: params)
     }
 	
-	def edit = {
+	def edit() {
         def geoInstance = Geo.get(params.id)
 		def salesManagerList = serviceCatalogService.findUsersByRole("SALES MANAGER")
 		
@@ -414,13 +406,13 @@ class GeoController {
         }
     }
 
-	def editsetup = {
+	def editsetup() {
         redirect(action: "edit", params: params)
     }
 	
 	
 
-    def update = {
+    def update() {
 		def geoInstance = Geo.get(params.id)
         if (geoInstance) {
             if (params.version) {
@@ -547,7 +539,7 @@ class GeoController {
         }
     }
 
-	def deletesetup = {
+	def deletesetup() {
 		def geoInstance = Geo.get(params.id)
 		def name = geoInstance.name
 		if (geoInstance) {
@@ -627,7 +619,7 @@ class GeoController {
 		}
 	}
 	
-    def delete = {
+    def delete() {
         def geoInstance = Geo.get(params.id)
 		def name = geoInstance.name
         if (geoInstance) 

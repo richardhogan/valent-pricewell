@@ -4,30 +4,27 @@ import com.valent.pricewell.PricewellSecurity
 class QuotationMilestoneController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	def beforeInterceptor = [action:this.&debug]
-	
 	def debug() {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		log.info("[User: ${user.profile.fullName}] - ${actionUri} with params ${params}")
 	}
 	
-    def index = {
+    def index() {
         redirect(action: "list", params: params)
     }
 
-    def list = {
+    def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [quotationMilestoneInstanceList: QuotationMilestone.list(params), quotationMilestoneInstanceTotal: QuotationMilestone.count()]
     }
 
-    def create = {
+    def create() {
         def quotationMilestoneInstance = new QuotationMilestone()
         quotationMilestoneInstance.properties = params
         return [quotationMilestoneInstance: quotationMilestoneInstance]
     }
 
-    def save = {
+    def save() {
         def quotationMilestoneInstance = new QuotationMilestone(params)
         if (quotationMilestoneInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'quotationMilestone.label', default: 'QuotationMilestone'), quotationMilestoneInstance.id])}"
@@ -38,7 +35,7 @@ class QuotationMilestoneController {
         }
     }
 
-    def show = {
+    def show() {
         def quotationMilestoneInstance = QuotationMilestone.get(params.id)
         if (!quotationMilestoneInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'quotationMilestone.label', default: 'QuotationMilestone'), params.id])}"
@@ -49,7 +46,7 @@ class QuotationMilestoneController {
         }
     }
 
-    def edit = {
+    def edit() {
         def quotationMilestoneInstance = QuotationMilestone.get(params.id)
         if (!quotationMilestoneInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'quotationMilestone.label', default: 'QuotationMilestone'), params.id])}"
@@ -60,7 +57,7 @@ class QuotationMilestoneController {
         }
     }
 
-    def update = {
+    def update() {
         def quotationMilestoneInstance = QuotationMilestone.get(params.id)
         if (quotationMilestoneInstance) {
             if (params.version) {
@@ -87,7 +84,7 @@ class QuotationMilestoneController {
         }
     }
 
-    def delete = {
+    def delete() {
         def quotationMilestoneInstance = QuotationMilestone.get(params.id)
         if (quotationMilestoneInstance) {
             try {
