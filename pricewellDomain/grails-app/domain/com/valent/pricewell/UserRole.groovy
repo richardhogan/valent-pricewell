@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.Role
 
 /**
  * Join domain between User and Role for Spring Security Core.

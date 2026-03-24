@@ -1,6 +1,5 @@
 package com.valent.pricewell
 
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 class ServiceQuotation {
 	Service service

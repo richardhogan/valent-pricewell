@@ -16,14 +16,12 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * Represents a remote party that provides federated authentication
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class FederationProvider {
 
   String uid
@@ -33,8 +31,8 @@ class FederationProvider {
   Map props
 
   static mapping = {
-      table ConfigurationHolder.config.nimble.tablenames.federationprovider
-      uid column: ConfigurationHolder.config.nimble.fieldnames.uid
+      table 'federation_provider'
+      uid column: 'uid'
   }
 
   static constraints = {

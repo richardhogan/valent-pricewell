@@ -16,13 +16,11 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 /**
  * Represents an object that we wish to store a basic set of information about
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class Details {
 
   String name
@@ -36,7 +34,7 @@ class Details {
   static belongsTo = [FederationProvider]
   
     static mapping = {
-        table ConfigurationHolder.config.nimble.tablenames.details
+        table 'details'
     } 
   static constraints = {
     name(nullable: true, blank: false)

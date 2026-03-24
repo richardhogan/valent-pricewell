@@ -1,5 +1,5 @@
 package com.valent.pricewell
-import com.valent.pricewell.PricewellSecurity
+import grails.plugin.springsecurity.SpringSecurityUtils
 import java.util.Date;
 import java.util.Map;
 
@@ -61,21 +61,21 @@ class Service{
 	
 	static List listPublished(User user)
 	{
-		if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR"))
+		if(SpringSecurityUtils.ifAnyGranted("ROLE_SYSTEM_ADMINISTRATOR"))
 		{
 			Service.findAll("FROM Service s WHERE s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published"])
 		}
-		else if(PricewellSecurity.hasRole("PORTFOLIO MANAGER"))
+		else if(SpringSecurityUtils.ifAnyGranted("ROLE_PORTFOLIO_MANAGER"))
 		{
 			Service.findAll("FROM Service s WHERE s.portfolio.portfolioManager = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(PricewellSecurity.hasRole("PRODUCT MANAGER")){
+		else if(SpringSecurityUtils.ifAnyGranted("ROLE_PRODUCT_MANAGER")){
 			Service.findAll("FROM Service s WHERE s.productManager = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(PricewellSecurity.hasRole("SERVICE DESIGNER")){
+		else if(SpringSecurityUtils.ifAnyGranted("ROLE_SERVICE_DESIGNER")){
 			Service.findAll("FROM Service s WHERE s.serviceProfile.serviceDesignerLead = :user AND s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published", user: user])
 		}
-		else if(PricewellSecurity.hasRole("SALES PRESIDENT") || PricewellSecurity.hasRole("GENERAL MANAGER") || PricewellSecurity.hasRole("SALES MANAGER") || PricewellSecurity.hasRole("SALES PERSON"))
+		else if(SpringSecurityUtils.ifAnyGranted("ROLE_SALES_PRESIDENT") || SpringSecurityUtils.ifAnyGranted("ROLE_GENERAL_MANAGER") || SpringSecurityUtils.ifAnyGranted("ROLE_SALES_MANAGER") || SpringSecurityUtils.ifAnyGranted("ROLE_SALES_PERSON"))
 		{
 			Service.findAll("FROM Service s WHERE s.serviceProfile.stagingStatus.name = :status order by serviceName", [status: "published"])
 		}

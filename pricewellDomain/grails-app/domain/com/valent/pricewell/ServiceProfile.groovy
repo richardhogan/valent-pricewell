@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import com.valent.pricewell.ServiceProfileSecurityProvider
 
 import java.util.Date
 import java.util.HashSet

@@ -16,7 +16,6 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 /**
  * Represents a WildcardPermission in the data repository.
  * Each level of a wildcard permission (upto 6) is able to be represented by
@@ -24,7 +23,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class LevelPermission extends Permission {
 
     private final String tokenSep = ","
@@ -41,7 +39,7 @@ class LevelPermission extends Permission {
 
     static mapping = {
         cache usage: 'read-write', include: 'all'
-        table ConfigurationHolder.config.nimble.tablenames.levelpermission
+        table 'level_permission'
     }
 
     static constraints = {
