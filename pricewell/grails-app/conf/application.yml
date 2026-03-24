@@ -1,0 +1,175 @@
+---
+grails:
+    profile: web
+    codegen:
+        defaultPackage: com.valent.pricewell
+    spring:
+        bean:
+            packages:
+                - 'com.valent.pricewell'
+    views:
+        default:
+            codec: none
+        gsp:
+            encoding: UTF-8
+            sitemesh:
+                preprocess: true
+    converters:
+        encoding: UTF-8
+    mime:
+        file:
+            extensions: true
+        use:
+            accept:
+                header: false
+        types:
+            html:
+                - 'text/html'
+                - 'application/xhtml+xml'
+            xml:
+                - 'text/xml'
+                - 'application/xml'
+            text: 'text/plain'
+            js: 'text/javascript'
+            rss: 'application/rss+xml'
+            atom: 'application/atom+xml'
+            css: 'text/css'
+            csv: 'text/csv'
+            all: '*/*'
+            json:
+                - 'application/json'
+                - 'text/json'
+            form: 'application/x-www-form-urlencoded'
+            multipartForm: 'multipart/form-data'
+    enable:
+        native2ascii: true
+    exceptionresolver:
+        params:
+            exclude:
+                - password
+
+    # Spring Security Core 7.x configuration
+    plugin:
+        springsecurity:
+            userLookup:
+                userDomainClassName: 'com.valent.pricewell.User'
+                authorityJoinClassName: 'com.valent.pricewell.UserRole'
+            authority:
+                className: 'grails.plugins.nimble.core.Role'
+                nameField: 'authority'
+            password:
+                algorithm: 'bcrypt'
+            auth:
+                loginFormUrl: '/auth/login'
+                ajaxLoginFormUrl: '/auth/login'
+            logout:
+                afterLogoutUrl: '/auth/login'
+            failureHandler:
+                defaultFailureUrl: '/auth/login?login_error=1'
+            adh:
+                errorPage: '/auth/denied'
+            securityConfigType: InterceptUrlMap
+            interceptUrlMap:
+                # Auth and static assets are always public
+                - { pattern: '/auth/**',                  access: 'permitAll' }
+                - { pattern: '/login/authenticate',       access: 'permitAll' }
+                - { pattern: '/assets/**',                access: 'permitAll' }
+                - { pattern: '/images/**',                access: 'permitAll' }
+                - { pattern: '/js/**',                    access: 'permitAll' }
+                - { pattern: '/css/**',                   access: 'permitAll' }
+                - { pattern: '/static/**',                access: 'permitAll' }
+                # Admin user-management UI requires SYSTEM ADMINISTRATOR
+                - { pattern: '/userAdmin/**',             access: 'ROLE_SYSTEM_ADMINISTRATOR' }
+                # Service create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+                - { pattern: '/service/create',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/service/save',             access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/service/delete',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                # Portfolio create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+                - { pattern: '/portfolio/create',         access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/portfolio/save',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/portfolio/delete',         access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                # Delivery role, geo, and rate-card management require DELIVERY ROLE MANAGER
+                - { pattern: '/deliveryRole/**',          access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/geo/create',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/geo/save',                 access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/geo/edit',                 access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/geo/update',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/geo/delete',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/relationDeliveryGeo/**',   access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                # Reports require PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+                - { pattern: '/reports/**',               access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                # Quotation actions require any sales or management role
+                - { pattern: '/quotation/**',             access: 'ROLE_SALES_PERSON,ROLE_SALES_MANAGER,ROLE_SALES_PRESIDENT,ROLE_GENERAL_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                # All other URLs require an authenticated session
+                - { pattern: '/**',                       access: 'isAuthenticated()' }
+
+---
+dataSource:
+    pooled: true
+    driverClassName: 'com.mysql.cj.jdbc.Driver'
+    dialect: org.hibernate.dialect.MySQL8Dialect
+
+hibernate:
+    cache:
+        use_second_level_cache: false
+        use_query_cache: false
+    hbm2ddl:
+        auto: update
+
+server:
+    servlet:
+        session:
+            timeout: 480m
+
+---
+environments:
+    development:
+        grails:
+            serverURL: ''
+        dataSource:
+            dbCreate: update
+            url: 'jdbc:mysql://localhost:3306/smp_pricewell'
+            username: root
+            password: ''
+            properties:
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                validationQuery: 'SELECT 1'
+
+    test:
+        grails:
+            serverURL: 'http://localhost:8080/pricewell'
+        dataSource:
+            dbCreate: create-drop
+            driverClassName: org.h2.Driver
+            url: 'jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE'
+        hibernate:
+            hbm2ddl:
+                auto: create-drop
+            dialect: org.hibernate.dialect.H2Dialect
+            username: sa
+            password: ''
+            properties:
+                validationQuery: 'select 1 as dbcp_connection_test'
+                testOnBorrow: true
+
+    production:
+        grails:
+            serverURL: ''
+        dataSource:
+            dbCreate: update
+            url: 'jdbc:mysql://${dbHostName:localhost}/${dbName:pricewell}'
+            username: usr
+            password: sa
+            properties:
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                validationQuery: 'SELECT 1'

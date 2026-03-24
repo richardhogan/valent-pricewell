@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>mylog.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.grails.web.servlet"         level="ERROR"/>
+    <logger name="org.apache.grails.web.pages"           level="ERROR"/>
+    <logger name="org.apache.grails.web.sitemesh"        level="ERROR"/>
+    <logger name="org.apache.grails.web.layout"          level="DEBUG"/>
+    <logger name="org.sitemesh"                          level="DEBUG"/>
+    <logger name="org.apache.grails.web.mapping.filter"  level="ERROR"/>
+    <logger name="org.apache.grails.web.mapping"         level="ERROR"/>
+    <logger name="org.apache.grails.commons"             level="ERROR"/>
+    <logger name="org.apache.grails.plugins"             level="ERROR"/>
+    <logger name="org.apache.grails.orm.hibernate"       level="ERROR"/>
+    <logger name="org.springframework.security"           level="DEBUG"/>
+    <logger name="grails.plugin.springsecurity"          level="DEBUG"/>
+    <logger name="grails.boot"                           level="DEBUG"/>
+    <logger name="org.grails.datastore"                  level="DEBUG"/>
+    <logger name="org.grails.orm"                        level="DEBUG"/>
+    <logger name="org.springframework"                   level="ERROR"/>
+    <logger name="org.hibernate"                         level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
