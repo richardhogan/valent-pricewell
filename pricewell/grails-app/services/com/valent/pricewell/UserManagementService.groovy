@@ -13,6 +13,12 @@ import grails.plugins.nimble.core.Role
 class UserManagementService {
 
     def springSecurityService
+    // Inject the passwordEncoder bean directly so encoding always uses the same
+    // PasswordEncoder that DaoAuthenticationProvider uses for verification.
+    // springSecurityService.encodePassword() can produce a {bcrypt}-prefixed hash
+    // when the underlying bean is DelegatingPasswordEncoder, but the verification
+    // bean may be BCryptPasswordEncoder (no prefix), causing a mismatch.
+    def passwordEncoder
     static transactional = true
 
     /**
@@ -22,7 +28,7 @@ class UserManagementService {
     User createUser(String username, String rawPassword, String fullName, String email = null) {
         User user = new User(
             username: username,
-            password: springSecurityService.encodePassword(rawPassword),
+            password: passwordEncoder.encode(rawPassword),
             enabled : true
         )
         Profile profile = new Profile(
