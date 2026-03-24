@@ -28,37 +28,36 @@
       Spring Security Core requires the form to POST to j_spring_security_check.
       The field names j_username and j_password are fixed by the Spring Security filter.
     --%>
-    <form action="${request.contextPath}/j_spring_security_check" method="POST" id="loginForm">
+    <form action="${request.contextPath}/login/authenticate" method="POST" id="loginForm">
         <input type="hidden" name="${_csrf?.parameterName}" value="${_csrf?.token}"/>
 
         <div class="dialog">
             <table>
                 <tbody>
                     <tr>
-                        <td class="name"><label for="j_username">Username</label></td>
+                        <td class="name"><label for="username">Username</label></td>
                         <td class="value">
                             <input type="text"
-                                   id="j_username"
-                                   name="j_username"
+                                   id="username"
+                                   name="username"
                                    value=""
                                    autocomplete="off"
                                    autofocus="autofocus"/>
                         </td>
                     </tr>
                     <tr>
-                        <td class="name"><label for="j_password">Password</label></td>
+                        <td class="name"><label for="password">Password</label></td>
                         <td class="value">
                             <input type="password"
-                                   id="j_password"
-                                   name="j_password"
+                                   id="password"
+                                   name="password"
                                    autocomplete="off"/>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <%-- _spring_security_remember_me enables persistent login cookies --%>
-                            <input type="checkbox" id="remember_me" name="_spring_security_remember_me"/>
+                            <input type="checkbox" id="remember_me" name="remember-me"/>
                             <label for="remember_me">Remember me</label>
                         </td>
                     </tr>
