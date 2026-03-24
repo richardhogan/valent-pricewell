@@ -1,0 +1,40 @@
+// Root build.gradle — shared repository and configuration for all subprojects
+subprojects {
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+
+    // Groovy 3 (org.codehaus.groovy) was relocated to Apache (org.apache.groovy) in Groovy 4.
+    // Both groups advertise the same Gradle capability for every split module, causing conflicts
+    // when third-party plugins (e.g. grails-mail 4.0.2) still declare org.codehaus.groovy deps.
+    // Resolve ALL such conflicts in favour of the Groovy 4 / Apache coordinates.
+    def groovyModules = [
+        'groovy', 'groovy-all', 'groovy-templates', 'groovy-json', 'groovy-xml',
+        'groovy-sql', 'groovy-test', 'groovy-test-junit5', 'groovy-dateutil',
+        'groovy-datetime', 'groovy-nio', 'groovy-servlet', 'groovy-swing',
+        'groovy-yaml', 'groovy-jsr223', 'groovy-macro', 'groovy-astbuilder',
+        'groovy-console', 'groovy-groovydoc', 'groovy-groovysh'
+    ]
+    configurations.all {
+        groovyModules.each { module ->
+            resolutionStrategy.capabilitiesResolution.withCapability("org.codehaus.groovy:${module}") {
+                def apache = candidates.find { it.id.group == 'org.apache.groovy' }
+                if (apache) select(apache)
+                else selectHighestVersion()
+            }
+        }
+
+        // grails-mail 4.0.2 (and other Grails 6 plugins) pull in org.grails:grails-gsp:6.x.
+        // Grails 7 moved to org.apache.grails:grails-gsp:7.x — both ship the same package names
+        // (org.grails.gsp.*) so having both on the classpath causes NoSuchFieldError / wrong-version
+        // class loading.  Substitute old org.grails:grails-* coords with org.apache.grails:* so
+        // only the Grails 7 JARs end up on the runtime classpath.
+        // Substitute old org.grails:grails-gsp:6.x with the Grails 7 equivalent.
+        // grails-gsp was the only module proven to cause a NoSuchFieldError clash;
+        // other org.grails:* are still needed by grails-mail's own plugin code.
+        resolutionStrategy.dependencySubstitution {
+            substitute module("org.grails:grails-gsp") using module("org.apache.grails:grails-gsp:7.0.9")
+        }
+    }
+}

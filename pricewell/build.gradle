@@ -1,0 +1,112 @@
+plugins {
+    id "war"
+    id "org.apache.grails.gradle.grails-web"  version "7.0.9"
+    id "org.apache.grails.gradle.grails-gsp"  version "7.0.9"
+    id "com.bertramlabs.asset-pipeline"        version "5.0.9"
+}
+
+version = "0.1"
+group   = "com.valent.pricewell"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['grails-app/init', 'grails-app/controllers', 'grails-app/services',
+                       'grails-app/conf', 'grails-app/taglib', 'grails-app/utils',
+                       'grails-app/jobs', 'src/groovy']
+        }
+        java {
+            srcDirs = ['src/groovy']
+        }
+    }
+}
+
+springBoot {
+    mainClass = 'com.valent.pricewell.Application'
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dependencies {
+    // Import the Grails BOM to align all Grails dependency versions
+    implementation platform("org.apache.grails:grails-bom:7.0.9")
+
+    // Grails core web stack (artifact IDs changed in Grails 7 — no more "plugin-" prefix)
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-web-boot"
+    implementation "org.apache.grails:grails-converters"       // was grails-plugin-rest
+    implementation "org.apache.grails:grails-rest-transforms"  // REST @Resource transforms
+    implementation "org.apache.grails:grails-databinding"      // was grails-plugin-databinding
+    // grails-i18n was merged into grails-core in 7.0.9 — no standalone artifact needed
+    implementation "org.apache.grails:grails-services"         // was grails-plugin-services
+    implementation "org.apache.grails:grails-url-mappings"     // was grails-plugin-url-mappings
+    implementation "org.apache.grails:grails-interceptors"     // was grails-plugin-interceptors
+    implementation "org.apache.grails:grails-gsp"
+    implementation "org.apache.grails:grails-layout"
+
+    // Persistence (GORM + Hibernate 5)
+    implementation "org.apache.grails:grails-data-hibernate5:7.0.9"
+
+    // Security
+    implementation "org.apache.grails:grails-spring-security:7.0.1"
+
+    // Mail (5.0.3 does not exist; latest stable for Grails 7 is 4.0.2)
+    implementation "org.grails.plugins:mail:4.0.2"
+    // Spring Boot 3 / Spring 6's JavaMailSenderImpl requires jakarta.mail.*
+    implementation "jakarta.mail:jakarta.mail-api:2.1.3"
+    runtimeOnly "org.eclipse.angus:angus-mail:2.0.3"
+
+    // Scheduler (moved to Apache Grails namespace in 4.x)
+    implementation "org.apache.grails:grails-quartz:4.0.1"
+
+
+    // Asset pipeline (5.0.9 POM references grails-bom:7.0.0-SNAPSHOT which doesn't resolve;
+    // 5.0.8 has a clean POM)
+    assets "com.bertramlabs.plugins:asset-pipeline-grails:5.0.8"
+
+    // Databases
+    runtimeOnly "com.mysql:mysql-connector-j:8.4.0"
+    runtimeOnly "com.h2database:h2:2.2.224"
+
+    // Subprojects
+    implementation project(':pricewellDomain')
+    implementation project(':connectwiseIntegration')
+    implementation project(':salesforceIntegration')
+    implementation project(':calendar')
+
+    // Third-party libraries
+    implementation "org.jsoup:jsoup:1.17.2"
+    implementation "commons-lang:commons-lang:2.6"
+    implementation "ma.glasnost.orika:orika-core:1.5.4"
+    implementation "org.tmatesoft.svnkit:svnkit:1.10.11"
+    implementation "org.apache.poi:poi-ooxml:5.2.5"
+    // JSON libraries used throughout the app
+    implementation "com.google.code.gson:gson:2.10.1"
+    implementation "org.json:json:20231013"
+    implementation "com.googlecode.json-simple:json-simple:1.1.1"
+    // HTML parsing (NekoHTML used in BasicJsonConverterPlugin)
+    implementation "net.sourceforge.nekohtml:nekohtml:1.9.22"
+    // Classpath scanning (used in SowJsonConverterUtil)
+    implementation "org.reflections:reflections:0.10.2"
+    // JAXB API — removed from JDK in Java 9; required by docx4j and Word utilities
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    // Groovy XML module (XmlSlurper etc.) — ensure it's on the compile classpath
+    implementation "org.apache.groovy:groovy-xml"
+    // ConnectWise v1 JARs also needed for src/groovy/com/valent/pricewell/cw15/*
+    // (transitively from connectwiseIntegration but implementation doesn't expose them)
+    implementation fileTree(dir: '../connectwiseIntegration/lib', include: ['cw15-opportunityApi.jar', 'cw15-contactApi.jar'])
+    // Local JARs (batik, docx4j, iText, etc.)
+    implementation fileTree(dir: 'lib', include: '*.jar')
+
+    // Test
+    testImplementation "org.apache.grails:grails-gorm-testing-support"
+    testImplementation "org.apache.grails:grails-web-testing-support"
+    testImplementation "org.spockframework:spock-core:2.3-groovy-4.0"
+    testImplementation "org.mockito:mockito-core:5.11.0"
+}

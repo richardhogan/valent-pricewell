@@ -1,0 +1,31 @@
+plugins {
+    id "org.apache.grails.gradle.grails-plugin" version "7.0.9"
+}
+
+version = "0.1"
+group   = "com.valent.pricewell"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['grails-app/services', 'src/groovy']
+        }
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dependencies {
+    implementation platform("org.apache.grails:grails-bom:7.0.9")
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-data-hibernate5:7.0.9"
+    implementation project(':pricewellDomain')
+    // Salesforce WSC API JARs (local, not in Maven Central)
+    implementation fileTree(dir: 'lib', include: '*.jar')
+}

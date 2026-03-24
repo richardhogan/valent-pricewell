@@ -1,0 +1,32 @@
+plugins {
+    id "org.apache.grails.gradle.grails-plugin" version "7.0.9"
+}
+
+version = "0.1"
+group   = "com.valent.pricewell"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['grails-app/domain', 'grails-app/conf', 'src/groovy']
+        }
+        java {
+            srcDirs = ['grails-app/domain', 'src/java']
+        }
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dependencies {
+    implementation platform("org.apache.grails:grails-bom:7.0.9")
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-data-hibernate5:7.0.9"
+    implementation "org.apache.grails:grails-spring-security:7.0.1"
+}

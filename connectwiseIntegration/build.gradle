@@ -1,0 +1,41 @@
+plugins {
+    id "org.apache.grails.gradle.grails-plugin" version "7.0.9"
+}
+
+version = "0.1"
+group   = "com.valent.pricewell"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['grails-app/services', 'src/groovy']
+        }
+    }
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dependencies {
+    implementation platform("org.apache.grails:grails-bom:7.0.9")
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-data-hibernate5:7.0.9"
+    implementation project(':pricewellDomain')
+
+    // ConnectWise v1 API JARs (local, not in Maven Central).
+    // NOTE: cw15-v2-allApi.jar and cw15-v2-contactApi.jar have internally-repackaged classes
+    //       (cw15_all.* / cw_all.*) stored under wrong paths — they must NOT be on the compile
+    //       classpath or the Groovy compiler cannot resolve cw15.*/cw.* imports.
+    implementation fileTree(dir: 'lib', include: ['cw15-opportunityApi.jar', 'cw15-contactApi.jar'])
+    runtimeOnly   fileTree(dir: 'lib', include: ['cw15-v2-allApi.jar', 'cw15-v2-contactApi.jar'])
+
+    // JAXB API (removed from JDK 11+; required by CW SOAP stubs that use javax.xml.bind annotations)
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    // JAX-WS API (removed from JDK 11+; required by CW SOAP stubs that use javax.xml.ws)
+    implementation "javax.xml.ws:jaxws-api:2.3.1"
+}
