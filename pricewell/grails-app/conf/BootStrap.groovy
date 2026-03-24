@@ -1,3 +1,4 @@
+import grails.plugins.nimble.core.Role
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -6,13 +7,13 @@ import java.util.TimerTask;
 import java.util.Timer;
 import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.ImageOutputStream
-import javax.servlet.http.HttpSession
+import jakarta.servlet.http.HttpSession
 
 import grails.util.GrailsUtil
 import org.springframework.context.ApplicationContext
 import org.springframework.context.MessageSource
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
+import grails.core.GrailsApplication
+import grails.util.Holders
 
 import com.valent.pricewell.*
 import com.valent.pricewell.ServiceProfile.ServiceProfileType
@@ -41,7 +42,7 @@ class BootStrap {
 
 		HttpRequestMetaClassEnhancer.enhanceRequest()
 
-		ApplicationContext applicationContext = servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
+		ApplicationContext applicationContext = Holders.applicationContext
 		GrailsApplication  grailsApplication = (GrailsApplication) applicationContext.getBean("grailsApplication")
 		MessageSource messageSource = applicationContext.getBean(MessageSource.class);
 		
@@ -53,6 +54,12 @@ class BootStrap {
 		//HttpSession se = request.getSession(true)
 		//MyHttpSessionListener//.sessionCreated(HttpSessionEvent(se))
 		
+		// Grails 7: BootStrap runs without an active Hibernate session/transaction.
+		// Wrap all GORM operations in withTransaction so saves and flushes work.
+		// startOpportunityImportTimer is declared here so it remains in scope
+		// after the withTransaction block closes.
+		boolean startOpportunityImportTimer = false
+		Role.withTransaction {
 		//Temporary fix for previous database which doesn't have get bootstrap revision
 		if(getBootstrapRevision() == 0 && Role.findByAuthority("ROLE_SALES_PRESIDENT")){
 			setBootstrapRevision(1);
@@ -174,7 +181,6 @@ class BootStrap {
 		}
 		
 		/*********For connectwise**********/
-		boolean startOpportunityImportTimer = false
 		if(salesCatalogService.isClass("com.connectwise.integration.ConnectwiseExporterService", grailsApplication))
 		{
 			connectwiseCredentialsSettings()//Settings related to newly added fields
@@ -210,7 +216,8 @@ class BootStrap {
 			addNewSubStageInDesignStage()//adding new stage that is created for requirement
 			initializeMetaphorsValueInServiceProfile()
 		//}
-		
+		} // end Role.withTransaction
+
 		//setBootstrapRevision(3);
 		//startSendingMail()
 		timer = new SendMailTimer(sendMailService);
@@ -1054,7 +1061,7 @@ class BootStrap {
 
 	void addServiceStages(){
 		def serviceStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.SERVICE, stage: 'NEW_STAGE'])
+				[entity: Staging.StagingObjectType.SERVICE, stage: Staging.StagingType.NEW_STAGE])
 
 		if(serviceStagingList.size()==0)
 		{
@@ -1262,7 +1269,7 @@ class BootStrap {
 
 
 			def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-					[entity: Staging.StagingObjectType.SERVICE, stage: 'NEW_STAGE'])
+					[entity: Staging.StagingObjectType.SERVICE, stage: Staging.StagingType.NEW_STAGE])
 
 			stagingList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 		}
@@ -1270,7 +1277,7 @@ class BootStrap {
 
 	void addOpportunityStages(){
 		def opportunityStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.OPPORTUNITY, stage: 'NEW_STAGE'])
+				[entity: Staging.StagingObjectType.OPPORTUNITY, stage: Staging.StagingType.NEW_STAGE])
 
 		if(opportunityStagingList.size()==0)
 		{
@@ -1424,7 +1431,7 @@ class BootStrap {
 
 
 			def opportunityStagList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-					[entity: Staging.StagingObjectType.OPPORTUNITY, stage: 'NEW_STAGE'])
+					[entity: Staging.StagingObjectType.OPPORTUNITY, stage: Staging.StagingType.NEW_STAGE])
 
 			opportunityStagList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 		}
@@ -1432,7 +1439,7 @@ class BootStrap {
 
 	void addLeadStages(){
 		def leadStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.LEAD, stage: 'NEW_STAGE'])
+				[entity: Staging.StagingObjectType.LEAD, stage: Staging.StagingType.NEW_STAGE])
 
 		if(leadStagingList.size()==0)
 		{
@@ -1514,7 +1521,7 @@ class BootStrap {
 
 
 			leadStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-					[entity: Staging.StagingObjectType.LEAD, stage: 'NEW_STAGE'])
+					[entity: Staging.StagingObjectType.LEAD, stage: Staging.StagingType.NEW_STAGE])
 
 			leadStagingList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 		}
@@ -1527,7 +1534,7 @@ class BootStrap {
 
 
 		def quoteStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.QUOTATION, stage: 'EDIT_STAGE'])
+				[entity: Staging.StagingObjectType.QUOTATION, stage: Staging.StagingType.EDIT_STAGE])
 
 		if(quoteStagingList.size() > 0)
 		{
@@ -1633,7 +1640,7 @@ class BootStrap {
 
 
 		quoteStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.QUOTATION, stage: 'EDIT_STAGE'])
+				[entity: Staging.StagingObjectType.QUOTATION, stage: Staging.StagingType.EDIT_STAGE])
 
 		quoteStagingList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 	}
@@ -1642,7 +1649,7 @@ class BootStrap {
 	
 	void addSetupStages(){
 		def setupStagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-				[entity: Staging.StagingObjectType.SETUP, stage: 'NEW_STAGE'])
+				[entity: Staging.StagingObjectType.SETUP, stage: Staging.StagingType.NEW_STAGE])
 
 		if(setupStagingList.size()==0)
 		{
@@ -1721,7 +1728,7 @@ class BootStrap {
 
 			
 			def setupStagList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-					[entity: Staging.StagingObjectType.SETUP, stage: 'NEW_STAGE'])
+					[entity: Staging.StagingObjectType.SETUP, stage: Staging.StagingType.NEW_STAGE])
 
 			setupStagList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 		}
@@ -1747,7 +1754,7 @@ class BootStrap {
 	void addServiceQuotationStages()
 	{
 		def serviceQuotationStages = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-			[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: 'NEW_STAGE'])
+			[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: Staging.StagingType.NEW_STAGE])
 
 		if(serviceQuotationStages.size()==0)
 		{
@@ -1802,7 +1809,7 @@ class BootStrap {
 	
 				
 			def setupStagList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder desc",
-					[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: 'NEW_STAGE'])
+					[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: Staging.StagingType.NEW_STAGE])
 	
 			setupStagList.each() { println " ${it.sequenceOrder} - ${it.name} - ${it.types}" };
 		}
