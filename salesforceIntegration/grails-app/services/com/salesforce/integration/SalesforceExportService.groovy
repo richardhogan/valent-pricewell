@@ -1,7 +1,7 @@
 package com.salesforce.integration
 
 import java.net.MalformedURLException;
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
+import grails.util.Holders
 import java.util.Date;
 import java.util.Map;
 
@@ -92,7 +92,7 @@ class SalesforceExportService {
 	
 	public String getProjectPath(def destinationDir)
 	{
-		def servletContext = ServletContextHolder.servletContext
+		def servletContext = Holders.servletContext
 		
 		def projectPath = servletContext.getRealPath(destinationDir)//return path of the folder inside project
 		//println "folder inside project path : "+projectPath
