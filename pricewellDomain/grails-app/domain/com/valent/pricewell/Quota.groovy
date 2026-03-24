@@ -1,5 +1,4 @@
 package com.valent.pricewell
-import grails.plugins.nimble.core.*
 
 class Quota {
 
@@ -10,7 +9,7 @@ class Quota {
 	Geo territory
 	Date fromDate
 	Date toDate
-	static belongsTo = [person: UserBase]
+	static belongsTo = [person: User]
     
 	static constraints = {
 		amount(nullable: true)

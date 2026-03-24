@@ -16,14 +16,11 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-
 /**
  * Represents generic details about users that are useful to many applications
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class ProfileBase {
 
     String fullName
@@ -37,24 +34,24 @@ class ProfileBase {
     Date dateCreated
     Date lastUpdated
 
-    def beforeInsert = {
+    def beforeInsert() {
         hashEmail()
     }
 
-    def beforeUpdate = {
+    def beforeUpdate() {
         hashEmail()
     }
 
-    def hashEmail = {
+    def hashEmail() {
         // MD5 email hashing (Gravatar) removed — Md5Hash was Apache Shiro, which is no longer a dependency.
         // emailHash field kept for DB schema compatibility only.
     }
     
-    static belongsTo = [owner:UserBase]
+    static belongsTo = [owner: com.valent.pricewell.User]
 
     static mapping = {
         cache usage: 'read-write', include: 'all'
-        table ConfigurationHolder.config.nimble.tablenames.profilebase
+        table 'profile_base'
     }
 
     static constraints = {

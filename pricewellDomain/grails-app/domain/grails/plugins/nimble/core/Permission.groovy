@@ -16,7 +16,6 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * Our permission object encapsulates details that a normal Shiro deployment
@@ -24,7 +23,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class Permission implements Serializable {
 
     static public final String defaultPerm = "grails.plugins.nimble.auth.WildcardPermission"
@@ -37,17 +35,17 @@ class Permission implements Serializable {
     String target
     boolean managed
 
-    UserBase user
+    com.valent.pricewell.User user
     Role role
     Group group
 
-    static belongsTo = [user: UserBase, role: Role, group:Group]
+    static belongsTo = [user: com.valent.pricewell.User, role: Role, group:Group]
 
     static transients = [ "owner" ]
 
     static mapping = {
         cache usage: 'read-write', include: 'all'
-        table ConfigurationHolder.config.nimble.tablenames.permission
+        table 'permission'
     }
 
     static constraints = {
@@ -62,7 +60,7 @@ class Permission implements Serializable {
     }
 
     def setOwner (def owner) {
-        if (owner instanceof UserBase)
+        if (owner instanceof com.valent.pricewell.User)
         this.user = owner
 
         if (owner instanceof Role)

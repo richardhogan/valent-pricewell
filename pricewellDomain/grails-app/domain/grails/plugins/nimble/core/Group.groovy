@@ -16,14 +16,12 @@
  */
 package grails.plugins.nimble.core
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 /**
  * Represents a grouping of users in a Nimble based appication
  *
  * @author Bradley Beddoes
  */
-@SuppressWarnings("deprecation")
 class Group {
 
     String name
@@ -38,13 +36,13 @@ class Group {
 
     static hasMany = [
         roles: Role,
-        users: UserBase,
+        users: com.valent.pricewell.User,
         permissions: Permission
     ]
 
     static mapping = {
         cache usage: 'read-write', include: 'all'
-        table ConfigurationHolder.config.nimble.tablenames.group
+        table '_group'
 
         users cache: true
         roles cache: true

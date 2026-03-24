@@ -1,8 +1,6 @@
 package com.valent.pricewell
 
 import java.util.List;
-import grails.plugins.nimble.core.UserBase;
-
 class Geo {
 	String name;
 	String description;
@@ -15,7 +13,7 @@ class Geo {
 	String signature_block;
 	String sowTemplate;
 	String sowLabel
-	UserBase salesManager
+	User salesManager
 	UploadFile sowFile
 	String country
 	
@@ -47,7 +45,7 @@ class Geo {
     }
 	
 	static hasMany = [relationDeliveryGeos:RelationDeliveryGeo, 
-						salesPersons: UserBase, sowDiscounts: SowDiscount, 
+						salesPersons: User, sowDiscounts: SowDiscount, 
 						sowDocumentTemplates: DocumentTemplate]
 	
 	static mapping = {
