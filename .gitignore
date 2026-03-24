@@ -1,0 +1,25 @@
+# Gradle build output
+.gradle/
+build/
+*/build/
+
+# Application runtime logs
+*.log
+pricewell/mylog.log
+
+# IDE / editor
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Grails 2 legacy (already deleted but keep for safety)
+target/
+*/target/
+web-app/WEB-INF/
