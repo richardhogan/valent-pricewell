@@ -1,7 +1,8 @@
 package com.valent.pricewell
 
+import grails.plugins.nimble.core.LoginRecord
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 /**
  * Application user domain class.
@@ -89,6 +90,7 @@ class User {
     ]
 
     static mapping = {
+        table '_user'          // matches the legacy Nimble schema (UserBase used _user)
         sort username: 'desc'
         cache usage: 'read-write', include: 'all'
         profile    lazy: false, cascade: 'all'
@@ -126,7 +128,7 @@ class User {
      */
     Set<GrantedAuthority> getAuthorities() {
         UserRole.findAllByUser(this).collect { ur ->
-            new GrantedAuthorityImpl(ur.role.authority)
+            new SimpleGrantedAuthority(ur.role.authority)
         } as Set
     }
 
