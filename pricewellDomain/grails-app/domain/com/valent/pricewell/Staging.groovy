@@ -25,6 +25,13 @@ class Staging {
 		authorizedRoles(nullable: true)
 		isActive(nullable: true)
     }
+
+	static mapping = {
+		// Give each Role collection its own join table so Hibernate 5 does not
+		// merge them into one table with mutually-exclusive nullable FK columns.
+		authorizedRoles joinTable: [name: 'staging_authorized_role', key: 'staging_id']
+		reviewerRoles   joinTable: [name: 'staging_reviewer_role',   key: 'staging_id']
+    }
 	
 	//Authorized roles are who can approve or reject request
 	//Reviewer roles are who can review and add comment on it.
@@ -37,28 +44,32 @@ class Staging {
 	
 	static List listServiceStages(String stageCategory)
 	{
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
-												[entity: Staging.StagingObjectType.SERVICE, stage: stageCategory])
+												[entity: Staging.StagingObjectType.SERVICE, stage: stageType])
 	}
-	
+
 	static List listShortServiceStages(String stageCategory)
 	{
 		println "in shortcut workflow"
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and st.name NOT IN (:stageList) AND :stage in elements(st.types) order by sequenceOrder asc ",
-										[entity: Staging.StagingObjectType.SERVICE, stageList: ["conceptreview", "conceptapproved", "designreview", "designapproved", "salesreview", "salesapproval", "requestforpublished"], stage: stageCategory])
-		
+										[entity: Staging.StagingObjectType.SERVICE, stageList: ["conceptreview", "conceptapproved", "designreview", "designapproved", "salesreview", "salesapproval", "requestforpublished"], stage: stageType])
+
 	}
 
 	static List listLeadStages(String stageCategory)
 	{
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
-												[entity: Staging.StagingObjectType.LEAD, stage: stageCategory])
+												[entity: Staging.StagingObjectType.LEAD, stage: stageType])
 	}
-	
+
 	static List listOpportunityStages(String stageCategory)
 	{
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
-												[entity: Staging.StagingObjectType.OPPORTUNITY, stage: stageCategory])
+												[entity: Staging.StagingObjectType.OPPORTUNITY, stage: stageType])
 		List finalList = []
 		for(Staging st : stagingList)
 		{
@@ -69,17 +80,19 @@ class Staging {
 		}
 		return finalList
 	}
-	
+
 	static List listSetupStages(String stageCategory)
 	{
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
-			[entity: Staging.StagingObjectType.SETUP, stage: stageCategory])
+			[entity: Staging.StagingObjectType.SETUP, stage: stageType])
 	}
-	
+
 	static List listServiceQuotationStages(String stageCategory)
 	{
+		StagingType stageType = StagingType.valueOf(stageCategory)
 		def stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
-			[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: stageCategory])
+			[entity: Staging.StagingObjectType.SERVICEQUOTATION, stage: stageType])
 	}
 	
 	static List listAllServiceStages()
@@ -90,25 +103,21 @@ class Staging {
 	
 	static Staging initialStage(StagingObjectType objectType, boolean edit)
 	{
-		String stgaeCategory = "BEGIN_NEW"
-		if(edit)
-		{
-			stgaeCategory = "BEGIN_EDIT"
-		}
-		
+		StagingType stgaeCategory = edit ? StagingType.BEGIN_EDIT : StagingType.BEGIN_NEW
+
 		Collection stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
 			[entity: objectType, stage: stgaeCategory])
-		
+
 		return stagingList[0];
 	}
-	
+
 	static Staging finalAcceptStage(StagingObjectType objectType, boolean edit)
 	{
-		String stgaeCategory = "END_EDIT"
-		
+		StagingType stgaeCategory = StagingType.END_EDIT
+
 		Collection stagingList = Staging.findAll("from Staging st where st.entity = :entity and :stage in elements(st.types) order by sequenceOrder asc",
 			[entity: objectType, stage: stgaeCategory])
-		
+
 		return stagingList[0];
 	}
 	
