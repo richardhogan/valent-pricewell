@@ -1,6 +1,6 @@
 package com.valent.pricewell
 
-import com.ibm.icu.text.DateFormat
+import java.text.DateFormat
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import com.ibm.icu.text.SimpleDateFormat
+import java.text.SimpleDateFormat
 import com.valent.pricewell.util.PricewellUtils;
 
 import java.util.Date;

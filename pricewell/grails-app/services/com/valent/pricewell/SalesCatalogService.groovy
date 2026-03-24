@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.Role
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
@@ -10,7 +11,7 @@ import java.util.List;
 import grails.converters.JSON;
 import javax.management.relation.RoleInfo;
 import com.valent.pricewell.Staging.AuthorizedScope;
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 
 class SalesCatalogService {
 

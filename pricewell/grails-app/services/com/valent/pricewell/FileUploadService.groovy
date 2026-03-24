@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage
 import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
+import grails.util.Holders
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -210,7 +210,7 @@ class FileUploadService {
 	
 	public String getProjectPath(def destinationDir)
 	{
-		def servletContext = ServletContextHolder.servletContext
+		def servletContext = Holders.servletContext
 		
 		def projectPath = servletContext.getRealPath(destinationDir)//return path of the folder inside project
 		//println "folder inside project path : "+projectPath

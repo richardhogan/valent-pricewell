@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import grails.plugins.nimble.core.Role
 
 /**
  * User and role lifecycle operations — replaces the Nimble userService,

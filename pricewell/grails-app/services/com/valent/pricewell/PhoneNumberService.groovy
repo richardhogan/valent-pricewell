@@ -5,7 +5,6 @@ import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 
 class PhoneNumberService {

@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 
 class OpportunityService {
 
