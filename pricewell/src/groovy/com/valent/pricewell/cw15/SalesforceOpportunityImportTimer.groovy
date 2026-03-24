@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
-import org.codehaus.groovy.grails.commons.GrailsApplication
+import grails.core.GrailsApplication
 import org.springframework.context.MessageSource
 
 class SalesforceOpportunityImportTimer extends TimerTask{

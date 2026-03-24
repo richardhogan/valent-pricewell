@@ -1,6 +1,6 @@
 package com.valent.pricewell
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 class HttpRequestMetaClassEnhancer{
 	public static void enhanceRequest(){

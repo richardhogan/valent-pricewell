@@ -1,7 +1,7 @@
 package com.valent.pricewell
 
-import grails.plugins.springsecurity.SpringSecurityUtils
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.util.Holders
 
 /**
  * Static security helper — replaces direct Apache Shiro / Nimble SecurityUtils
@@ -64,7 +64,7 @@ class PricewellSecurity {
      * into every caller.
      */
     private static def getSpringSecurityService() {
-        ApplicationHolder.application?.mainContext?.getBean('springSecurityService')
+        Holders.applicationContext?.getBean('springSecurityService')
     }
 
     /**

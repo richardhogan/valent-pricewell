@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.json.JSONArray
+import org.json.JSONObject
 import org.docx4j.*
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.dml.wordprocessingDrawing.Inline

@@ -1,8 +1,8 @@
 package com.valent.pricewell.templater
 
 import com.valent.pricewell.*
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.json.JSONArray
+import org.json.JSONObject
 
 import com.valent.pricewell.templater.BasicJsonConverterPlugin.ResolvableJsonObject
 

@@ -7,11 +7,11 @@ import java.util.Properties;
 import com.valent.pricewell.*
 
 import grails.gsp.PageRenderer
-import groovy.json.StringEscapeUtils
+import groovy.xml.XmlSlurper
 
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONException
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import org.cyberneko.html.parsers.SAXParser
 import org.docx4j.*
 

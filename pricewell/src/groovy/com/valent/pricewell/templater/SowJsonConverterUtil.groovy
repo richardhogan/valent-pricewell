@@ -1,7 +1,7 @@
 package com.valent.pricewell.templater
 
 import com.valent.pricewell.*
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.json.JSONObject
 import org.reflections.Reflections
 
 /**

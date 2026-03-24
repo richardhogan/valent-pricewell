@@ -2,7 +2,7 @@ package com.valent.pricewell.cw15
 
 import ma.glasnost.orika.CustomConverter
 import ma.glasnost.orika.MapperFactory;
-
+import ma.glasnost.orika.MappingContext;
 import com.valent.pricewell.*;
 import cw15.OpportunityListItem;
 import ma.glasnost.orika.metadata.Type
@@ -20,7 +20,7 @@ class OpportunityMapperHelper {
 		{
 			mapperFactory.getConverterFactory().registerConverter("stageNameToStagingConverter",
 					new CustomConverter<String, Staging>(){
-						public Staging convert(String source, Type<? extends Staging> destinationClass ) {
+						public Staging convert(String source, Type<? extends Staging> destinationClass, MappingContext mappingContext) {
 							return convertStagingNameToStage(source);
 						}
 					})
