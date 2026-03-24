@@ -1,0 +1,60 @@
+/*
+
+COLORING
+
+For ease of colortheming, the color selectors are grouped together with descriptive comments.
+Just change the color-values to apply your own color-scheme.
+
+#043E64
+*/
+
+/* Main navigation */
+.navigation li a { background-color: #525D76;  }                         /* Background-color */
+.navigation li.navigation_active a { background-color: #fbfbfb; }      /* Background-color of active item */
+.navigation li.navigation_active a:hover { background-color: #fbfbfb;} /* Background-color of hovered active item */
+.navigation li.navigation_active { border: 1px solid #032D60; }
+.navigation li a:hover { background-color: #fbfbfb; }                  /* Background-color of hovered item */
+.navigation li a { color: #fff; }                                   /* Text color */
+.navigation li a:hover { color: #000000; }                             /* Text color on hovering */
+.navigation li { border: 1px solid #032D60; }                          /* Border color */
+.navigation li.navigation_first { border-left-color: #032D60; }        /* Border color. Typically same as above */
+.navigation li { border-left-color: #032D60; }                         /* Highlight border-color */
+.navigation li.navigation_active { border-left-color: 1px solid #032D60; }       /* Highlight border-color of active item */
+
+
+
+.navigation {
+    list-style-type: none;
+    clear: both;
+    margin: 1em 0;
+    font-size: 12px;
+    overflow: hidden; /* Clearing floats */
+}
+
+.navigation li {
+    float: left;
+    /* border: 1px solid #888; */
+    /* border-left-color: #bbb; */
+}
+.navigation li.navigation_first {
+    /* border-left-color: #888; */
+}
+.navigation li.navigation_active {
+    /* border-left-color: #555; */
+}
+.navigation li a {
+    padding: 0.5em 1em;
+    display: block;
+    text-decoration: none;
+    /* background-color: #aaa; */
+    /* color: #fff; */
+}
+.navigation li a:hover {
+    /* background-color: #999; */
+}
+.navigation li.navigation_active a {
+    /* background-color: #555; */
+    color: #000000;
+    cursor: default;
+}
+

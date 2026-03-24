@@ -1,0 +1,21 @@
+/*
+ * Pricewell application CSS manifest
+ * Asset Pipeline processes *= require directives in order.
+ * This replaces the grails.resources.modules configuration from Config.groovy.
+ *
+ *= require redmond/jquery-ui-1.8.16.custom
+ *= require my
+ *= require smart_wizard
+ *= require navigation
+ *= require loaderbox
+ *= require jquery.alerts-1.1/jquery.alerts
+ *= require jqgrid/ui.jqgrid
+ *= require jqgrid/jqgrid
+ *= require dataTables/css/demo_table
+ *= require dataTables/css/demo_page
+ *= require jquery.flexbox
+ *= require badgeStyle
+ *= require chartsBox
+ *= require toastmessage/resources/css/jquery.toastmessage
+ *= require errors
+ */

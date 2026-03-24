@@ -1,0 +1,186 @@
+
+.oneRowChartBoxHeight {
+	height: 360px;
+}
+
+.twoRowChartBoxHeight {
+	height: 720px;
+}
+			
+.twoRowChartDiv {
+	background: none;
+	height: 740px;
+}
+
+.twoRowChartDiv .fullChartDiv {
+	float: left;
+	height: 740px;
+}
+
+.mainChartDiv {
+	background: none;
+	height: 370px;
+}
+
+.mainExceptionDiv {
+	background: none;
+	height: auto;
+}
+
+.mainChartDiv .leftChartDiv {
+	float: left;
+	height: 370px;
+	
+}
+.mainChartDiv .rightChartDiv {
+	float: left;
+	padding-left: 5px;
+	text-align: left;
+	height: 370px;	
+}
+
+.mainChartDiv .fullChartDiv {
+	float: left;
+	height: 370px;
+}
+
+.mainExceptionDiv .fullExceptionDiv {
+	float: left;
+	height: auto;
+}
+
+.combineChart .dvFullChart{
+	float: left;
+	height: 370px;
+}
+
+.combineChart .dvLeftChart{
+	float: left;
+	height: 370px;
+}
+
+.combineChart .dvRightChart{
+	float: left;
+	padding-left: 5px;
+	text-align: left;
+	height: 370px;	
+}
+
+
+.exceptionBox {
+	
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    
+	border-top: 2px solid #666986;
+    border-bottom: 1px solid #666986;
+    border-right: 2px solid #666986;
+    border-left: 2px solid #666986;
+			   
+	background: #FFFFFF;
+	height: auto;
+	position: relative;
+
+}
+
+
+.chartBox {
+	
+	/* css3 drop shadow */
+	/*-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+	
+	/* css3 border radius */
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    
+	border-top: 2px solid #666986;
+    border-bottom: 1px solid #666986;
+    border-right: 2px solid #666986;
+    border-left: 2px solid #666986;
+			   
+	background: #FFFFFF;
+	/*height: 360px;
+	/* styling of the loader box, i have a fixed dimension for this demo */ 
+	/*width:400px; 
+	height: 300px;
+/* make sure it has the highest z-index */
+	position: relative;
+
+}
+
+.chartBox .chartHeader, .exceptionBox .exceptionHeader {
+	
+	background:#8CA7BB;
+	padding: 5px;
+	color:white;
+	height: 25px;
+	
+	-moz-border-radius-bottomright:5px;
+    -moz-border-radius-bottomleft:5px;
+    -webkit-border-bottom-right-radius:5px;
+    -webkit-border-bottom-left-radius:5px;
+}
+
+.chartBox .chartHeader .chartTitle, .exceptionBox .exceptionHeader .exceptionTitle{
+	
+	float: left;
+	color:white;
+	width: 65%;
+	margin-left:20px;
+	font-size: 100%;
+}
+
+.combineTitleAndAction{
+	
+	float: left;
+	color:white;
+	margin-left:20px;
+}
+
+.combineTitleAndAction .title{
+	float: left;
+	font-size: 100%;
+	margin-top:3px;
+}
+
+.combineTitleAndAction .action{
+	float: right;
+	font-size: 10px;
+	margin-left:5px;
+}
+
+.chartBox .chartHeader .chartAction{
+	
+	float: right;
+	color:white;
+	text-align: right;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.box .header{
+    -moz-border-radius-bottomright:5px;
+    -moz-border-radius-bottomleft:5px;
+    -webkit-border-bottom-right-radius:5px;
+    -webkit-border-bottom-left-radius:5px;
+}
+
+
+
+.chartBox .chartContent, .exceptionBox .exceptionContent {
+	/* style the content */
+	text-align: left; 
+}
+
+
+/* extra styling */
+.chartBox .ChartContent p {
+	font-weight:700; margin:0;
+}
+
+.chartBox .chartContent ul {
+	margin:10px 0 10px 20px; 
+	padding:0; 
+	height:50px;
+}
