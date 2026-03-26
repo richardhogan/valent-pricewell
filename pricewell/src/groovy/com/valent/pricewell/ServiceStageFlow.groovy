@@ -19,7 +19,7 @@ class ServiceStageFlow {
 		List<String> concept = new ArrayList<String>();
 		//println stageName
 		
-		List desiredStage = Staging.executeQuery("select distinct st from Staging st where st.entity = ? and st.name = ?", [Staging.StagingObjectType.SERVICE, stageName]);
+		List desiredStage = Staging.executeQuery("select distinct st from Staging st where st.entity = :entity and st.name = :name", [entity: Staging.StagingObjectType.SERVICE, name: stageName]);
 		
 		Staging stag = desiredStage.getAt(0)
 		
@@ -41,7 +41,7 @@ class ServiceStageFlow {
 	{
 		List<String> concept = new ArrayList<String>();
 
-		def desiredStage = Staging.executeQuery("SELECT DISTINCT st FROM Staging st WHERE st.entity = ? AND st.name = ?", [Staging.StagingObjectType.SERVICE, stageName]);
+		def desiredStage = Staging.executeQuery("SELECT DISTINCT st FROM Staging st WHERE st.entity = :entity AND st.name = :name", [entity: Staging.StagingObjectType.SERVICE, name: stageName]);
 
 		Staging stag = desiredStage.getAt(0)
 

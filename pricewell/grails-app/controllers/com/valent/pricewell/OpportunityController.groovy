@@ -47,7 +47,7 @@ class OpportunityController {
 		println from
 		println toDate	
 		
-		def data = Opportunity.executeQuery("FROM Opportunity op  WHERE op.geo.id = ? AND op.dateCreated BETWEEN ? AND ?  ORDER BY dateModified DESC", [4L, from ,toDate])
+		def data = Opportunity.executeQuery("FROM Opportunity op  WHERE op.geo.id = :geoId AND op.dateCreated BETWEEN :fromDate AND :toDate  ORDER BY dateModified DESC", [geoId: 4L, fromDate: from, toDate: toDate])
 		render(view: "list", model:[opportunityInstanceList: data, opportunityInstanceTotal: data.count()])
 	}
 

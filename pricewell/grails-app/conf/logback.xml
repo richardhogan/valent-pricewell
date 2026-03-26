@@ -30,7 +30,9 @@
     <logger name="org.grails.datastore"                  level="DEBUG"/>
     <logger name="org.grails.orm"                        level="DEBUG"/>
     <logger name="org.springframework"                   level="ERROR"/>
+    <logger name="org.springframework.web.servlet"       level="WARN"/>
     <logger name="org.hibernate"                         level="ERROR"/>
+    <logger name="com.valent.pricewell"                  level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

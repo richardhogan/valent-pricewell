@@ -7,7 +7,7 @@ class UrlMappings {
 			}
 		}
 
-		"/"(controller: "home")
+		"/"(controller: "home", action: "index")
 
 		// Auth endpoints replacing the Nimble plugin's NimbleUrlMappings.groovy.
 		// Spring Security Core intercepts POST /j_spring_security_check internally;

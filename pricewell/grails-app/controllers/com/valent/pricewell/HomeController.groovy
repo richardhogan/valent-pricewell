@@ -139,13 +139,16 @@ class HomeController {
 		}
 		catch(java.sql.SQLException ex)
 		{
-			println "SQL server access error.."
+			log.error("HomeController.index() SQL exception: ${ex.message}", ex)
 			redirect(controller: "home", action: "index")
+			return
 		}
 		catch(Exception ex)
 		{
+			log.error("HomeController.index() exception: ${ex.class.name}: ${ex.message}", ex)
 			redirect(controller: "home", action: "index")
-		}		
+			return
+		}
 		//ratan's code
 		
 		def c = LoginRecord.createCriteria()

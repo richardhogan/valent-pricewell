@@ -70,7 +70,7 @@ class OpportunityService {
 	  
 	  if(opportunitySearchCriteria.filterCriteria.fromDate != null && opportunitySearchCriteria.filterCriteria.toDate != null)
 	  {
-		  dateRang = "op.dateCreated BETWEEN ? AND ? OR op.closeDate BETWEEN ? AND ?"
+		  dateRang = "op.dateCreated BETWEEN :fromDate AND :toDate OR op.closeDate BETWEEN :fromDate AND :toDate"
 	  }
 	  
 	  if(opportunitySearchCriteria.type ==  SalesSearchCriteria.SalesSearchType.searchByOwners)
@@ -86,9 +86,9 @@ class OpportunityService {
 			  else
 			  {
 				  query = "FROM Opportunity op WHERE " + opportunityTypeQuery + " AND (op.createdBy.id = ${us?.id} OR op.assignTo.id = ${us?.id}) AND "+dateRang+" ORDER BY dateModified DESC"
-				  opportunities = Opportunity.executeQuery(query,[opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate,opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate])
+				  opportunities = Opportunity.executeQuery(query,[fromDate: opportunitySearchCriteria.filterCriteria.fromDate, toDate: opportunitySearchCriteria.filterCriteria.toDate])
 			  }
-			  
+
 			  for(Opportunity op in opportunities)
 			  {
 				  opportunityList.add(op)
@@ -107,7 +107,7 @@ class OpportunityService {
 			  else
 			  {
 				  query = "FROM Opportunity op WHERE " + opportunityTypeQuery + " AND op.geo.id = ${geo?.id} AND "+dateRang+" ORDER BY dateModified DESC"
-				  opportunities = Opportunity.executeQuery(query,[opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate, opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate])
+				  opportunities = Opportunity.executeQuery(query,[fromDate: opportunitySearchCriteria.filterCriteria.fromDate, toDate: opportunitySearchCriteria.filterCriteria.toDate])
 			  }
 			  
 			  for(Opportunity op in opportunities)
@@ -126,7 +126,7 @@ class OpportunityService {
 		  else
 		  {
 			  query = "FROM Opportunity op WHERE " + opportunityTypeQuery + " AND " + dateRang + " ORDER BY dateModified DESC"
-			  opportunities = Opportunity.executeQuery(query,[opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate, opportunitySearchCriteria.filterCriteria.fromDate ,opportunitySearchCriteria.filterCriteria.toDate])
+			  opportunities = Opportunity.executeQuery(query,[fromDate: opportunitySearchCriteria.filterCriteria.fromDate, toDate: opportunitySearchCriteria.filterCriteria.toDate])
 		  }
 		  
 		  for(Opportunity op in opportunities)
