@@ -196,7 +196,7 @@
         					
         					<td>
         					
-        						<g:each in="${user.roles}" var="role">
+        						<g:each in="${com.valent.pricewell.UserRole.findAllByUser(user)*.role}" var="role">
 		                        	<g:if test="${role?.code != 'USER' && role?.code != roleInstance.code }">
 		                        		<li>${role.description }</li>
 		                        	</g:if>

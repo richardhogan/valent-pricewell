@@ -465,7 +465,7 @@ class UserSetupController {
 					// ROLE_SYSTEM_ADMINISTRATOR has full access via Spring Security interceptUrlMap — no Shiro permission needed.
 					
 					//session.save(profile)
-					user.password = springSecurityService.encodePassword(user.pass ?: randomPassword)
+					user.password = passwordEncoder.encode(user.pass ?: randomPassword)
 					user.save(flush: true)
 					def savedUser = user
 					if (savedUser.hasErrors())
@@ -1080,7 +1080,7 @@ class UserSetupController {
 		  redirect action: list
 		}
 		else {
-			if (user.external) {
+			if (false) { // user.external removed - all users are local
 			  log.warn("Attempt to change password on user [$user.id]$user.username that is externally managed denied")
 			  flash.type = "error"
 			  flash.message = message(code: 'nimble.user.password.external.nochange', args: [user.username])
@@ -1101,7 +1101,7 @@ class UserSetupController {
 		  redirect action: list
 		}
 		else {
-			if (user.external) {
+			if (false) { // user.external removed - all users are local
 			  log.warn("Attempt to change password on user [$user.id]$user.username that is externally managed denied")
 			  flash.type = "error"
 			  flash.message = message(code: 'nimble.user.password.external.nochange', args: [user.username])
@@ -1123,13 +1123,13 @@ class UserSetupController {
 			return
 		}
 		// Compare old password using BCrypt encoder
-		if(!passwordEncoder.isPasswordValid(user.password, params.pass_old, null))
+		if(!passwordEncoder.matches(params.pass_old, user.password))
 		{
 			render "not_match"
 		}
 		else if(params.pass == params.passConfirm && params.pass?.length() >= 8)
 		{
-			user.password = springSecurityService.encodePassword(params.pass)
+			user.password = passwordEncoder.encode(params.pass)
 			user.save(flush: true)
 			if (!user.hasErrors()) {
 				log.info("Successfully saved password change for user [$user.id]$user.username")
@@ -1189,7 +1189,7 @@ class UserSetupController {
 		{
 			if(params.pass == params.passConfirm && params.pass?.length() >= 8)
 			{
-				user.password = springSecurityService.encodePassword(params.pass)
+				user.password = passwordEncoder.encode(params.pass)
 				user.save(flush: true)
 				if (!user.hasErrors()) {
 					log.info("Successfully saved password change for user [$user.id]$user.username")

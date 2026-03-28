@@ -135,7 +135,7 @@
 			        
 			        			<td><label>Secondary Territories</label></td>
 			        			<td>
-			        				<g:each in="${new UserSetupController().getTerritories(user)}" status="t" var="territory">
+			        				<g:each in="${user?.territories?.findAll { it?.id != user?.primaryTerritory?.id }}" status="t" var="territory">
 				        				${t+1}) ${territory?.name}
 				        				
 				        				<g:if test="${t%2 == 1}">
@@ -203,7 +203,7 @@
 	   
 			 <!--  <tr>
 			  	<td>
-			  		<g:each in="${user.roles}" status="j" var="role">
+			  		<g:each in="${com.valent.pricewell.UserRole.findAllByUser(user)*.role}" status="j" var="role">
 		        		
 		        		
 		        		<g:if test="${role.name=='SALES MANAGER'}"> 

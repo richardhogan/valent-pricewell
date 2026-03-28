@@ -1,6 +1,8 @@
 package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
+import grails.plugins.nimble.core.Role
+import com.valent.pricewell.UserRole
 import java.util.List;
 
 import grails.converters.JSON
@@ -542,7 +544,7 @@ class SetupController {
 						companyInformationInstance.properties = params
 					}
 					
-					render(template: "../companyInformation/aboutCompanyInfo", model: [companyInformationInstance: companyInformationInstance, companyInformationId: companyInformationId, source: "setup"])
+					render(template: "/companyInformation/aboutCompanyInfo", model: [companyInformationInstance: companyInformationInstance, companyInformationId: companyInformationId, source: "setup"])
 				}
 				break;
 				
@@ -610,7 +612,7 @@ class SetupController {
 					//CommonFunctionsUtil generateRandomPassword = new CommonFunctionsUtil()
 					//def randomPassword = generateRandomPassword.generatePswd(8, 8, 1, 1, 1)
 					
-					render(template: "../userSetup/aboutUser", model: [user: userInstance, roleInstance: roleInstance, roleUserList: roleUserList, source: 'setup', geoGroupList: geoGroupList, territoriesList: territoriesList])
+					render(template: "/userSetup/aboutUser", model: [user: userInstance, roleInstance: roleInstance, roleUserList: roleUserList, source: 'setup', geoGroupList: geoGroupList, territoriesList: territoriesList])
 					
 				}
 				break;
@@ -624,7 +626,7 @@ class SetupController {
 					generalManagerList = salesCatalogService.findUnassignedGeneralManagerList()
 					
 					def territoriesList = TerritoriesList(geoGroupInstance)
-					render(template: "../geoGroup/aboutGeoGroup", model: [geoGroupInstance: geoGroupInstance, generalManagerList: generalManagerList, territoriesList: territoriesList, geoGroupList: GeoGroup.list(), source: 'setup'])
+					render(template: "/geoGroup/aboutGeoGroup", model: [geoGroupInstance: geoGroupInstance, generalManagerList: generalManagerList, territoriesList: territoriesList, geoGroupList: GeoGroup.list(), source: 'setup'])
 				}
 				break;
 			
@@ -633,7 +635,7 @@ class SetupController {
 				{
 					def deliveryRoleInstance = new DeliveryRole()
 					deliveryRoleInstance.properties = params
-					render(template: "../deliveryRole/aboutDeliveryRole", model: [deliveryRoleInstance: deliveryRoleInstance, deliveryRoleList: DeliveryRole.list(), source: 'setup'])
+					render(template: "/deliveryRole/aboutDeliveryRole", model: [deliveryRoleInstance: deliveryRoleInstance, deliveryRoleList: DeliveryRole.list(), source: 'setup'])
 				}
 				break;
 				
@@ -643,7 +645,7 @@ class SetupController {
 					def portfolioInstance = new Portfolio()
 					portfolioInstance.properties = params
 					def portfolioManagerList = serviceCatalogService.findPortfolioManagers()
-					render(template: "../portfolio/aboutPortfolio", model: [portfolioInstance: portfolioInstance, portfolioManagerList: portfolioManagerList, portfolioList: Portfolio.list(), source: 'setup'])
+					render(template: "/portfolio/aboutPortfolio", model: [portfolioInstance: portfolioInstance, portfolioManagerList: portfolioManagerList, portfolioList: Portfolio.list(), source: 'setup'])
 				}
 				break;
 			//9879000099

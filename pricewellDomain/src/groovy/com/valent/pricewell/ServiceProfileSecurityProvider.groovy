@@ -2,6 +2,7 @@ package com.valent.pricewell
 import com.valent.pricewell.Staging.StagingType;
 
 import grails.plugins.nimble.core.Role;
+import com.valent.pricewell.UserRole;
 
 class ServiceProfileSecurityProvider {
 
@@ -114,20 +115,20 @@ class ServiceProfileSecurityProvider {
 					break;
 					
 				case RoleId.SALES_PERSON.code:
-						(role.users?.size() > 0) ? users.addAll(role.users) : ""
+						users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 					
 				case RoleId.DELIVERY_ROLE_MANAGER.code:
-						(role.users?.size() > 0) ? users.addAll(role.users) : ""
+						users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 				
 				case RoleId.ADMINISTRATOR.code:
-						(role.users?.size() > 0) ? users.addAll(role.users) : ""
+						users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 			}
 		}
 		
-		(Role.findByCode(RoleId.ADMINISTRATOR.code).users?.size() > 0) ? users.addAll(Role.findByCode(RoleId.ADMINISTRATOR.code).users) : ""
+		def adminRole = Role.findByCode(RoleId.ADMINISTRATOR.code); users.addAll(UserRole.findAllByRole(adminRole)*.user)
 		
 		return users
 	}
@@ -141,7 +142,7 @@ class ServiceProfileSecurityProvider {
 			switch(role.code)
 			{
 				case RoleId.SERVICE_DESIGNER.code:
-					  users.addAll(Role.findByCode(RoleId.SERVICE_DESIGNER.code).users)
+					  users.addAll(UserRole.findAllByRole(Role.findByCode(RoleId.SERVICE_DESIGNER.code))*.user)
 					break;
 				
 				case RoleId.PRODUCT_MANAGER.code:
@@ -154,15 +155,15 @@ class ServiceProfileSecurityProvider {
 					break;
 					
 				case RoleId.SALES_PERSON.code:
-					users.addAll(role.users)
+					users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 					
 				case RoleId.DELIVERY_ROLE_MANAGER.code:
-					users.addAll(role.users)
+					users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 				
 				case RoleId.ADMINISTRATOR.code:
-					users.addAll(role.users)
+					users.addAll(UserRole.findAllByRole(role)*.user)
 					break;
 			}
 		}
