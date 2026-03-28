@@ -4,6 +4,8 @@ import grails.converters.JSON
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class PortfolioController {
 
 	def serviceCatalogService
@@ -113,8 +115,11 @@ class PortfolioController {
 		
 	  }
     def save() {
-        def portfolioInstance = new Portfolio(params)
+        def portfolioInstance = new Portfolio()
+		portfolioInstance.portfolioName = params.portfolioName
 		portfolioInstance.stagingStatus = "Published"
+		def pmId = params['portfolioManager.id'] ?: params.portfolioManagerId
+		if (pmId) portfolioInstance.portfolioManager = User.get(pmId.toLong())
 		portfolioInstance.dateModified = new Date()
 		def map = [:], resultMap = [:]
 		if(isPortfolioAvailable(params.portfolioName)){

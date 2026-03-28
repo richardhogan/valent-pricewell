@@ -4,6 +4,8 @@ import com.valent.pricewell.PricewellSecurity
 import java.util.List;
 
 import grails.converters.JSON
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class GeoGroupController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -143,9 +145,9 @@ class GeoGroupController {
 	  }
 	
 	def save() {
-        def geoGroupInstance = new GeoGroup(params)
-		
-		
+        def geoGroupInstance = new GeoGroup()
+		geoGroupInstance.name = params.name
+
 		//geoGroupInstance.generalManager = generalManager
 		//generalManager?.geoGroup = geoGroupInstance
 		def map = [:]

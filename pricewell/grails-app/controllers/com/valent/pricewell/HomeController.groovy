@@ -15,6 +15,8 @@ import com.valent.pricewell.util.*
 import cw15.ApiCredentials;
 //import cw15.*
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class HomeController {
 	
 	def serviceCatalogService

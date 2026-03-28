@@ -2,6 +2,8 @@ package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class DeliveryRoleController {
 
     static allowedMethods = [save: "POST", update: "POST"]
@@ -109,7 +111,8 @@ class DeliveryRoleController {
 	}
 	
     def save() {
-        def deliveryRoleInstance = new DeliveryRole(params)
+        def deliveryRoleInstance = new DeliveryRole()
+		deliveryRoleInstance.name = params.name
 		if(isDeliveryRoleAvailable(params.name))
 		{
 			render "DeliveryRole_Available"

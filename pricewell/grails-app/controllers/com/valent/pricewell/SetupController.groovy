@@ -7,6 +7,8 @@ import java.util.List;
 
 import grails.converters.JSON
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class SetupController {
 	def serviceCatalogService
 	def salesCatalogService

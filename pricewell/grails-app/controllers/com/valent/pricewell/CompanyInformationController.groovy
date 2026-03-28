@@ -2,6 +2,8 @@ package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class CompanyInformationController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -141,7 +143,7 @@ class CompanyInformationController {
 
 	def save() {
 		//def res = "fail"
-		def companyInformationInstance = new CompanyInformation(params)
+		def companyInformationInstance = new CompanyInformation()
 
 		if(params.website != null && params.website != "")
 		{

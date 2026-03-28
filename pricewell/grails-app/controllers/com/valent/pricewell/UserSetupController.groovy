@@ -9,6 +9,8 @@ import grails.converters.JSON;
 import javax.management.relation.RoleInfo;
 import com.valent.pricewell.Staging.AuthorizedScope;
 
+@groovy.util.logging.Slf4j
+@grails.gorm.transactions.Transactional
 class UserSetupController {
 
 	def userManagementService
