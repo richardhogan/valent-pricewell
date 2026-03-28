@@ -161,10 +161,10 @@
 			    
 			    	<div id="dvportfolio" class="dvportfolio">
 			    		<g:if test="${portfolioList.size() > 0}">
-			    			<g:render template="../portfolio/listsetup" model="['portfolioInstanceList': portfolioList, 'portfolioInstanceTotal': portfolioList.size(), 'source': source]"/>
+			    			<g:render template="/portfolio/listsetup" model="['portfolioInstanceList': portfolioList, 'portfolioInstanceTotal': portfolioList.size(), 'source': source]"/>
 		    			</g:if>
 		    			<g:else>
-		    				<g:render template="../portfolio/createsetup" model="['portfolioInstance': portfolioInstance, 'portfolioManagerList': portfolioManagerList, 'source': source]"/>
+		    				<g:render template="/portfolio/createsetup" model="['portfolioInstance': portfolioInstance, 'portfolioManagerList': portfolioManagerList, 'source': source]"/>
 		    			</g:else>
 		    			
 					</div>

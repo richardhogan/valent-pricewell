@@ -11,7 +11,7 @@
         <g:set var="entityName" value="${message(code: 'account.label', default: 'Account')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
         
-        <g:setProvider library="prototype"/>
+        
         
         <style type="text/css" title="currentStyle">
 			@import "${baseurl}/js/dataTables/css/demo_page.css";

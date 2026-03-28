@@ -10,7 +10,7 @@
 		<meta name="layout" content="main" />
 		<g:set var="entityName" value="${message(code: 'reviewRequest.label', default: 'ReviewRequest')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
-		<g:javascript library="prototype" />
+		
     </head>
     
     <body>    

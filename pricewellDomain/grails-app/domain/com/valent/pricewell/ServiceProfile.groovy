@@ -87,7 +87,7 @@ class ServiceProfile {
 
 	List<ExtraUnit> listExtraUnitsOfSaleAndUnits()
 	{
-		List<ExtraUnit> listOfSalesUnits = ExtraUnit.findAll("FROM ExtraUnit eu WHERE eu.serviceProfile.id = ${this.id}")
+		List<ExtraUnit> listOfSalesUnits = ExtraUnit.findAll("FROM ExtraUnit eu WHERE eu.serviceProfile.id = :spid", [spid: this.id])
 		return listOfSalesUnits
 	}
 

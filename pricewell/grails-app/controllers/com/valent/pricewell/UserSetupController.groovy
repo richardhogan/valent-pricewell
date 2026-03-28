@@ -67,9 +67,9 @@ class UserSetupController {
 	def isUserDefined() {
 		println "coming here user"
 		String roleName = ServiceStageFlow.findUserRole("addUsers", params.stepNumber.toInteger());
-		def roleInstance = Role.findByName(roleName)
+		def roleInstance = Role.findByAuthority(roleName)
 		
-		if(roleInstance?.users.size() > 0)
+		if(roleInstance != null && UserRole.findAllByRole(roleInstance).size() > 0)
 		{
 			render "true"
 		}
@@ -97,17 +97,17 @@ class UserSetupController {
 		else
 		{
 			int index = params.roleindex.toInteger();
-			roleInstance = Role.findByName(usersByRoleList[index]["role"])
+			roleInstance = Role.findByAuthority(usersByRoleList[index]["role"])
 		}
 		
 		if(params.sourceFrom != "geoGroup" && params.sourceFrom != "geo")
 		{
-			if(roleInstance.name == "SALES PRESIDENT")
+			if(roleInstance.authority == "ROLE_SALES_PRESIDENT")
 			{
 				territoriesList = Geo.list()
 			}
 			
-			if(roleInstance.name == "GENERAL MANAGER")
+			if(roleInstance.authority == "ROLE_GENERAL_MANAGER")
 			{
 				/*if(params.sourceFrom != "geoGroup")
 				{*/
@@ -117,7 +117,7 @@ class UserSetupController {
 					territoriesList = map['territoriesList']
 				//}
 			}
-			else if(roleInstance.name == "SALES MANAGER")
+			else if(roleInstance.authority == "ROLE_SALES_MANAGER")
 			{
 				/*if(params.sourceFrom != "geo")
 				{*/
@@ -127,7 +127,7 @@ class UserSetupController {
 					territoriesList = map['territoriesList']
 				//}
 			}
-			else if(roleInstance.name == "SALES PERSON")
+			else if(roleInstance.authority == "ROLE_SALES_PERSON")
 			{
 				/*if(params.sourceFrom != "geo")
 				{*/
@@ -149,20 +149,20 @@ class UserSetupController {
 		def roleInstance = Role.get(params.roleId.toInteger())
 		def geoGroup = GeoGroup.get(params.id.toInteger())
 		def data = [:]
-		if(roleInstance.name == "GENERAL MANAGER")
+		if(roleInstance.authority == "ROLE_GENERAL_MANAGER")
 		{
 			for(Geo territory : geoGroup?.geos)
 			{
 				territoriesList.add(territory)
 			}
 		}
-		else if(roleInstance.name == "SALES MANAGER")
+		else if(roleInstance.authority == "ROLE_SALES_MANAGER")
 		{
 			def map = [:]
 			map = salesCatalogService.findUnassignedTerritoriesForSalesManager(geoGroup)
 			territoriesList = map['territoriesList']
 		}
-		else if(roleInstance.name == "SALES PERSON")
+		else if(roleInstance.authority == "ROLE_SALES_PERSON")
 		{
 			territoriesList = salesCatalogService.findTerritoriesForSalesPerson(geoGroup)
 		}
@@ -182,9 +182,9 @@ class UserSetupController {
 	
 	def getExistingUsers() {
 		int index = params.roleindex.toInteger()
-		def roleInstance = Role.findByName(usersByRoleList[index]["role"])
+		def roleInstance = Role.findByAuthority(usersByRoleList[index]["role"])
 		
-		def adminRole = Role.findByName("SYSTEM ADMINISTRATOR")
+		def adminRole = Role.findByAuthority("ROLE_SYSTEM_ADMINISTRATOR")
 		def testUser = User.findByUsername("user")
 		
 		def existingUsers = []
@@ -543,7 +543,7 @@ class UserSetupController {
 		for(Role role: roles){
 			if(roleIds.contains(role.getCode())){
 				
-				usersByRoleList[roleIds.indexOf(role.getCode())] = [role: role.getName(), users: []]
+				usersByRoleList[roleIds.indexOf(role.getCode())] = [role: role.authority, users: []]
 				isRoleDisplay[roleIds.indexOf(role.getCode())] = isRoleVisibleInList(role.getCode())
 			}
 		}
@@ -553,7 +553,7 @@ class UserSetupController {
 		{
 			if(user?.enabled == true)
 			{
-				def userRoles = user.getRoles();
+				def userRoles = UserRole.findAllByUser(user)*.role;
 				for(Role role : userRoles){
 					if(roleIds.contains(role.getCode())){
 						int index = roleIds.indexOf(role.getCode());
@@ -610,7 +610,7 @@ class UserSetupController {
 	def listsetup() {
 		/*int index = params.roleindex.toInteger(); 
 		def users = usersByRoleList[index]["users"]
-		def role = Role.findByName(usersByRoleList[index]["role"])
+		def role = Role.findByAuthority(usersByRoleList[index]["role"])
 		/*println role.name
 		for(User user in role.users)
 		{
@@ -635,7 +635,7 @@ class UserSetupController {
 	def listusersbyrole() {
 		int index = params.roleindex.toInteger();
 		def users = usersByRoleList[index]["users"]
-		def role = Role.findByDescription(usersByRoleList[index]["role"])
+		def role = Role.findByAuthority(usersByRoleList[index]["role"])
 		def source = (params.source == "firstsetup")?"firstsetup":"setup"
 		List roleUsers = UserRole.findAllByRole(role).collect { it.user }.findAll { it.username != "superadmin" && it.username != "user" }
 		/*for(User user : role?.users)
@@ -705,11 +705,11 @@ class UserSetupController {
 			Set territoriesList = new HashSet(), geoGroupList = new HashSet() 
 			Set primaryTerritoriesList = new HashSet() //unassigned + primary
 			
-			if(roleInstance.name == "SALES PRESIDENT")
+			if(roleInstance.authority == "ROLE_SALES_PRESIDENT")
 			{
 				territoriesList = Geo.list()
 			}
-			else if(roleInstance.name == "GENERAL MANAGER")
+			else if(roleInstance.authority == "ROLE_GENERAL_MANAGER")
 			{
 				/*if(params.sourceFrom != "geoGroup")
 				 {*/
@@ -729,7 +729,7 @@ class UserSetupController {
 					}
 				
 			}
-			else if(roleInstance.name == "SALES MANAGER")
+			else if(roleInstance.authority == "ROLE_SALES_MANAGER")
 			{
 				def map = [:]
 				map = salesCatalogService.findUnassignedTerritoriesForSalesManager(null)
@@ -757,7 +757,7 @@ class UserSetupController {
 				}
 				
 			}
-			else if(roleInstance.name == "SALES PERSON")
+			else if(roleInstance.authority == "ROLE_SALES_PERSON")
 			{
 				//geoGroupList = GeoGroup.list()
 				territoriesList = salesCatalogService.findTerritoriesForSalesPerson(null)

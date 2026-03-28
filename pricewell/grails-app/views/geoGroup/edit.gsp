@@ -11,7 +11,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'default.geoGroup.label', default: 'Geo')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
-        <ckeditor:resources />
+        <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
         
          <script>
 		   	jQuery(function() 

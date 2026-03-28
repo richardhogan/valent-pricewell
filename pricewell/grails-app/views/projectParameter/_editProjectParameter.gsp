@@ -5,7 +5,7 @@
 	def baseurl = request.siteUrl
 %>
     <head>
-    	<g:setProvider library="prototype"/>
+    	
     	<style type="text/css">
 			.submit { margin-left: 12em; }
 			em { font-weight: bold; padding-right: 1em; vertical-align: top; }

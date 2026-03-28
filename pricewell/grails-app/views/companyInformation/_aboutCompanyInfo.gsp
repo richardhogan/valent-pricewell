@@ -2,7 +2,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-	<g:setProvider library="prototype"/>	
+		
 		<script>
 			jQuery(document).ready(function()
 		 	{
@@ -72,10 +72,10 @@
 			    
 			    	<div id="dvCompanyInfo">
 			    		<g:if test="${companyInformationId == null}">
-			    			<g:render template="../companyInformation/create" model="['companyInformationInstance': companyInformationInstance, 'source': source]"/>
+			    			<g:render template="/companyInformation/create" model="['companyInformationInstance': companyInformationInstance, 'source': source]"/>
 		    			</g:if>
 		    			<g:else>
-		    				<g:render template="../companyInformation/show" model="['companyInformationInstance': companyInformationInstance, 'source': source]"/>
+		    				<g:render template="/companyInformation/show" model="['companyInformationInstance': companyInformationInstance, 'source': source]"/>
 		    			</g:else>
 					</div>
 			</div>

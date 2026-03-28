@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
 
-<ckeditor:resources />
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <style>
 /* LIST #4 */
 #list4 { width:300px; font-family:Georgia, Times, serif; font-size:15px; }

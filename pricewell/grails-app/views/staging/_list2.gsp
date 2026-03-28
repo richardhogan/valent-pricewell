@@ -9,7 +9,7 @@
         
 	        
 	        <div class="leftNavSmall">      		
-	    		<g:render template="../staging/nevigationsetup"/>
+	    		<g:render template="/staging/nevigationsetup"/>
 	    	</div>
 	        
 	        <div class="body rightContent column">

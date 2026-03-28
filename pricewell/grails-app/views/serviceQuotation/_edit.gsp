@@ -34,7 +34,7 @@
 		}
 	</style>
 
-	<g:setProvider library="prototype"/>
+	
     <script>
 
     	var editedAdditionalUnitOfSaleJson = JSON.parse('${additionalUnitOfSaleJSONObjectString}');

@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="layout" content="main" />
 		
-		<g:setProvider library="prototype"/>
+		
 		
 		<g:set var="entityName"
 			value="${message(code: 'quotation.label', default: 'Quotation Contract')}" />
@@ -47,7 +47,7 @@
 		  	
 		</style>
 		
-		<ckeditor:resources />
+		<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 	
 	</head>
 	

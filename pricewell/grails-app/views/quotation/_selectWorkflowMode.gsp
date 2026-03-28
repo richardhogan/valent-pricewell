@@ -6,7 +6,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<g:setProvider library="prototype"/>
+
 		
         <script>
 		
@@ -92,7 +92,7 @@
 		<div class="body" >	
 			<div id="dvResponseDialog"></div>
 			<div class="leftNavSmall">      		
-	    		<g:render template="../staging/nevigationsetup"/>
+	    		<g:render template="/staging/nevigationsetup"/>
 	    	</div>
             
             <div id="dvSubStage" class="body rightContent column">

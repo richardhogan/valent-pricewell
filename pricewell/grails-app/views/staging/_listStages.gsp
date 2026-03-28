@@ -5,7 +5,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-	<g:setProvider library="prototype"/>
+	
 	
 	<style>
 		h1, button, #successDialogInfo
@@ -65,7 +65,7 @@
         <div class="body">
             
             <div class="leftNavSmall">      		
-	    		<g:render template="../staging/nevigationsetup"/>
+	    		<g:render template="/staging/nevigationsetup"/>
 	    	</div>
             
             <div id="dvSubStage" class="body rightContent column">

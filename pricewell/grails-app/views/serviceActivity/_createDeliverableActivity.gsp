@@ -23,7 +23,7 @@
   			}
 		</style>
 		
-		<g:setProvider library="prototype"/>
+		
 		<script>
 			var activityTasks = [];
 			var sequenceOrder = 1;

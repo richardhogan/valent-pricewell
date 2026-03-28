@@ -496,7 +496,7 @@ class SetupController {
 	def isUserDefined() {
 		println "coming here user"
 		String roleName = ServiceStageFlow.findUserRole("addUsers", currentStepNo);
-		def roleInstance = Role.findByName(roleName)
+		def roleInstance = Role.findByAuthority(roleName)
 		
 		if(UserRole.countByRole(roleInstance) > 0)
 		{
@@ -550,7 +550,7 @@ class SetupController {
 				if(stepName.equals("createUser"))
 				{
 					String roleName = ServiceStageFlow.findUserRole(source, stepNumber);
-					def roleInstance = Role.findByName(roleName)
+					def roleInstance = Role.findByAuthority(roleName)
 					def territoriesList = new ArrayList(), geoGroupList = new ArrayList()
 					def roleUserList = []
 					//roleUserList = roleInstance?.users

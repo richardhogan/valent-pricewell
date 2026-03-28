@@ -76,7 +76,7 @@
         
 	        
 	        <div class="leftNavSmall">      		
-	    		<g:render template="../objectType/nevigationsetup"/>
+	    		<g:render template="/objectType/nevigationsetup"/>
 	    	</div>
 	        
 	        <div class="body rightContent column">

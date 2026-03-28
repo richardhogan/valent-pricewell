@@ -6,7 +6,7 @@
     	
 		<link rel="stylesheet" href="${resource(dir:'js/dataTables/css',file:'demo_page.css')}" />
 		<link rel="stylesheet" href="${resource(dir:'js/dataTables/css',file:'demo_table.css')}" />
-		<ckeditor:resources />	
+		<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>	
 		<script type="text/javascript" language="javascript" src="../js/dataTables/js/jquery.dataTables.js"></script>
 		
     	<script> 
@@ -71,13 +71,13 @@
 			
 			<div id="emailSetting">
 				<div id="mainEmailSettingTab">
-					<g:render template="../emailSetting/emailSettings" model="['emailSettings': emailSettings]"/>
+					<g:render template="/emailSetting/emailSettings" model="['emailSettings': emailSettings]"/>
 				</div>
 			</div>
 			
 			<div id="workflowSetting">
 				<div id="mainWorkflowSettingTab">
-					<g:render template="../staging/list" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
+					<g:render template="/staging/list" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
 				</div>
 			</div>
 		</div>

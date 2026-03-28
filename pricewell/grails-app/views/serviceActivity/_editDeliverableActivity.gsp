@@ -2,7 +2,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<g:setProvider library="prototype"/>
+
 <script type="text/javascript">
 	jQuery(document).ready(function()
 	{
@@ -90,7 +90,7 @@
 	</div>
   	
   	<div id="dvRoleList">
-    	<g:render template="../activityRoleTime/listActivityRoleTime" model="['serviceActivityInstance': serviceActivityInstance]"/>
+    	<g:render template="/activityRoleTime/listActivityRoleTime" model="['serviceActivityInstance': serviceActivityInstance]"/>
 	</div>	   
 	
 	<hr />

@@ -42,7 +42,7 @@ class Notification {
 		//println list1
 		Set set = new HashSet()
 		
-		def userRoles = user.roles.code
+		def userRoles = UserRole.findAllByUser(user)*.role*.code
 		
 		for(Object n in list1)
 		{

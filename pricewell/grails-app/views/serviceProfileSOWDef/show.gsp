@@ -7,7 +7,7 @@
         <g:set var="entityName" value="${message(code: 'serviceProfileSOWDef.label', default: 'ServiceProfileSOWDef')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
         
-        <g:setProvider library="prototype"/>
+        
     </head>
     <body>
         <div class="nav">

@@ -1141,11 +1141,11 @@ class ServiceController {
 		boolean assignPortfolioManager = false
 		
 		User pm = User.get(portfolio.portfolioManager.id)
-		Role pmRole = Role.findByName("PORTFOLIO MANAGER") 
-		
-		for(Role role : pm.roles)
+		Role pmRole = Role.findByAuthority("ROLE_PORTFOLIO_MANAGER")
+
+		for(Role role : UserRole.findAllByUser(pm)*.role)
 		{
-			if(role.name == pmRole.name)
+			if(role.authority == pmRole?.authority)
 			{
 				assignPortfolioManager = true
 			}
@@ -1602,7 +1602,7 @@ class ServiceController {
 		def portfolioList = []
 		if(serviceProfile != null)
 		{
-			portfolioList = Portfolio.findAll("from Portfolio pf WHERE pf.id != '$serviceProfile.service.portfolio.id'")
+			portfolioList = Portfolio.findAll("from Portfolio pf WHERE pf.id != :pid", [pid: serviceProfile.service.portfolio.id])
 		}
 		
 		println portfolioList

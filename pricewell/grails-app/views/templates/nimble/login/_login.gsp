@@ -323,7 +323,7 @@
 </g:else>
 
 <div id="dvForgotPass">
-	<g:render template="../userSetup/reset" />
+	<g:render template="/userSetup/reset" />
 </div>
 
 <n:facebookConnect/>

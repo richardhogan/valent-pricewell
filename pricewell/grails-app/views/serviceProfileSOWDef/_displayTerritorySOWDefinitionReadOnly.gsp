@@ -4,7 +4,7 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<g:setProvider library="prototype"/>
+
 <script>
 		jQuery(function() {
 		  	jQuery( ".SOWDefinitionTabs" ).tabs();//.addClass( "ui-tabs-vertical ui-helper-clearfix" );

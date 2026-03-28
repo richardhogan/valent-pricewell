@@ -198,7 +198,7 @@
 		</head>
     <body>
         <div class="leftNav">				
-    		<g:render template="../service/serviceNavigation"/>
+    		<g:render template="/service/serviceNavigation"/>
     	</div>
         <div id="columnRight" class="body rightContent column">
         	<div class="reportDv" id="reportDv" title="Delete Report Of Solution Bundle">

@@ -15,8 +15,8 @@
 	<title><g:message code="default.show.label" args="[entityName]" />
 	</title>
 	
-	<modalbox:modalIncludes />
-	<g:setProvider library="prototype"/>
+	
+	
 </head>
 
 <body>

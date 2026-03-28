@@ -1,6 +1,7 @@
 package com.valent.pricewell
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
+import grails.util.Holders
 class SalesController {
 
 	def salesCatalogService// = new SalesCatalogService()
@@ -57,18 +58,14 @@ class SalesController {
 		return content
 	}
 	
-	public boolean isConnectwiseIncluded()
+	public static boolean isConnectwiseIncluded()
 	{
-		//boolean isForConnectwise = false
-		
-		return salesCatalogService.isClass("com.connectwise.integration.ConnectwiseExporterService", grailsApplication)
+		return Holders.grailsApplication.allClasses.any { it.name == "com.connectwise.integration.ConnectwiseExporterService" }
 	}
-	
-	public boolean isSalesforceIncluded()
+
+	public static boolean isSalesforceIncluded()
 	{
-		//boolean isForConnectwise = false
-		
-		return salesCatalogService.isClass("com.salesforce.integration.SalesforceExportService", grailsApplication)
+		return Holders.grailsApplication.allClasses.any { it.name == "com.salesforce.integration.SalesforceExportService" }
 	}
 	
 	public boolean isQuoteForConnectwiseOpportunity(def id)

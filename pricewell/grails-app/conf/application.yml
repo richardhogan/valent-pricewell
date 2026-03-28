@@ -70,9 +70,10 @@ grails:
                 errorPage: '/auth/denied'
             securityConfigType: InterceptUrlMap
             interceptUrlMap:
-                # Auth and static assets are always public
+                # Auth, error page, and static assets are always public
                 - { pattern: '/auth/**',                  access: 'permitAll' }
                 - { pattern: '/login/authenticate',       access: 'permitAll' }
+                - { pattern: '/error',                    access: 'permitAll' }
                 - { pattern: '/assets/**',                access: 'permitAll' }
                 - { pattern: '/images/**',                access: 'permitAll' }
                 - { pattern: '/js/**',                    access: 'permitAll' }
@@ -81,25 +82,25 @@ grails:
                 # Admin user-management UI requires SYSTEM ADMINISTRATOR
                 - { pattern: '/userAdmin/**',             access: 'ROLE_SYSTEM_ADMINISTRATOR' }
                 # Service create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
-                - { pattern: '/service/create',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/service/save',             access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/service/delete',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/service/create',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/service/save',             access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/service/delete',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # Portfolio create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
-                - { pattern: '/portfolio/create',         access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/portfolio/save',           access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/portfolio/delete',         access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/portfolio/create',         access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/portfolio/save',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/portfolio/delete',         access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # Delivery role, geo, and rate-card management require DELIVERY ROLE MANAGER
-                - { pattern: '/deliveryRole/**',          access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/geo/create',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/geo/save',                 access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/geo/edit',                 access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/geo/update',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/geo/delete',               access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
-                - { pattern: '/relationDeliveryGeo/**',   access: 'ROLE_DELIVERY_ROLE_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/deliveryRole/**',          access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/geo/create',               access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/geo/save',                 access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/geo/edit',                 access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/geo/update',               access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/geo/delete',               access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/relationDeliveryGeo/**',   access: "hasAnyRole('ROLE_DELIVERY_ROLE_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # Reports require PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
-                - { pattern: '/reports/**',               access: 'ROLE_PORTFOLIO_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/reports/**',               access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # Quotation actions require any sales or management role
-                - { pattern: '/quotation/**',             access: 'ROLE_SALES_PERSON,ROLE_SALES_MANAGER,ROLE_SALES_PRESIDENT,ROLE_GENERAL_MANAGER,ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/quotation/**',             access: "hasAnyRole('ROLE_SALES_PERSON','ROLE_SALES_MANAGER','ROLE_SALES_PRESIDENT','ROLE_GENERAL_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # All other URLs require an authenticated session
                 - { pattern: '/**',                       access: 'isAuthenticated()' }
 

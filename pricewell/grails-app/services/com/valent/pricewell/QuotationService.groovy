@@ -54,10 +54,10 @@ class QuotationService {
 		int counter = 0;
 		for(Object r in UserRole.findAllByUser(user)*.role)
 		{
-			map[counter++] = r.name
+			map[counter++] = r.authority
 		}
-		
-		if(!map.contains("SYSTEM ADMINISTRATOR"))
+
+		if(!map.contains("ROLE_SYSTEM_ADMINISTRATOR"))
 		{
 			quotationList = Quotation.findAll("from Quotation qu WHERE qu.createdBy.id=:uid", [uid: user.id])
 			return quotationList
@@ -65,11 +65,11 @@ class QuotationService {
 		else
 		{
 			quotationList = Quotation.findAll("from Quotation qu")
-			
+
 		}
 		return quotationList
 	}
-	
+
 	List findPendingUserQuotes(User user)
 	{
 		List map = new ArrayList()
@@ -77,10 +77,10 @@ class QuotationService {
 		int counter = 0;
 		for(Object r in UserRole.findAllByUser(user)*.role)
 		{
-			map[counter++] = r.name
+			map[counter++] = r.authority
 		}
-		
-		if(!map.contains("SYSTEM ADMINISTRATOR"))
+
+		if(!map.contains("ROLE_SYSTEM_ADMINISTRATOR"))
 		{
 			//quotationList = Quotation.findAll("from Quotation qu WHERE qu.createdBy.id=:uid AND status != :status1 AND status != :status2", [uid: user.id, status1: Quotation.Status.CONTRACT , status2: Quotation.Status.REJECTED])
 			quotationList = Quotation.findAll("from Quotation qu WHERE qu.createdBy.id=:uid", [uid: user.id])
@@ -361,7 +361,7 @@ class QuotationService {
 	
 	List getActiveServiceOfQuotation(Quotation quotationInstance)
 	{
-		List<ServiceQuotation> serviceQuotations = ServiceQuotation.findAll("from ServiceQuotation sq WHERE sq.quotation.id = ${quotationInstance.id} AND sq.stagingStatus.name != 'delete' ORDER BY sq.sequenceOrder")
+		List<ServiceQuotation> serviceQuotations = ServiceQuotation.findAll("from ServiceQuotation sq WHERE sq.quotation.id = :qid AND sq.stagingStatus.name != 'delete' ORDER BY sq.sequenceOrder", [qid: quotationInstance.id])
 		return serviceQuotations
 	}
 	

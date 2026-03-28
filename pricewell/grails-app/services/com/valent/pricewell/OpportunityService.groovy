@@ -267,7 +267,8 @@ class OpportunityService {
    {
 	   newExpTimer = new OpportunityExpireTimer(expTimer.opportunityService)
 	   expTimer.push()
-	   
+
+	   Opportunity.withTransaction {
 	   Date today = new Date()
 	   for(Opportunity op : Opportunity.list())
 	   {
@@ -360,10 +361,11 @@ class OpportunityService {
 			   }
 		   }
 	   }
-	   
+	   } // end withTransaction
+
 	   newExpTimer.resume()
    }
-   
+
    public def convertQuotationToRejectStage(Quotation quote)
    {
 	   Staging endStage =  Staging.findByName("rejected")

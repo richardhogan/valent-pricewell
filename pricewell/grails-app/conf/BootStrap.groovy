@@ -387,7 +387,7 @@ class BootStrap {
 	
 	public fixPrimaryTerritoryForSalesPerson()
 	{
-		List salesPersonList = serviceCatalogService.findUsersByRole("SALES PERSON")
+		List salesPersonList = serviceCatalogService.findUsersByRole("ROLE_SALES_PERSON")
 		for(User salesUser : salesPersonList)
 		{
 			if(salesUser?.primaryTerritory == null || salesUser?.primaryTerritory == "")

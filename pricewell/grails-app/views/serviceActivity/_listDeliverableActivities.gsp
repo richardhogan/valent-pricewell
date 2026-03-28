@@ -4,7 +4,7 @@
 	def baseurl = request.siteUrl
 %>
 <!--  	<span style="font-size: 100%"> <b> Activities of ${serviceDeliverableInstance} </b> </span>-->
-	<g:setProvider library="prototype"/>
+	
 	<script>
 		jQuery(document).ready(function()
 		{

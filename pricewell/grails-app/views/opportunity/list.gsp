@@ -143,13 +143,13 @@
         <div class="nav">
             
             <span><g:link class="buttons.button button" title="Create Opportunity" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
-            <g:if test="${new SalesController().isConnectwiseIncluded()}">
+            <g:if test="${grailsApplication.allClasses.any { it.name == "com.connectwise.integration.ConnectwiseExporterService" }}">
             	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
             		<span><button id="importBtn" title="From Connectwise to Pricewell" class="buttons.button button">Import</button></span>
            		</g:if>
            	</g:if>
            	
-           	<g:if test="${new SalesController().isSalesforceIncluded()}">
+           	<g:if test="${grailsApplication.allClasses.any { it.name == "com.salesforce.integration.SalesforceExportService" }}">
             	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')}">
             		<span><button id="salesforceImportBtn" title="From Salesforce to Pricewell" class="buttons.button button">Import</button></span>
            		</g:if>

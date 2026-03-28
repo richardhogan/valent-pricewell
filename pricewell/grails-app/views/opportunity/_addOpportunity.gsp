@@ -21,7 +21,7 @@
 			em { font-weight: bold; padding-right: 1em; vertical-align: top; }
 		</style>
 		
-		<g:setProvider library="prototype"/>
+		
 		<script>
 			 
 				  jQuery(document).ready(function()

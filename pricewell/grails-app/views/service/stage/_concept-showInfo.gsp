@@ -5,7 +5,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<g:setProvider library="prototype"/>
+
 
 <script>
 	jQuery(function() {
@@ -262,7 +262,7 @@
 		
 		<div  id="territorySOWDefinitionListReadOnly">
 			<g:if test="${hasDefaultSOWDefinition}">
-				<g:render template="../service/showDefinition" model="['serviceProfileInstance': serviceProfileInstance, 'defaultSOWDefinition': defaultSowDef, 'readOnly': readOnly]"/>
+				<g:render template="/service/showDefinition" model="['serviceProfileInstance': serviceProfileInstance, 'defaultSOWDefinition': defaultSowDef, 'readOnly': readOnly]"/>
 			</g:if>
 		</div>
 	</div>

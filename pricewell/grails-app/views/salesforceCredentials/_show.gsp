@@ -68,7 +68,7 @@
 		
 		</script>
 		 <div id="helpDialog" title="Salesforce Configuration">
-			<g:render template="../salesforceCredentials/help" />
+			<g:render template="/salesforceCredentials/help" />
 		</div>
         <div class="body">
         	<g:if test="${source == 'firstsetup'}">

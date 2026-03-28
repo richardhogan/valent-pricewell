@@ -3,7 +3,7 @@
 	def baseurl = request.siteUrl
 %>
 
-		<g:setProvider library="prototype"/>
+		
 		<g:set var="entityName" value="${message(code: 'companyInformation.label', default: 'Company Information')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
         <style>

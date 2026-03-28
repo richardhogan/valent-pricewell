@@ -1,4 +1,4 @@
-<g:setProvider library="prototype"/>
+
 
 <div id="mainReviewBoardTab">
 	<g:render template="showFromWizard"	

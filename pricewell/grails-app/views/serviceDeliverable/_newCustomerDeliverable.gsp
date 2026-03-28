@@ -24,7 +24,7 @@
     			height: 100px;
   			}
 		</style>
-		<g:setProvider library="prototype"/>
+		
 		<script>
 			
 			jQuery(function() 

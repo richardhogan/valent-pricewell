@@ -21,7 +21,7 @@
 			
 		</style>
 		
-		<g:setProvider library="prototype"/>
+		
 		<script>
 
 		

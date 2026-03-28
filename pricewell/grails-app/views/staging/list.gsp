@@ -9,7 +9,7 @@
     </head>
     <body>
     	<div id="mainWorkflowSettingTab">
-    	     <g:render template="../staging/list" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
+    	     <g:render template="/staging/list" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
    	    </div> 
     </body>
 </html>

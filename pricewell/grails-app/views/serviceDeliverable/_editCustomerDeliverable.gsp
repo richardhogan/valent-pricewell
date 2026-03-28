@@ -24,7 +24,7 @@
     			height: 100px;
   			}
 		</style>
-		<g:setProvider library="prototype"/>
+		
 		<script>
 			jQuery.getScript("${baseurl}/js/jquery.validate.js", function() {
 					jQuery("#deliverableEdit").validate(

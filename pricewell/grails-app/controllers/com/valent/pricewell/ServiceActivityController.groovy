@@ -177,7 +177,7 @@ class ServiceActivityController {
 											'estimatedTimeInHoursFlat', 'estimatedTimeInHoursPerBaseUnits', 'category',
 											'sequenceOrder', 'results'] = params
 	
-			def result = ServiceActivity.executeQuery("select max(act.sequenceOrder) from ServiceActivity act where act.serviceDeliverable.id = ${del?.id}")
+			def result = ServiceActivity.executeQuery("select max(act.sequenceOrder) from ServiceActivity act where act.serviceDeliverable.id = :delid", [delid: del?.id])
 			int order = (result[0]?result[0]+1:1)
 					
 			serviceActivityInstance.sequenceOrder = order

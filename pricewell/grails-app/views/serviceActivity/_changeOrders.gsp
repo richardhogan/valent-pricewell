@@ -5,7 +5,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<g:setProvider library="prototype"/>
+
 <script>
 	function serviceActivityList()
 	{

@@ -16,7 +16,7 @@
 		<link rel="shortcut icon"
 			href="${resource(dir:'images',file:'star-delete.png')}"
 			type="image/x-icon" />
-		<ckeditor:resources />
+		<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 	</head>
 <body>
 	<div class="nav">

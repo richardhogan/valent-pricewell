@@ -6,7 +6,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<g:setProvider library="prototype"/>
+
 <script>
 		jQuery.getScript("${baseurl}/js/jquery.validate.js", function() {
 					jQuery("#reviewRequestEdit").validate();

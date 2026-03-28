@@ -140,7 +140,7 @@ td.reduced {
 						
 						<div  id="territorySOWDefinitionListPreview">
 							<g:if test="${hasDefaultSOWDefinition}">
-								<g:render template="../service/showDefinition" model="['serviceProfileInstance': serviceProfileInstance, 'defaultSOWDefinition': defaultSowDef, 'readOnly': readOnly]"/>
+								<g:render template="/service/showDefinition" model="['serviceProfileInstance': serviceProfileInstance, 'defaultSOWDefinition': defaultSowDef, 'readOnly': readOnly]"/>
 							</g:if>
 						</div>
 						

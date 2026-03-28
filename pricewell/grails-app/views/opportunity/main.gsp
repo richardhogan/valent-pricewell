@@ -12,10 +12,10 @@
 		<title><g:message code="default.show.opportunity" args="[entityName]" />
 		</title>
 		
-		<modalbox:modalIncludes />
-		<ckeditor:resources/>
 		
-		<g:setProvider library="prototype"/>
+		<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+		
+		
 		<style>
 			p {
 				font-size: 100%;

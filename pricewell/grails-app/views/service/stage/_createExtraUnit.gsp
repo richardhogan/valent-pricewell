@@ -7,7 +7,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-	<g:setProvider library="prototype"/>
+	
 	
        <script>
        jQuery(document).ready(function()

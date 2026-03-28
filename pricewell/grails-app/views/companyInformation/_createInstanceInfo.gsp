@@ -3,7 +3,7 @@
 <%
 	def baseurl = request.siteUrl
 %>		
-<g:setProvider library="prototype"/>
+
 	<div id="mainInformationTab">
 		<style>
 			h1, button, #successDialogInfo

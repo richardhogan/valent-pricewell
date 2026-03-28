@@ -26,7 +26,7 @@
 				 } 
 	</style>
 		
-	<g:setProvider library="prototype"/>
+	
 	<script type="text/javascript" language="javascript" src="${baseurl}/js/dataTables/js/jquery.dataTables.js"></script>	
 	<script>
 		jQuery(document).ready(function()

@@ -1,6 +1,6 @@
 <%@ page import="com.valent.pricewell.ServiceQuotation" %>
 
-<g:setProvider library="prototype"/>
+
 
 <g:form>
 

@@ -3,7 +3,7 @@
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.ServiceProfile" %>
 <%@ page import="com.valent.pricewell.*" %>
-<g:javascript library="prototype" />
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

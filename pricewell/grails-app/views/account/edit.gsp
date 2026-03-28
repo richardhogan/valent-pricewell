@@ -11,7 +11,7 @@
         <g:set var="entityName" value="${message(code: 'account.label', default: 'Account')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
         
-        <g:setProvider library="prototype"/>
+        
         
         <style type="text/css">
 			.submit { margin-left: 12em; }

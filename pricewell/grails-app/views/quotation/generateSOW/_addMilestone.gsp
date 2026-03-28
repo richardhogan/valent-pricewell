@@ -7,7 +7,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-	<g:setProvider library="prototype"/>
+	
 		<style>
 			.milestoneContent {
 			    height: 290px;

@@ -12,7 +12,7 @@
 jQuery.noConflict();
 		</script>
 
-<g:setProvider library="prototype"/>
+
 <script>
 
 	jQuery(document).ready(function()

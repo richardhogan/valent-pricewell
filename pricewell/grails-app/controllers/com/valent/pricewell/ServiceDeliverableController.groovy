@@ -174,7 +174,7 @@ class ServiceDeliverableController {
 		def serviceDeliverableInstance = new ServiceDeliverable()
 		serviceDeliverableInstance.properties['sequenceOrder','name','type', 'phase'] = params
 		
-		def result = ServiceDeliverable.executeQuery("select max(del.sequenceOrder) from ServiceDeliverable del where del.serviceProfile.id = ${serviceProfile?.id}")
+		def result = ServiceDeliverable.executeQuery("select max(del.sequenceOrder) from ServiceDeliverable del where del.serviceProfile.id = :spid", [spid: serviceProfile?.id])
 		int order = (result[0]?result[0]+1:1)
 				
 		serviceDeliverableInstance.sequenceOrder = order 

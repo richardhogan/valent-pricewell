@@ -1,7 +1,7 @@
 <%
 	def baseurl = request.siteurl
 %>
-<g:setProvider library="prototype"/>
+
 <script>
 	 (function($) {
 		  $(document).ready(function()

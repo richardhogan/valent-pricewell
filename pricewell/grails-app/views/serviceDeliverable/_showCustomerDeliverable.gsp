@@ -1,6 +1,6 @@
 <%@ page import="com.valent.pricewell.ServiceDeliverable" %>
     
-<g:setProvider library="prototype"/>
+
 <div>
     <span class="menuButton"><g:remoteLink class="list" action="list">Edit</g:remoteLink></span>
     <span class="menuButton"><g:remoteLink class="delete" action="list">Delete</g:remoteLink></span>

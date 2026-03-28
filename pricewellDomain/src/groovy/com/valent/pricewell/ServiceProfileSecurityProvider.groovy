@@ -28,7 +28,7 @@ class ServiceProfileSecurityProvider {
 			return true;
 		
 			
-		for(Role role: user.roles)
+		for(Role role: UserRole.findAllByUser(user)*.role)
 		{
 			if(stage.authorizedRoles?.contains(role))
 			{
@@ -58,7 +58,7 @@ class ServiceProfileSecurityProvider {
 	
 	private boolean isAdmin()
 	{
-		if((user.roles.code).contains(RoleId.ADMINISTRATOR.code))
+		if((UserRole.findAllByUser(user)*.role*.code).contains(RoleId.ADMINISTRATOR.code))
 			return true;
 		return false;
 	}

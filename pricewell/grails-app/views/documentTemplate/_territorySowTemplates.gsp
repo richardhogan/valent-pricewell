@@ -571,7 +571,7 @@
 		</div>
 		
 		<div id="helpDialog" title="SOW Template Help">
-			<g:render template="../setting/help"/>
+			<g:render template="/setting/help"/>
 		</div>
 		
 		<div id="importSOWDialog" title="Import SOW File">

@@ -61,7 +61,7 @@
 	                    </thead>
 	                    <g:if test="${listForServiceDesigner}">
 	                    <tbody>
-	                    <% 	def adminRole = Role.findByName('SYSTEM ADMINISTRATOR') %>
+	                    <% 	def adminRole = Role.findByAuthority('ROLE_SYSTEM_ADMINISTRATOR') %>
 	                    <g:each in="${listForServiceDesigner}" status="i" var="serviceProfileInstance">
 	                        <tr>
 	                        

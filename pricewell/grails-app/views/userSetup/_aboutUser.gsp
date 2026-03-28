@@ -154,7 +154,7 @@
 	        <div id="accordion-${roleInstance.id}" class="accordion">
 			    <h3 style="font-size: 130%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; About ${roleInstance.name}</h3>
 				  <div>
-					   <g:render template="../userSetup/aboutRole" model="['roleInstance': roleInstance]"/>
+					   <g:render template="/userSetup/aboutRole" model="['roleInstance': roleInstance]"/>
 				  </div>
 				  
 			    <h3 style="font-size: 130%"> <div id="dvheader-${roleInstance.id}" class="dvheader"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -163,10 +163,10 @@
 			    
 			    	<div id="dvusersinfo-${roleInstance.id}" class="dvusersinfo">
 			    		<g:if test="${roleUserList.size() > 0}">
-			    			<g:render template="../userSetup/usersbyrole" model="['roleInstance': roleInstance, 'users': roleUserList, 'source': source]"/>
+			    			<g:render template="/userSetup/usersbyrole" model="['roleInstance': roleInstance, 'users': roleUserList, 'source': source]"/>
 		    			</g:if>
 		    			<g:else>
-		    				<g:render template="../userSetup/createsetup2" model="['user': user, 'roleInstance': roleInstance, 'randomPassword': randomPassword, 'source': source, 'geoGroupList': geoGroupList, 'territoriesList': territoriesList]"/>
+		    				<g:render template="/userSetup/createsetup2" model="['user': user, 'roleInstance': roleInstance, 'randomPassword': randomPassword, 'source': source, 'geoGroupList': geoGroupList, 'territoriesList': territoriesList]"/>
 		    			</g:else>
 		    			
 					</div>

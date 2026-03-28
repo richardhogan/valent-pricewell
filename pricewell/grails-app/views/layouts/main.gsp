@@ -11,6 +11,7 @@
 
          <asset:javascript src="application.js"/>
          <asset:stylesheet href="application.css"/>
+        <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
         <script type="text/javascript">
 			jQuery.noConflict();

@@ -88,7 +88,7 @@
 					<li><a href="${baseurl}/account/list">Accounts</a></li>
 					<li><a href="${baseurl}/opportunity/list">Opportunities</a></li>
 					
-					<g:if test="${new SalesController().isConnectwiseIncluded() }">
+					<g:if test="${grailsApplication.allClasses.any { it.name == "com.connectwise.integration.ConnectwiseExporterService" } }">
 						<li><a href="${baseurl}/serviceQuotationTicket/list">Service Ticket</a></li>
 					</g:if>
 				</ul>

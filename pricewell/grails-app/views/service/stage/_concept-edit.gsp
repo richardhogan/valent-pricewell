@@ -112,7 +112,7 @@
         
         <div class="body">
             <div id="createExtraUnitDialog" title="Add Extra Unit"><%--
-				<g:render template="../service/stage/createExtraUnit" model="['extraUnitInstanceList': extraUnitInstanceList]"/>
+				<g:render template="/service/stage/createExtraUnit" model="['extraUnitInstanceList': extraUnitInstanceList]"/>
 			--%></div>
 
             <g:form action="saveStage" controller="service" name="serviceEdit">

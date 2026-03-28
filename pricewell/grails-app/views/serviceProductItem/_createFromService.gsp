@@ -13,7 +13,7 @@
 }
 		</style>
 		
-		<g:setProvider library="prototype"/>
+		
 		<script>
 			jQuery(document).ready(function()
 			{

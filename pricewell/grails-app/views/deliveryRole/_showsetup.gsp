@@ -6,7 +6,7 @@
 %>
 <html>
     <head>
-    	<g:setProvider library="prototype"/>
+    	
     	<script>
 		   	jQuery(function() 
 		   	{

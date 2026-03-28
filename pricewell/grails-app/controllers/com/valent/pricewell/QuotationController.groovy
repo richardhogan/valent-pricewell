@@ -591,7 +591,7 @@ class QuotationController {
 			//def serquo = ServiceQuotation.findAll("from ServiceQuotation sq WHERE sq.quotation.id = ${params.id} AND sq.stagingStatus.name != 'delete' ORDER BY sq.sequenceOrder")
 			HashSet set = new HashSet()
 			set.addAll(serquo.service.portfolio)
-			def notificationList = Notification.findAll("FROM Notification nf WHERE nf.objectId=${quotationInstance.id} AND nf.objectType='Quotation' order by dateCreated desc")
+			def notificationList = Notification.findAll("FROM Notification nf WHERE nf.objectId = :qid AND nf.objectType='Quotation' order by dateCreated desc", [qid: quotationInstance.id])
 			boolean requestDone = false
 			boolean canModifyServices = false;
 
@@ -1186,7 +1186,7 @@ class QuotationController {
 		}
 		else if(stepName == "showReview")
 		{
-			def serviceQuotationList = ServiceQuotation.findAll("from ServiceQuotation sq WHERE sq.quotation.id = ${quotationInstance?.id} AND sq.stagingStatus.name != 'delete'")
+			def serviceQuotationList = ServiceQuotation.findAll("from ServiceQuotation sq WHERE sq.quotation.id = :qid AND sq.stagingStatus.name != 'delete'", [qid: quotationInstance?.id])
 			HashSet portfolioSet = new HashSet()
 			portfolioSet.addAll(serviceQuotationList.service.portfolio)
 			

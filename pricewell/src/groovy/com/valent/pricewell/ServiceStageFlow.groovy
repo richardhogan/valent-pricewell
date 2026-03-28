@@ -172,7 +172,7 @@ class ServiceStageFlow {
 		public static def setupSteps = [welcome: [["welcome", "WELCOME TO VALENT SOFTWARE"]],
 										companyInfo: [["addCompanyInfo", "DEFINE COMPANY INFORMATION"]],
 										geos: [["createGeos", "DEFINE GEO-TERRITORY"]],
-										addUsers: [["createUser", "SYSTEM ADMINISTRATOR"],["createUser","PORTFOLIO MANAGER"],["createUser","PRODUCT MANAGER"],["createUser","SERVICE DESIGNER"],["createUser","SALES PRESIDENT"],["createUser","GENERAL MANAGER"],["createUser","SALES MANAGER"],["createUser","SALES PERSON"],["createUser","DELIVERY ROLE MANAGER"]],
+										addUsers: [["createUser", "ROLE_SYSTEM_ADMINISTRATOR"],["createUser","ROLE_PORTFOLIO_MANAGER"],["createUser","ROLE_PRODUCT_MANAGER"],["createUser","ROLE_SERVICE_DESIGNER"],["createUser","ROLE_SALES_PRESIDENT"],["createUser","ROLE_GENERAL_MANAGER"],["createUser","ROLE_SALES_MANAGER"],["createUser","ROLE_SALES_PERSON"],["createUser","ROLE_DELIVERY_ROLE_MANAGER"]],
 										deliveryRoles: [["createDeliveryRoles","DEFINE DELIVERY ROLES"]],
 										portfolios: [["createPortfolios","DEFINE PORTFOLIOS"]],
 			

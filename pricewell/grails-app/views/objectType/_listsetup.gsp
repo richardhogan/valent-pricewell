@@ -4,7 +4,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-	<g:setProvider library="prototype"/>
+	
 	<script type="text/javascript">
 			jQuery.noConflict();
 		</script>
@@ -20,7 +20,7 @@
 		
     <body>
     	<div id="mainServicePropertiesTypesTab">
-    	     <g:render template="../objectType/list" model="['objectTypes': objectTypes, 'title': title, 'type': type, 'changeOrder': changeOrder]"/>
+    	     <g:render template="/objectType/list" model="['objectTypes': objectTypes, 'title': title, 'type': type, 'changeOrder': changeOrder]"/>
    	    </div> 
     </body>
 </html>

@@ -1,7 +1,7 @@
 
 <%@ page import="com.valent.pricewell.Staging" %>
 
-<g:setProvider library="prototype"/>
+
 		
 		<script>
 			jQuery(document).ready(function()
@@ -32,7 +32,7 @@
 	        </div>
 	        
 	        <div class="leftNavSmall">      		
-	    		<g:render template="../staging/nevigation"/>
+	    		<g:render template="/staging/nevigation"/>
 	    	</div>
 	        
 	        <div class="body rightContent column">

@@ -165,10 +165,10 @@
 			    
 			    	<div id="dvdeliveryrole" class="dvdeliveryrole">
 			    		<g:if test="${deliveryRoleList.size() > 0}">
-			    			<g:render template="../deliveryRole/listsetup" model="['deliveryRoleInstanceList': deliveryRoleList, 'deliveryRoleInstanceTotal': deliveryRoleList.size(), 'source': source]"/>
+			    			<g:render template="/deliveryRole/listsetup" model="['deliveryRoleInstanceList': deliveryRoleList, 'deliveryRoleInstanceTotal': deliveryRoleList.size(), 'source': source]"/>
 		    			</g:if>
 		    			<g:else>
-		    				<g:render template="../deliveryRole/createsetup" model="['deliveryRoleInstance': deliveryRoleInstance, 'source': source]"/>
+		    				<g:render template="/deliveryRole/createsetup" model="['deliveryRoleInstance': deliveryRoleInstance, 'source': source]"/>
 		    			</g:else>
 		    			
 					</div>

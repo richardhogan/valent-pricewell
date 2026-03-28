@@ -2202,7 +2202,7 @@ class ChartService {
 		List activeList = []//["Active"]
 		List newList = []//["New"]
 		List closedList = []//["Closed"]
-		List roles = Role.list(sort:"name")
+		List roles = Role.list(sort:"description")
 		List rolesCodes = roles.code
 		List plotColors = getPlotColor(rolesCodes.size()-1)
 
@@ -2216,8 +2216,8 @@ class ChartService {
 				activeList.add(0)
 				newList.add(0)
 				closedList.add(0)
-				columns.add(['number', roles[i].name])
-				columns1.add(roles[i].name)
+				columns.add(['number', roles[i].description])
+				columns1.add(roles[i].description)
 			}
 		}
 
@@ -2286,7 +2286,7 @@ class ChartService {
 		List activeList = []//["Active"]
 		List newList = []//["New"]
 		List closedList = []//["Closed"]
-		List roles = Role.list(sort:"name")
+		List roles = Role.list(sort:"description")
 		List rolesCodes = roles.code
 		List plotColors = getPlotColor(rolesCodes.size()-1)
 
@@ -2300,8 +2300,8 @@ class ChartService {
 				activeList.add(0)
 				newList.add(0)
 				closedList.add(0)
-				columns.add(['number', roles[i].name])
-				columns1.add(roles[i].name)
+				columns.add(['number', roles[i].description])
+				columns1.add(roles[i].description)
 			}
 		}
 
@@ -2771,7 +2771,7 @@ class ChartService {
 		{
 			for(User us in usersList)
 			{
-				tempList = Account.findAll("FROM Account ac WHERE ac.assignTo.id = ${us.id} OR ac.createdBy.id = ${us.id}")
+				tempList = Account.findAll("FROM Account ac WHERE ac.assignTo.id = :uid OR ac.createdBy.id = :uid", [uid: us.id])
 				accounts.addAll(tempList)
 			}
 			accountList.addAll(accounts.toList())

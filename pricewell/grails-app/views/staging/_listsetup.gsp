@@ -4,7 +4,7 @@
 	def baseurl = request.siteUrl
 %>
 <html>
-<g:setProvider library="prototype"/>
+
     <style>
 			h1, button, #successDialogInfo
 			{
@@ -25,7 +25,7 @@
 		</script>
     <body>
     	<div id="mainWorkflowSettingTab">
-    	     <g:render template="../staging/list2" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
+    	     <g:render template="/staging/list2" model="['stagingInstanceList': stagingInstanceList, 'title': title]"/>
    	    </div> 
     </body>
 </html>

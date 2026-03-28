@@ -5,7 +5,7 @@
 	}
 </style>
 
-<g:setProvider library="prototype"/>
+
 <script type="text/javascript">
     var childCount = ${serviceActivityInstance?.rolesEstimatedTime?.size()} + 0;
 

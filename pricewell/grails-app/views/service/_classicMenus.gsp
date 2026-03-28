@@ -311,13 +311,12 @@
 					</g:if>
 					<g:if test="${!reviewStage && stageChangedAllowed && nextStage && nextStageReview}">
 						
-							<span> <modalbox:createLink
-									class="buttons.button button" controller="staging" action="changeStaging"
-									title="Service Stage Assignment"
-									params="['stageId': serviceProfileInstance.stagingStatus.id, 'serviceProfileId': serviceProfileInstance?.id, 'nextStageDisabled': true]"
-									width="700" height="500">
-									Request ${nextStage.name == 'requestforpublished'? 'Publish' :nextStage?.displayName}
-								</modalbox:createLink> </span>
+							<span>
+								<div id="stagingDialog" title="Service Stage Assignment" style="display:none;"></div>
+								<input type="button" class="buttons.button button"
+									onclick="var dlg=jQuery('#stagingDialog'); dlg.load('<g:createLink controller=\"staging\" action=\"changeStaging\"/>' + '?stageId=${serviceProfileInstance?.stagingStatus?.id}&serviceProfileId=${serviceProfileInstance?.id}&nextStageDisabled=true', function(){ dlg.dialog({modal:true,width:700,height:500}); }); return false;"
+									value="Request ${nextStage?.name == 'requestforpublished'? 'Publish' :nextStage?.displayName}" />
+							</span>
 						
 					</g:if> 
 					

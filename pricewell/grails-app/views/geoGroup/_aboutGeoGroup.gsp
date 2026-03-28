@@ -180,10 +180,10 @@
 			    
 			    	<div id="dvgeogroup" class="dvgeogroup">
 			    		<g:if test="${geoGroupList.size() > 0}">
-			    			<g:render template="../geoGroup/listsetup" model="['geoGroupInstanceList': geoGroupList, 'geoGroupInstanceTotal': geoGroupList.size(), 'source': source]"/>
+			    			<g:render template="/geoGroup/listsetup" model="['geoGroupInstanceList': geoGroupList, 'geoGroupInstanceTotal': geoGroupList.size(), 'source': source]"/>
 		    			</g:if>
 		    			<g:else>
-		    				<g:render template="../geoGroup/createsetup" model="['geoGroupInstance': geoGroupInstance, 'generalManagerList': generalManagerList, 'source': source, 'territoriesList': territoriesList]"/>
+		    				<g:render template="/geoGroup/createsetup" model="['geoGroupInstance': geoGroupInstance, 'generalManagerList': generalManagerList, 'source': source, 'territoriesList': territoriesList]"/>
 		    			</g:else>
 		    			
 					</div>

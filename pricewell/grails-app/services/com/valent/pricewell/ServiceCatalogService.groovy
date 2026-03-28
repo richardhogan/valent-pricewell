@@ -349,12 +349,12 @@ class ServiceCatalogService {
 		List map = new ArrayList()
 		
 		int counter = 0;
-		for(Object r in user1.roles)
+		for(Object r in UserRole.findAllByUser(user1)*.role)
 		{
-			map[counter++] = r.name
+			map[counter++] = r.authority
 		}
-		
-		if(!map.contains("SYSTEM ADMINISTRATOR"))
+
+		if(!map.contains("ROLE_SYSTEM_ADMINISTRATOR"))
 		{
 			//if(PricewellSecurity.hasRole("PRODUCT MANAGER"))
 			//{
@@ -455,12 +455,12 @@ class ServiceCatalogService {
 		List map = new ArrayList()
 		
 		int counter = 0;
-		for(Object r in user1.roles)
+		for(Object r in UserRole.findAllByUser(user1)*.role)
 		{
-			map[counter++] = r.name
+			map[counter++] = r.authority
 		}
-		
-		if(!map.contains("SYSTEM ADMINISTRATOR"))
+
+		if(!map.contains("ROLE_SYSTEM_ADMINISTRATOR"))
 		{
 			/*if(isFirst)
 			{
@@ -525,7 +525,7 @@ class ServiceCatalogService {
 		def servicesList
 		if(findField?.portfolio?.id && findField?.portfolio?.id != "all")
 		{
-			servicesList = Service.findAll("from Service sr WHERE sr.portfolio.portfolioManager.id = :uid AND sr.portfolio.id = ${findField.portfolio.id} ", [uid: user.id])
+			servicesList = Service.findAll("from Service sr WHERE sr.portfolio.portfolioManager.id = :uid AND sr.portfolio.id = :pid", [uid: user.id, pid: findField.portfolio.id])
 		}
 		
 		else if(findField?.portfolio?.id == "all" || findField?.role?.id == null)
@@ -563,19 +563,19 @@ class ServiceCatalogService {
 	public List findProductManagers()
 	{
 		
-		 List pms = findUsersByRole("PRODUCT MANAGER")
+		 List pms = findUsersByRole("ROLE_PRODUCT_MANAGER")
 		 return pms.sort{x,y -> x.toString() <=> y.toString()}
 	}
 	
 	public List findPortfolioManagers()
 	{
-		 List pms = findUsersByRole("PORTFOLIO MANAGER")
+		 List pms = findUsersByRole("ROLE_PORTFOLIO_MANAGER")
 		 return pms.sort{x,y -> x.toString() <=> y.toString()}
 	}
 	
 	public List findServiceDesigners()
 	{
-		 List sds = findUsersByRole("SERVICE DESIGNER")
+		 List sds = findUsersByRole("ROLE_SERVICE_DESIGNER")
 		 return sds.sort{x,y -> x.toString() <=> y.toString()}
 	}
 	
@@ -683,9 +683,9 @@ class ServiceCatalogService {
 		
 			for(Object u in userlist)
 			{
-				for(Object r in u.roles)
+				for(Object r in UserRole.findAllByUser(u)*.role)
 				{
-					if(r.name == roleName)
+					if(r.authority == roleName)
 					{
 						counter++
 					}

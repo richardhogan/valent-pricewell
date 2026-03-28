@@ -50,6 +50,7 @@ class Lead
 	}
 	
 	static mapping = {
+		table '`lead`'
 		billingAddress lazy:false
 		contact lazy:false
 	}

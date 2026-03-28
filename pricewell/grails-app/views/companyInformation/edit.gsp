@@ -45,7 +45,7 @@
 				</div>
 			
 				<div id="dvUploadLogo" title="Upload New Logo">
-					<g:render template="../logoImage/create" model="['companyInformationInstance': companyInformationInstance]"/>
+					<g:render template="/logoImage/create" model="['companyInformationInstance': companyInformationInstance]"/>
 				</div>
 				
 				<div class="collapsibleContainerContent">

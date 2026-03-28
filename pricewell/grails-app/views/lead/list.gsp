@@ -20,7 +20,7 @@
         	jQuery.noConflict();
 		</script>
 		
-        <modalbox:modalIncludes />
+        
 		<script>
 			function changeUrl()
 			{

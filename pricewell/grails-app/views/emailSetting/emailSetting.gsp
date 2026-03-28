@@ -15,7 +15,7 @@
     <body>
     	<div id="emailSetting">
 			<div id="mainEmailSettingTab">
-				<g:render template="../emailSetting/emailSettings" model="['emailSettings': emailSettings]"/>
+				<g:render template="/emailSetting/emailSettings" model="['emailSettings': emailSettings]"/>
 			</div>
 		</div>
     </body>

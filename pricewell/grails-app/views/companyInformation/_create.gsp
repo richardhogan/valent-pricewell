@@ -4,7 +4,7 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<g:setProvider library="prototype"/>
+
 
     <div id="mainCreateInformationTab">
         <g:set var="entityName" value="${message(code: 'companyInformation.label', default: 'CompanyInformation')}" />
