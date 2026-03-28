@@ -572,12 +572,12 @@ class SetupController {
 						}
 						
 					}
-					else*/ if(roleInstance.name == "SALES PRESIDENT")
+					else*/ if(roleInstance.code == "SALES PRESIDENT")
 					{
 						territoriesList = Geo.list()
 					}
 					
-					else if(roleInstance.name == "GENERAL MANAGER")
+					else if(roleInstance.code == "GENERAL MANAGER")
 					{
 						/*if(params.sourceFrom != "geoGroup")
 						{*/
@@ -587,7 +587,7 @@ class SetupController {
 							territoriesList = map['territoriesList']
 						//}
 					}
-					else if(roleInstance.name == "SALES MANAGER")
+					else if(roleInstance.code == "SALES MANAGER")
 					{
 						/*if(params.sourceFrom != "geo")
 						{*/
@@ -597,7 +597,7 @@ class SetupController {
 							territoriesList = map['territoriesList']
 						//}
 					}
-					else if(roleInstance.name == "SALES PERSON")
+					else if(roleInstance.code == "SALES PERSON")
 					{
 						/*if(params.sourceFrom != "geo")
 						{*/

@@ -111,9 +111,9 @@
 					<td>${user.profile?.phone?.encodeAsHTML()}</td>
 				</tr>
 		
-      			<g:if test="${roleInstance?.name == 'SALES PRESIDENT' || roleInstance?.name == 'GENERAL MANAGER' || roleInstance?.name == 'SALES MANAGER' || roleInstance?.name == 'SALES PERSON'}">
-      				
-      				<g:if test="${roleInstance?.name == 'GENERAL MANAGER'}">
+      			<g:if test="${roleInstance?.code == 'SALES PRESIDENT' || roleInstance?.code == 'GENERAL MANAGER' || roleInstance?.code == 'SALES MANAGER' || roleInstance?.code == 'SALES PERSON'}">
+
+      				<g:if test="${roleInstance?.code == 'GENERAL MANAGER'}">
       					<tr>
 		        			<td><label>GEO</label></td>
 		        			<td>${user?.geoGroup?.name}</td>
@@ -130,7 +130,7 @@
 		        			<td><label>Primary Territory</label></td>
 		        			<td>${user?.primaryTerritory?.name}</td>
 		        			
-		        			<g:if test="${roleInstance?.name == 'SALES MANAGER'}">
+		        			<g:if test="${roleInstance?.code == 'SALES MANAGER'}">
 			        			<td>&nbsp;&nbsp;</td>
 			        
 			        			<td><label>Secondary Territories</label></td>

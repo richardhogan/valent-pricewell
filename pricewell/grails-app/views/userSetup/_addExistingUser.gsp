@@ -75,17 +75,17 @@
 	
 		
 		<div id="successToAddDialog" title="Success">
-			<p><g:message code="addUserInRole.message.success.dialog" args="${ [roleInstance?.name]}" default=""/></p>
+			<p><g:message code="addUserInRole.message.success.dialog" args="${ [roleInstance?.description]}" default=""/></p>
 		</div>
 	
 		<div id="failureToAddDialog" title="Failure">
-			<p><g:message code="addUserInRole.message.failure.dialog" args="${ [roleInstance?.name]}" default=""/></p>
+			<p><g:message code="addUserInRole.message.failure.dialog" args="${ [roleInstance?.description]}" default=""/></p>
 		</div>
 		
 		<g:form>
 			<g:hiddenField name="roleId"  value="${roleInstance?.id}" />
 			<table>
-				<td><label>Add user in ${roleInstance?.name } Role</label></td>
+				<td><label>Add user in ${roleInstance?.description } Role</label></td>
 				
 				<td>&nbsp;&nbsp;</td>
 				

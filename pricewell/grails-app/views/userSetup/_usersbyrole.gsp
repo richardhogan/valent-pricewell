@@ -73,7 +73,7 @@
 			{
 					 
 					 var dialogWidth = 'auto'; var dialogHeight = 600;
-					 var createTitle = "Add New ${roleInstance.name}";
+					 var createTitle = "Add New ${roleInstance.description}";
 					 
 					jQuery( xdialogDiv ).html('Loading, please wait.....');
 					jQuery( xdialogDiv ).dialog( "open" );
@@ -98,7 +98,7 @@
 			jQuery(".userShow").click(function(){
 				jQuery(xdialogDiv).html('Loading, please wait.....');
 				jQuery(xdialogDiv).dialog( "open" );
-				jQuery(xdialogDiv).dialog( "option", "title", "Show ${roleInstance.name}" );
+				jQuery(xdialogDiv).dialog( "option", "title", "Show ${roleInstance.description}" );
 				jQuery(xdialogDiv).dialog( "option", "zIndex", 1500 );
 				jQuery(xdialogDiv).dialog( "option", "width", 'auto');
 				jQuery(xdialogDiv).dialog( "option", "maxHeight", 600);
@@ -116,7 +116,7 @@
 			jQuery(".userEdit").click(function(){
 				jQuery(xdialogDiv).html('Loading, please wait.....');
 				jQuery(xdialogDiv).dialog( "open" );
-				jQuery(xdialogDiv).dialog( "option", "title", "Edit ${roleInstance.name}" );
+				jQuery(xdialogDiv).dialog( "option", "title", "Edit ${roleInstance.description}" );
 				jQuery(xdialogDiv).dialog( "option", "zIndex", 1500 );
 				jQuery(xdialogDiv).dialog( "option", "width", 'auto');
 				jQuery(xdialogDiv).dialog( "option", "maxHeight", 600);
@@ -139,7 +139,7 @@
         <div class="body">
             
             <div class="nav">
-	            <a id="addnewuser" class="addnewuser button" href="#1" title="Add New ${roleInstance.name}">Add New</a>
+	            <a id="addnewuser" class="addnewuser button" href="#1" title="Add New ${roleInstance.description}">Add New</a>
 			    <!--<a id="addexistinguser" class="addexistinguser button"  href="#2">Add Existing User</a>-->
 			    
 	        </div>
@@ -161,15 +161,15 @@
                             
 							<th> Other roles </th>
 							
-							<g:if test="${roleInstance.name == 'GENERAL MANAGER'}">
+							<g:if test="${roleInstance.code == 'GENERAL MANAGER'}">
 								<th>GEO</th>
 								<th>Primary Territory</th>
 							</g:if>
-							<g:elseif test="${roleInstance.name == 'SALES MANAGER'}">
+							<g:elseif test="${roleInstance.code == 'SALES MANAGER'}">
 								<th>Primary Territory</th>
 								<th>Secondary Territories</th>
 							</g:elseif>
-							<g:elseif test="${roleInstance.name == 'SALES PRESIDENT' || roleInstance.name == 'SALES PERSON' }">
+							<g:elseif test="${roleInstance.code == 'SALES PRESIDENT' || roleInstance.code == 'SALES PERSON' }">
 								<th>Primary Territory</th>
 							</g:elseif>
 							
@@ -197,17 +197,17 @@
         					<td>
         					
         						<g:each in="${user.roles}" var="role">
-		                        	<g:if test="${role?.name != 'USER' && role?.name != roleInstance.name }">
-		                        		<li>${role.name }</li>
+		                        	<g:if test="${role?.code != 'USER' && role?.code != roleInstance.code }">
+		                        		<li>${role.description }</li>
 		                        	</g:if>
 		                    	</g:each>
 							</td>
 							
-							<g:if test="${roleInstance.name == 'GENERAL MANAGER'}">
+							<g:if test="${roleInstance.code == 'GENERAL MANAGER'}">
 								<td>${user?.geoGroup}</td>
 								<td>${user?.primaryTerritory}</td>
 							</g:if>
-							<g:elseif test="${roleInstance.name == 'SALES MANAGER'}">
+							<g:elseif test="${roleInstance.code == 'SALES MANAGER'}">
 								<td>${user?.primaryTerritory}</td>
 								<td>
 									<g:each in="${user?.territories}" status="t" var="territory">
@@ -223,7 +223,7 @@
 			        				</g:each>
 								</td>
 							</g:elseif>
-							<g:elseif test="${roleInstance.name == 'SALES PRESIDENT' || roleInstance.name == 'SALES PERSON' }">
+							<g:elseif test="${roleInstance.code == 'SALES PRESIDENT' || roleInstance.code == 'SALES PERSON' }">
 								<td>${user?.primaryTerritory}</td>
 							</g:elseif>
 							

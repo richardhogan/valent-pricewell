@@ -71,7 +71,7 @@
 			jQuery(".userShow").click(function(){
 				jQuery("#userDialog").html('Loading, please wait.....');
 				jQuery("#userDialog").dialog( "open" );
-				jQuery("#userDialog").dialog( "option", "title", "Show ${roleInstance.name}" );
+				jQuery("#userDialog").dialog( "option", "title", "Show ${roleInstance.description}" );
 				jQuery("#userDialog").dialog( "option", "zIndex", 1500 );
 				jQuery("#userDialog").dialog( "option", "width", 'auto');
 				jQuery("#userDialog").dialog( "option", "maxHeight", 600);
@@ -128,15 +128,15 @@
                             
 							<th> Other roles </th>
 							
-							<g:if test="${roleInstance.name == 'GENERAL MANAGER'}">
+							<g:if test="${roleInstance.code == 'GENERAL MANAGER'}">
 								<th>GEO</th>
 								<th>Primary Territory</th>
 							</g:if>
-							<g:elseif test="${roleInstance.name == 'SALES MANAGER'}">
+							<g:elseif test="${roleInstance.code == 'SALES MANAGER'}">
 								<th>Primary Territory</th>
 								<th>Secondary Territories</th>
 							</g:elseif>
-							<g:elseif test="${roleInstance.name == 'SALES PRESIDENT' || roleInstance.name == 'SALES PERSON' }">
+							<g:elseif test="${roleInstance.code == 'SALES PRESIDENT' || roleInstance.code == 'SALES PERSON' }">
 								<th>Primary Territory</th>
 							</g:elseif>
 							
@@ -162,17 +162,17 @@
         					
         					<td>
         						<g:each in="${user.roles}" var="role">
-		                        	<g:if test="${role?.name != 'USER' && role?.name != roleInstance.name }">
-		                        		<li>${role.name }</li>
+		                        	<g:if test="${role?.code != 'USER' && role?.code != roleInstance.code }">
+		                        		<li>${role.description }</li>
 		                        	</g:if>
 		                    	</g:each>
 							</td>
 							
-							<g:if test="${roleInstance.name == 'GENERAL MANAGER'}">
+							<g:if test="${roleInstance.code == 'GENERAL MANAGER'}">
 								<td>${user?.geoGroup}</td>
 								<td>${user?.primaryTerritory}</td>
 							</g:if>
-							<g:elseif test="${roleInstance.name == 'SALES MANAGER'}">
+							<g:elseif test="${roleInstance.code == 'SALES MANAGER'}">
 								<td>${user?.primaryTerritory}</td>
 								<td>
 									<g:each in="${user?.territories}" status="t" var="territory">
@@ -188,7 +188,7 @@
 			        				</g:each>
 								</td>
 							</g:elseif>
-							<g:elseif test="${roleInstance.name == 'SALES PRESIDENT' || roleInstance.name == 'SALES PERSON' }">
+							<g:elseif test="${roleInstance.code == 'SALES PRESIDENT' || roleInstance.code == 'SALES PERSON' }">
 								<td>${user?.primaryTerritory}</td>
 							</g:elseif>
 							

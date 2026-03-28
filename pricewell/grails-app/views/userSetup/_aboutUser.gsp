@@ -94,7 +94,7 @@
 								type: "POST", data: {roleId: ${roleInstance.id}, source: "${source}"},
 								url: "${baseurl}/userSetup/listsetup",
 								success: function(data){
-									jQuery( ".dvheader" ).html("      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   List Of ${roleInstance.name}");
+									jQuery( ".dvheader" ).html("      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   List Of ${roleInstance.description}");
 				  					jQuery(".dvusersinfo").html(data);
 									jQuery( ".resultDialog" ).dialog( "close" );
 								}, 
@@ -152,13 +152,13 @@
 		<div class="body">	
         
 	        <div id="accordion-${roleInstance.id}" class="accordion">
-			    <h3 style="font-size: 130%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; About ${roleInstance.name}</h3>
+			    <h3 style="font-size: 130%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; About ${roleInstance.description}</h3>
 				  <div>
 					   <g:render template="/userSetup/aboutRole" model="['roleInstance': roleInstance]"/>
 				  </div>
 				  
 			    <h3 style="font-size: 130%"> <div id="dvheader-${roleInstance.id}" class="dvheader"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    	<g:if test="${roleUserList.size() > 0}">List Of</g:if><g:else>Create New</g:else> ${roleInstance.name} </div>
+			    	<g:if test="${roleUserList.size() > 0}">List Of</g:if><g:else>Create New</g:else> ${roleInstance.description} </div>
 			    </h3>
 			    
 			    	<div id="dvusersinfo-${roleInstance.id}" class="dvusersinfo">

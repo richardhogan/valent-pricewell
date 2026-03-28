@@ -109,7 +109,7 @@
 						 {
 							 //jQuery("#primaryTerritoryList").html(data);
 							 jQuery("#primaryTerritory").html(data['primary']);
-							 if("SALES MANAGER" == '${roleInstance?.name}')
+							 if("SALES MANAGER" == '${roleInstance?.code}')
 							 {
 								 jQuery("#territoriesList").html(data['secondary']);
 							 }
@@ -148,7 +148,7 @@
 		    		jQuery('.countryForTerritory').html("");
 		    	}
 
-		    	if("SALES MANAGER" == '${roleInstance?.name}')
+		    	if("SALES MANAGER" == '${roleInstance?.code}')
 		    	{
 			    	 var secondaryOptions = '<option value selected="selected">Select Multiple</option>';
 			    	 jQuery("#primaryTerritory option").each(function()
@@ -235,7 +235,7 @@
 	    {
 	  		var givePermission = false;
 			var geoId = "";
-			if("GENERAL MANAGER" == '${roleInstance?.name}' && territoryType == "primaryTerritory")
+			if("GENERAL MANAGER" == '${roleInstance?.code}' && territoryType == "primaryTerritory")
 			{
 				if(jQuery("#geoGroupId").val() != "")
 				{
@@ -353,7 +353,7 @@
       				</tr>
 					
 					<g:if test="${sourceFrom != 'geoGroup' && sourceFrom != 'geo' }">
-					    <g:if test="${roleInstance?.name == 'GENERAL MANAGER'}"> <!-- && geoGroupList.size()>0}"> -->
+					    <g:if test="${roleInstance?.code == 'GENERAL MANAGER'}"> <!-- && geoGroupList.size()>0}"> -->
 							<tr>
 								<td><label>GEO</label><em>*</em></td>
 								<td>
@@ -363,7 +363,7 @@
 							</tr>
 					  	</g:if>
 				
-		      			<g:if test="${roleInstance?.name == 'SALES PRESIDENT' || roleInstance?.name == 'GENERAL MANAGER' || roleInstance?.name == 'SALES MANAGER' || roleInstance?.name == 'SALES PERSON'}">
+		      			<g:if test="${roleInstance?.code == 'SALES PRESIDENT' || roleInstance?.code == 'GENERAL MANAGER' || roleInstance?.code == 'SALES MANAGER' || roleInstance?.code == 'SALES PERSON'}">
 			 		
 			 					 			
 						 		<tr>
@@ -371,17 +371,17 @@
 					  				
 					  				<td>
 					  					<div id="primaryTerritoryList">
-					  						<g:if test="${roleInstance?.name == 'SALES MANAGER'}"> 
+					  						<g:if test="${roleInstance?.code == 'SALES MANAGER'}"> 
 					  							<g:select name="primaryTerritory" from="${primaryTerritoriesList}" value="${user?.primaryTerritory?.id }" optionKey="id"  noSelection="['': 'Select Any One']" class="required"/>
 				  							</g:if>
-				  							<g:elseif test="${roleInstance?.name == 'SALES PERSON'}">
+				  							<g:elseif test="${roleInstance?.code == 'SALES PERSON'}">
 				  								<g:select name="primaryTerritory" from="${territoriesList}" value="${user?.territory?.id }" optionKey="id"  noSelection="['': 'Select Any One']" class="required"/>
 				  							</g:elseif>
 				  							<g:else>
 				  								<g:select name="primaryTerritory" from="${territoriesList}" value="${user?.primaryTerritory?.id }" optionKey="id"  noSelection="['': 'Select Any One']" class="required"/>
 				  							</g:else>
 					  						<g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
-					  							<g:if test="${roleInstance?.name != 'SALES MANAGER'}"> 
+					  							<g:if test="${roleInstance?.code != 'SALES MANAGER'}"> 
 					  								<button id="newPrimaryTerritory" class="roundNewButton" title="Create New Territory">+</button>
 				  								</g:if>
 				  							</g:if>
@@ -392,7 +392,7 @@
 						        <tr class="countryForTerritory"></tr>
 			 				
 			 		
-							<g:if test="${roleInstance?.name == 'SALES MANAGER'}"> 
+							<g:if test="${roleInstance?.code == 'SALES MANAGER'}"> 
 								<tr>
 									<td><label>Secondary Territories</label></td>
 									<td>
