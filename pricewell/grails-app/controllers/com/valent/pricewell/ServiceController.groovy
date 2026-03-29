@@ -10,8 +10,9 @@ import grails.converters.JSON
 import java.text.SimpleDateFormat
 import com.valent.pricewell.ServiceProfile.ServiceProfileType
 import com.valent.pricewell.ServiceProfileMetaphors.MetaphorsType
-import org.springframework.web.multipart.MultipartFile;
-import java.text.SimpleDateFormat
+import org.springframework.web.multipart.MultipartFile
+import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 //import org.hibernate.collection.PersistentSet;
 
 class ServiceController {
@@ -20,7 +21,7 @@ class ServiceController {
 	def constant
 	def priceCalculationService
 	def serviceStagingService, fileUploadService
-	def exportService, serviceExportService, serviceImportService
+	def serviceExportService, serviceImportService
 	def sendMailService, reviewService, readImportedFileService, defaultEntityOperationService
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST", search: ["POST", "GET"]]
 	def debug() {
@@ -754,7 +755,38 @@ class ServiceController {
 					}
 				}
 
-				exportService.export(params.format, response.outputStream,results, fields, labels, [:], [:])
+				// MIGRATION: Grails export plugin not available for Grails 7 — replaced with direct POI/CSV
+			if (params.format == 'csv') {
+				response.contentType = 'text/csv'
+				response.setHeader('Content-disposition', 'attachment; filename=pricelist.csv')
+				def writer = new OutputStreamWriter(response.outputStream, 'UTF-8')
+				writer.write(fields.collect { labels[it] ?: it }.join(',') + '\n')
+				results.each { row ->
+					writer.write(fields.collect { f ->
+						def v = row[f]?.toString() ?: ''
+						v.contains(',') || v.contains('"') ? '"' + v.replace('"', '""') + '"' : v
+					}.join(',') + '\n')
+				}
+				writer.flush()
+			} else {
+				// Default: xlsx export via Apache POI
+				response.contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+				response.setHeader('Content-disposition', 'attachment; filename=pricelist.xlsx')
+				def wb = new XSSFWorkbook()
+				def sheet = wb.createSheet('Pricelist')
+				def headerRow = sheet.createRow(0)
+				fields.eachWithIndex { f, i -> headerRow.createCell(i).setCellValue(labels[f] ?: f) }
+				results.eachWithIndex { row, ri ->
+					def dataRow = sheet.createRow(ri + 1)
+					fields.eachWithIndex { f, i ->
+						def v = row[f]
+						if (v instanceof Number) dataRow.createCell(i).setCellValue(v.doubleValue())
+						else dataRow.createCell(i).setCellValue(v?.toString() ?: '')
+					}
+				}
+				wb.write(response.outputStream)
+				wb.close()
+			}
 			}
 			else
 			{
