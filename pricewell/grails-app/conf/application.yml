@@ -51,6 +51,8 @@ grails:
     # Spring Security Core 7.x configuration
     plugin:
         springsecurity:
+            csrf:
+                active: false   # MIGRATION: app was Grails 2 (no CSRF); all forms lack tokens
             userLookup:
                 userDomainClassName: 'com.valent.pricewell.User'
                 authorityJoinClassName: 'com.valent.pricewell.UserRole'
@@ -118,6 +120,7 @@ hibernate:
         use_query_cache: false
     hbm2ddl:
         auto: update
+    allow_update_outside_transaction: true   # MIGRATION: restore Grails 2 behaviour (flush:true in controllers)
 
 server:
     servlet:

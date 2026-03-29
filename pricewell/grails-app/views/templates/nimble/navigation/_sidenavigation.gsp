@@ -64,7 +64,7 @@
 			<g:if test="${controllerName == 'role' && actionName in ['show', 'edit']}">
 			    <ul>
 					<li>
-						<g:link controller="role" action="show" id="${role.id}">${role.name?.encodeAsHTML()}</g:link>
+						<g:link controller="role" action="show" id="${role.id}">${role.description?.encodeAsHTML()}</g:link>
 				
 						<g:if test="${!role.protect}">
 						<ul>

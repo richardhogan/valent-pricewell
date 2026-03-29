@@ -147,7 +147,10 @@
                                 <g:if test="${updatePermission}">
 			            			<td valign="top" class="value ${hasErrors(bean: leadInstance, field: 'assignTo', 'errors')}">
 	                                    <!--<g:select name="assignToId" from="${salesUsers?.sort {it.profile.fullName}}" value="${leadInstance?.assignTo?.id}" optionKey="id" noSelection="['': 'Select Any One']" class="required"/>-->
-	                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(leadInstance?.assignTo?.id)}" value="${leadInstance?.assignTo?.id}" noSelection="['': 'Select Any One']" class="required"/>
+	                                    <select name="assignToId" class="required">
+	                                        <option value="">Select Any One</option>
+	                                        <sales:assignedToOptions selectId="${leadInstance?.assignTo?.id}"/>
+	                                    </select>
 	                                </td>
 								</g:if>
 								<g:else>

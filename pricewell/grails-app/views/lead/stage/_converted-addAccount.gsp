@@ -226,7 +226,10 @@
                                 </td><td>&nbsp;&nbsp;</td>
                                 <td valign="top" class="value">
                                     <!--<g:select name="assignToId" from="${salesUsers?.sort {it.profile.fullName}}" value="${PricewellSecurity.principalId}" optionKey="id" noSelection="['':'-Select Any One-']" class="required"/>-->
-                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(loginUser.id)}" value="" noSelection="['': 'Select Any One']" class="required"/>
+                                    <select name="assignToId" class="required">
+                                        <option value="">Select Any One</option>
+                                        <sales:assignedToOptions selectId="${loginUser.id}"/>
+                                    </select>
                                 </td>                              
                             </tr>
                         </tbody>

@@ -39,7 +39,7 @@ class RoleService {
    */
   def createRole(String name, String description, boolean protect, String code) {
     def role = new Role()
-    role.name = name
+    role.authority = name
     role.description = description
     role.protect = protect
 	role.code = code
@@ -54,7 +54,7 @@ class RoleService {
 
     def savedRole = role.save()
     if (savedRole) {
-      log.info("Created role [$role.id]$role.name")
+      log.info("Created role [$role.id]$role.description")
       return savedRole
     }
 
@@ -79,41 +79,13 @@ class RoleService {
   def deleteRole(Role role) {
 
     // Remove all users from this role
-    def users = []
-    users.addAll(role.users)
-    users.each {
-      it.removeFromRoles(role)
-      it.save()
-
-      if (it.hasErrors()) {
-        log.error("Error updating user [$it.id]$it.name to remove role [$role.id]$role.name")
-        it.errors.each {err ->
-          log.error err
-        }
-
-        throw new RuntimeException("Error updating user [$it.id]$it.name to remove role [$role.id]$role.name")
-      }
-    }
-
-    // Remove all groups from this role
-    def groups = []
-    groups.addAll(role.groups)
-    groups.each {
-      it.removeFromRoles(role)
-      it.save()
-
-      if (it.hasErrors()) {
-        log.error("Error updating group [$it.id]$it.name to remove role [$role.id]$role.name")
-        it.errors.each {err ->
-          log.error err
-        }
-
-        throw new RuntimeException("Error updating group [$it.id]$it.name to remove role [$role.id]$role.name")
-      }
+    def userRoles = com.valent.pricewell.UserRole.findAllByRole(role)
+    userRoles.each { ur ->
+      com.valent.pricewell.UserRole.remove(ur.user, role, true)
     }
 
     role.delete()
-    log.info("Deleted role [$role.id]$role.name")
+    log.info("Deleted role [$role.id]$role.description")
   }
 
   /**
@@ -130,16 +102,16 @@ class RoleService {
 
     def updatedRole = role.save()
     if (updatedRole) {
-      log.info("Updated role [$role.id]$role.name")
+      log.info("Updated role [$role.id]$role.description")
       return updatedRole
     }
 
-    log.error("Error updating role [$role.id]$role.name")
+    log.error("Error updating role [$role.id]$role.description")
     role.errors.each {err ->
       log.error err
     }
 
-    throw new RuntimeException("Error updating role [$role.id]$role.name")
+    throw new RuntimeException("Error updating role [$role.id]$role.description")
   }
 
   /**
@@ -177,7 +149,7 @@ class RoleService {
 		}
 	}
 	
-	if(role.name == "GENERAL MANAGER")
+	if(role.code == "GENERAL MANAGER")
 	{
 		def geoGroup =  GeoGroup.get(params?.geoGroupId)
 		if(geoGroup)
@@ -189,28 +161,28 @@ class RoleService {
 	
     def savedRole = role.save()
     if (!savedRole) {
-      log.error("Error updating role [$role.id]$role.name to add user [$user.id]$user.username")
+      log.error("Error updating role [$role.id]$role.description to add user [$user.id]$user.username")
 
       role.errors.each {
         log.error(it)
       }
 
-      throw new RuntimeException("Unable to persist role [$role.id]$role.name when adding user [$user.id]$user.username")
+      throw new RuntimeException("Unable to persist role [$role.id]$role.description when adding user [$user.id]$user.username")
     }
 
     def savedUser = user.save()
     if (!savedUser) 
 	{
-	  log.error("Error updating user [$user.id]$user.username when adding role [$role.id]$role.name")
+	  log.error("Error updating user [$user.id]$user.username when adding role [$role.id]$role.description")
 
       user.errors.each {
         log.error(it)
       }
 
-      throw new RuntimeException("Error updating user [$user.id]$user.username when adding role [$role.id]$role.name")
+      throw new RuntimeException("Error updating user [$user.id]$user.username when adding role [$role.id]$role.description")
     }
 
-    log.info("Successfully added role [$role.id]$role.name to user [$user.id]$user.username")
+    log.info("Successfully added role [$role.id]$role.description to user [$user.id]$user.username")
   }
 
   /**
@@ -234,26 +206,26 @@ class RoleService {
 	
 	    def savedRole = role.save()
 	    if (!savedRole) {
-	      log.error("Error updating role [$role.id]$role.name to add user [$user.id]$user.username")
+	      log.error("Error updating role [$role.id]$role.description to add user [$user.id]$user.username")
 	
 	      role.errors.each {
 	        log.error(it)
 	      }
 	
-	     throw new RuntimeException("Unable to persist role [$role.id]$role.name when removing user [$user.id]$user.username")
+	     throw new RuntimeException("Unable to persist role [$role.id]$role.description when removing user [$user.id]$user.username")
 	    }
 	
 	    def savedUser = user.save()
 	    if (!savedUser) {
-	      log.error("Error updating user [$user.id]$user.username when adding role [$role.id]$role.name")
+	      log.error("Error updating user [$user.id]$user.username when adding role [$role.id]$role.description")
 	      user.errors.each {
 	        log.error(it)
 	      }
 	
-	      throw new RuntimeException("Error updating user [$user.id]$user.username when removing role [$role.id]$role.name")
+	      throw new RuntimeException("Error updating user [$user.id]$user.username when removing role [$role.id]$role.description")
 	    }
 	
-	    log.info("Successfully removed role [$role.id]$role.name to user [$user.id]$user.username")
+	    log.info("Successfully removed role [$role.id]$role.description to user [$user.id]$user.username")
   }
 
   /**
@@ -273,25 +245,25 @@ class RoleService {
 
     def savedRole = role.save()
     if (!savedRole) {
-      log.error("Error updating role [$role.id]$role.name to add group [$group.id]$group.name")
+      log.error("Error updating role [$role.id]$role.description to add group [$group.id]$group.name")
       role.errors.each {
         log.error(it)
       }
 
-      throw new RuntimeException("Unable to persist role [$role.id]$role.name when adding group [$group.id]$group.name")
+      throw new RuntimeException("Unable to persist role [$role.id]$role.description when adding group [$group.id]$group.name")
     }
 
     def savedGroup = group.save()
     if (!savedGroup) {
-      log.error("Error updating group [$group.id]$group.name when adding role [$role.id]$role.name")
+      log.error("Error updating group [$group.id]$group.name when adding role [$role.id]$role.description")
       group.errors.each {
         println it
       }
 
-     throw new RuntimeException("Error updating group [$group.id]$group.name when adding role [$role.id]$role.name")
+     throw new RuntimeException("Error updating group [$group.id]$group.name when adding role [$role.id]$role.description")
     }
 
-    log.info("Successfully added role [$role.id]$role.name to group [$group.id]$group.name")
+    log.info("Successfully added role [$role.id]$role.description to group [$group.id]$group.name")
   }
 
   /**
@@ -311,31 +283,31 @@ class RoleService {
 
     def savedRole = role.save()
     if (!savedRole) {
-      log.error("Error updating role [$role.id]$role.name to remove group [$group.id]$group.name")
+      log.error("Error updating role [$role.id]$role.description to remove group [$group.id]$group.name")
       role.errors.each {
         log.error(it)
       }
 
-      throw new RuntimeException("Unable to persist role [$role.id]$role.name when removing group [$group.id]$group.name")
+      throw new RuntimeException("Unable to persist role [$role.id]$role.description when removing group [$group.id]$group.name")
     }
 
     def savedGroup = group.save()
     if (!savedGroup) {
-       log.error("Error updating group [$group.id]$group.name when removing role [$role.id]$role.name")
+       log.error("Error updating group [$group.id]$group.name when removing role [$role.id]$role.description")
       group.errors.each {
         log.error(it)
       }
 
-      throw new RuntimeException("Error updating group [$group.id]$group.name when removing role [$role.id]$role.name")
+      throw new RuntimeException("Error updating group [$group.id]$group.name when removing role [$role.id]$role.description")
     }
 
-    log.info("Successfully removed role [$role.id]$role.name to group [$group.id]$group.name")
+    log.info("Successfully removed role [$role.id]$role.description to group [$group.id]$group.name")
   }
   
   public List findUsersByRole(Object roleName)
   {
 	  List tmpList = new ArrayList()
-	  for(UserBase user in Role.findByCode(roleName)?.users)
+	  for(UserBase user in com.valent.pricewell.UserRole.findAllByRole(Role.findByCode(roleName))*.user)
 	  {
 		  tmpList.add(UserBase.get(user.id))
 	  }
@@ -350,22 +322,22 @@ class RoleService {
 	  def flag = 0;
 	  for(Object user in userList)
 	  {
-		  if(!user.roles.contains(role))
+		  if(!com.valent.pricewell.UserRole.findByUserAndRole(user, role))
 		  {
 			  
 			  
-				  for(Object r in user.roles)
+				  for(Object r in com.valent.pricewell.UserRole.findAllByUser(user)*.role)
 				  {
-				  	  if(role.name == "SALES PRESIDENT" || role.name=="SALES MANAGER" || role.name=="SALES PERSON")
+				  	  if(role.code == "SALES PRESIDENT" || role.code == "SALES MANAGER" || role.code == "SALES PERSON")
 				  	  {
-						  if(r.name == "SALES PRESIDENT" || r.name=="SALES MANAGER" || r.name=="SALES PERSON")
+						  if(r.code == "SALES PRESIDENT" || r.code == "SALES MANAGER" || r.code == "SALES PERSON")
 						  {
 							  flag = 1;
 						  }
 					  }
 					  else
 					  {
-				  		  if(r.name == role.name)
+				  		  if(r.code == role.code)
 				  		  {
 				  		  	flag = 1
 				  		  }

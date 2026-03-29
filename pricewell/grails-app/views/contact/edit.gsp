@@ -158,7 +158,10 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: contactInstance, field: 'assignTo', 'errors')}">
                                     <!--<g:select name="assignToId" from="${salesUsers?.sort {it.profile.fullName}}" value="${contactInstance?.assignTo?.id}" optionKey="id" noSelection="['': 'Select Any One']" class="required"/>-->
-                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(contactInstance?.assignTo?.id)}" value=""  noSelection="['': 'Select Any One']" class="required"/>
+                                    <select name="assignToId" class="required">
+                                        <option value="">Select Any One</option>
+                                        <sales:assignedToOptions selectId="${contactInstance?.assignTo?.id}"/>
+                                    </select>
                                 </td>
                                 
                                 <td>&nbsp;&nbsp;</td>

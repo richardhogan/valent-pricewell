@@ -29,13 +29,22 @@ class PricewellUtils {
 	public static RoleEnum getFirstMatchingRoleEnum()
 	{
 		User user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
-		
+
+		// Always initialise the roles map first by referencing RoleEnum.values().
+		// The roles map (populated by RoleEnum enum constructors) is empty until
+		// RoleEnum is class-loaded. On first call after a server start the JVM may
+		// not have loaded RoleEnum yet, so roles.get() would return null even for a
+		// valid role.  Calling values() here guarantees the map is populated before
+		// any lookup.
+		RoleEnum[] s = RoleEnum.values()
+
 		if(user?.lastLoginRole != null && user?.lastLoginRole != "" && user?.lastLoginRole != "NULL")
 		{
-			return roles.get(user?.lastLoginRole);
+			RoleEnum cached = roles.get(user?.lastLoginRole)
+			if (cached != null) return cached
+			// roles map was empty (RoleEnum not yet initialised when lastLoginRole was
+			// stored) — fall through to the role-check loop below.
 		}
-		
-		RoleEnum[] s = RoleEnum.values() ;
 
 		for(RoleEnum role : s ){
 			if( PricewellSecurity.hasRole(role.value()) ){

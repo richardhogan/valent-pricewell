@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import com.valent.pricewell.UserRole
 
 import java.text.DateFormat
 import java.text.ParseException

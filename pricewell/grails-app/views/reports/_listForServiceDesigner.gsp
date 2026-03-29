@@ -93,7 +93,7 @@
 											{
 												
 												
-												if(!user?.roles?.contains(adminRole))
+												if(!com.valent.pricewell.UserRole.findAllByUser(user)*.role?.contains(adminRole))
 												{
 													responsiblePerson.add(user)
 												}

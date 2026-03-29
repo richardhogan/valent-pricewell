@@ -334,8 +334,10 @@ class ContactController {
 		contactInstance.dateModified = new Date()
 		//contactInstance.assignTo = params.assingTo
 		def accountInstance = Account.get(params.accountId)
-		accountInstance.dateModified = new Date()
-		accountInstance.save(flush:true)
+		if (accountInstance) {
+			accountInstance.dateModified = new Date()
+			accountInstance.save(flush:true)
+		}
 		contactInstance.account = accountInstance
 		
 		def billingAddress = new BillingAddress()
@@ -350,7 +352,7 @@ class ContactController {
 		def map = [:]
 		if ( billingAddress.save() && contactInstance.save(flush: true))
 		{
-			if(contactInstance.createdBy.id != contactInstance.assignTo.id)
+			if(contactInstance.assignTo != null && contactInstance.createdBy?.id != contactInstance.assignTo?.id)
 			{
 				map = new NotificationGenerator(g).sendAssignedToNotification(contactInstance, "Contact")
 				sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/contact/show/"+contactInstance.id)
@@ -507,7 +509,7 @@ class ContactController {
 					return false
 				}
 			}
-			def previousAssignToId = contactInstance.assignTo.id
+			def previousAssignToId = contactInstance.assignTo?.id
 			def previousAccountId = contactInstance.account.id
 			
 			contactInstance.properties["firstname", "lastname", "department", "email", "altEmail", "title", "fax"] = params
@@ -526,7 +528,7 @@ class ContactController {
 			def map = [:]
 			if (!contactInstance.hasErrors() && contactInstance.save(flush: true)) 
 			{
-				if(previousAssignToId != contactInstance.assignTo.id && contactInstance.createdBy.id != contactInstance.assignTo.id)
+				if(previousAssignToId != contactInstance.assignTo?.id && contactInstance.assignTo != null && contactInstance.createdBy?.id != contactInstance.assignTo?.id)
 				{
 					map = new NotificationGenerator(g).sendAssignedToNotification(contactInstance, "Contact")
 					sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/contact/show/"+contactInstance.id)

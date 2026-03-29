@@ -155,10 +155,10 @@
 	   
 		  <tr>
 		  	<td>
-		  		<g:each in="${user.roles}" status="j" var="role">
+		  		<g:each in="${com.valent.pricewell.UserRole.findAllByUser(user)*.role}" status="j" var="role">
 	        		
 	        		
-	        		<g:if test="${role.name=='SALES MANAGER'}"> 
+	        		<g:if test="${role.code=='SALES MANAGER'}"> 
 		        			
 		                    	
                     		<b>Territories</b></td>
@@ -169,7 +169,7 @@
 		                    	<input id="changeTerritories" type="button" value="Change" class="button"/></td>
 	        		</g:if>
 	        		
-	        		<g:if test="${role.name=='SALES PERSON'}">
+	        		<g:if test="${role.code=='SALES PERSON'}">
 	        			
 	        			
 	        			<b>Territory</b></td>
@@ -177,7 +177,7 @@
 	        			
 	        		</g:if>
 	        		
-	        		<g:if test="${role.name=='GENERAL MANAGER'}">
+	        		<g:if test="${role.code=='GENERAL MANAGER'}">
 	        			<b>GEO</b></td>
 	        			<td>${user?.geoGroup?.name}<input id="changeGeo" type="button" value="Change" class="button"/>
 	        			

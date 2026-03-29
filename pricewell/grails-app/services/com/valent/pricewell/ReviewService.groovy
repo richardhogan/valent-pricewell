@@ -1,4 +1,6 @@
 package com.valent.pricewell
+import com.valent.pricewell.UserRole
+import grails.plugins.nimble.core.Role
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead
 import com.valent.pricewell.PricewellSecurity
 
@@ -938,7 +940,7 @@ class ReviewService {
 			}
 		}
 
-		def lastdate = new Date()-30
+		def lastdate = new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000)
 
 		for(User user in User.list())
 		{

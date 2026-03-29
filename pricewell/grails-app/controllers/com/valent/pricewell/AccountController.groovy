@@ -294,7 +294,7 @@ class AccountController {
 		//println accountInstance.save()
 		if(accountInstance.save())//billingAddress.save() && shippingAddress.save())
 		{
-			if(accountInstance.createdBy.id != accountInstance.assignTo.id)
+			if(accountInstance.assignTo != null && accountInstance.createdBy?.id != accountInstance.assignTo?.id)
 			{
 				map = new NotificationGenerator(g).sendAssignedToNotification(accountInstance, "Account")
 				sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/account/show/"+accountInstance.id)
@@ -566,7 +566,7 @@ class AccountController {
 			accountInstance.properties['accountName','website','phone','fax','email','createdBy','dateCreated'] = params
 			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			accountInstance.modifiedBy = user
-			def previousAssignedUserId = accountInstance.assignTo.id
+			def previousAssignedUserId = accountInstance.assignTo?.id
 			accountInstance.assignTo = User.get(params.accountAssignToId)
 			accountInstance.dateModified = new Date()
 			
@@ -588,7 +588,7 @@ class AccountController {
 			def map = [:]
 			if (billingAddress.save() && shippingAddress.save() && !accountInstance.hasErrors() && accountInstance.save(flush: true)) 
 			{
-				if(previousAssignedUserId != accountInstance.assignTo.id && accountInstance.createdBy.id != accountInstance.assignTo.id)
+				if(previousAssignedUserId != accountInstance.assignTo?.id && accountInstance.assignTo != null && accountInstance.createdBy?.id != accountInstance.assignTo?.id)
 				{
 					map = new NotificationGenerator(g).sendAssignedToNotification(accountInstance, "Account")
 					sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/account/show/"+accountInstance.id)

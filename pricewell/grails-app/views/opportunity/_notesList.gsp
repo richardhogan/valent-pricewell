@@ -1,9 +1,7 @@
 <%@ page import="com.valent.pricewell.Quotation" %>
 <%@ page import="com.valent.pricewell.QuotationService" %> 
-<%@ page import="com.valent.pricewell.SalesController"%>
 <%
 	def baseurl = request.siteUrl
-	def salesController = new SalesController()
 %>
 	<style>
 		.editableIcon {

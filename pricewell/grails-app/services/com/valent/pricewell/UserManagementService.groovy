@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import com.valent.pricewell.UserRole
 import grails.plugins.nimble.core.Role
 
 /**

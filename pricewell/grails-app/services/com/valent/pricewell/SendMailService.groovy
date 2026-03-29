@@ -20,11 +20,11 @@ class SendMailService implements ApplicationContextAware {
 	
 	def getPendingMail(SendMailTimer timer)
 	{
-		def inprogressList = PendingMail.findAll("FROM PendingMail pm WHERE pm.activeBit=1 AND pm.status='inprogress' ORDER BY createDate ASC")
+		def inprogressList = PendingMail.withTransaction { PendingMail.findAll("FROM PendingMail pm WHERE pm.activeBit=1 AND pm.status='inprogress' ORDER BY createDate ASC") }
 		//println "inprogress mail : "+ inprogressList.size()
 		if(inprogressList.size() == 0)
 		{
-			def pendingList = PendingMail.findAll("FROM PendingMail pm WHERE pm.activeBit=1 AND pm.status='pending' ORDER BY createDate ASC")
+			def pendingList = PendingMail.withTransaction { PendingMail.findAll("FROM PendingMail pm WHERE pm.activeBit=1 AND pm.status='pending' ORDER BY createDate ASC") }
 			
 			if(pendingList.size() > 0)
 			{

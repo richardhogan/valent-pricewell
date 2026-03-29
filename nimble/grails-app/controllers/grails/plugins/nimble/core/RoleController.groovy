@@ -70,13 +70,13 @@ class RoleController {
     if (createdRole.hasErrors()) {
       log.error("Unable to create new role $name with description $description")
 		flash.type = "error"
-		flash.message = message(code: 'nimble.role.create.error', args: [createdRole.name])
+		flash.message = message(code: 'nimble.role.create.error', args: [createdRole.description])
       	render view: 'create', model: [role: createdRole]
     }
     else {
       log.info("Created new role $name with description $description")
       flash.type = "success"
-      flash.message = message(code: 'nimble.role.create.success', args: [createdRole.name])
+      flash.message = message(code: 'nimble.role.create.success', args: [createdRole.description])
       redirect action: show, params: [id: createdRole.id]
     }
   }
@@ -90,7 +90,7 @@ class RoleController {
       redirect action: list
     }
 	else {
-    	log.debug("Editing role $role.name")
+    	log.debug("Editing role $role.description")
 	    [role: role]
 	}
   }
@@ -105,7 +105,7 @@ class RoleController {
     }
 	else {
     	if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      flash.type = "error"
 	      flash.message = message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      redirect (action: show, id: role.id)
@@ -113,23 +113,23 @@ class RoleController {
 		else {
 	    	role.properties['name', 'description'] = params
 		    if (!role.validate()) {			
-				log.warn("Attempt to update role [$role.id]$role.name failed")
+				log.warn("Attempt to update role [$role.id]$role.description failed")
 				flash.type = "error"
-			    flash.message = message(code: 'nimble.role.update.error', args: [role.name])
+			    flash.message = message(code: 'nimble.role.update.error', args: [role.description])
 				render view: 'edit', model: [role: role]
 			}
 			else {
 		      	def updatedRole = roleService.updateRole(role)
 				if (updatedRole.hasErrors()) {
-			       log.warn("Attempt to update role [$role.id]$role.name failed")
+			       log.warn("Attempt to update role [$role.id]$role.description failed")
 				   flash.type = "error"
-			       flash.message = message(code: 'nimble.role.update.error', args: [role.name])
+			       flash.message = message(code: 'nimble.role.update.error', args: [role.description])
 			       render view: 'edit', model: [role: updatedRole]
 				}
 				else {
 		        	log.info("Updated role $updatedRole.name with description $updatedRole.description")
 		        	flash.type = "success"
-		        	flash.message = message(code: 'nimble.role.update.success', args: [role.name])
+		        	flash.message = message(code: 'nimble.role.update.success', args: [role.description])
 		        	redirect action: show, params: [id: role.id]
 		      	}
 			}
@@ -147,16 +147,16 @@ class RoleController {
     }
 	else {
     	if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      flash.type = "error"
 	      flash.message = message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      redirect (action: show, id: role.id)
 	    }
 		else {
 	    	roleService.deleteRole(role)
-		    log.info("Deleted role $role.name with description $role.description")
+		    log.info("Deleted role $role.description with description $role.description")
 		    flash.type = "success"
-		    flash.message = message(code: 'nimble.role.delete.success', args: [role.name])
+		    flash.message = message(code: 'nimble.role.delete.success', args: [role.description])
 		    redirect action: list
     	}
 	}
@@ -188,7 +188,7 @@ class RoleController {
     }
 	else {
     	log.debug("Listing role members")
-	    render(template: '/templates/admin/members_list', contextPath: pluginContextPath, model: [parent:role, users: role.users, groups: role.groups, protect: role.protect, groupmembers: true])
+	    render(template: '/templates/admin/members_list', contextPath: pluginContextPath, model: [parent:role, users: com.valent.pricewell.UserRole.findAllByRole(role)*.user, groups: [], protect: role.protect, groupmembers: true])
 	}
   }
 
@@ -201,7 +201,7 @@ class RoleController {
     }
 	else {
 		if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      render message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      response.status = 500
 	    }
@@ -216,8 +216,8 @@ class RoleController {
 				
 		    	roleService.addMember(user, role, params)
 				//roleService.addMember(user, role, params.territoryID, territoriesList)
-			    log.info("Added user [$user.id]$user.username to role [$role.id]$role.name")
-			    render message(code: 'nimble.role.addmember.success', args: [role.name, user.username])
+			    log.info("Added user [$user.id]$user.username to role [$role.id]$role.description")
+			    render message(code: 'nimble.role.addmember.success', args: [role.description, user.username])
 			}
 		}
     }
@@ -232,7 +232,7 @@ class RoleController {
     }
 	else {
 		if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      render message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      response.status = 500
 	    }
@@ -252,16 +252,16 @@ class RoleController {
 
   def checkUserBeforeDeleteMember(UserBase user, Role role)
   {
-	  /*if(role.name=="SALES PERSON")
+	  /*if(role.code == "SALES PERSON")
 	  {
 		  def salesManager = UserBase.get(user.supervisor.id)
 		  salesManager.removeFromMembers(user)
 		  salesManager.save()
 		  roleService.deleteMember(user, role)
-		  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.name")
-		  render message(code: 'nimble.role.removemember.success', args: [role.name, user.username])
+		  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.description")
+		  render message(code: 'nimble.role.removemember.success', args: [role.description, user.username])
 	  }
-	  else */if(role.name == "SALES MANAGER")
+	  else */if(role.code == "SALES MANAGER")
 	  {
 		  //if(user.members.size() == 0)
 		  if(user.territories.size() > 0)
@@ -273,35 +273,35 @@ class RoleController {
 			  user.territories = null
 			  user.save()
 			  roleService.deleteMember(user, role)
-			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.name")
-			  render message(code: 'nimble.role.removemember.success', args: [role.name, user.username])
+			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.description")
+			  render message(code: 'nimble.role.removemember.success', args: [role.description, user.username])
 		  }
 		  else
 		  {
 			 render message(code: 'nimble.role.salesManager.remove.error')
 		  }
 	  }
-	  else if(role.name == "GENERAL MANAGER")
+	  else if(role.code == "GENERAL MANAGER")
 	  {
 		  user.geoGroup = null
 		  if(user.save())
 		  {
 			  roleService.deleteMember(user, role)
-			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.name")
-			  render message(code: 'nimble.role.removemember.success', args: [role.name, user.username])
+			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.description")
+			  render message(code: 'nimble.role.removemember.success', args: [role.description, user.username])
 		  }
 		  else
 		  {
 			  render message(code: 'nimble.role.salesManager.remove.error')
 		  }
 	  }
-	 /* else if(role.name == "SALES PRESIDENT")
+	 /* else if(role.code == "SALES PRESIDENT")
 	  {
 		  if(user.members.size() == 0)
 		  {
 			  roleService.deleteMember(user, role)
-			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.name")
-			  render message(code: 'nimble.role.removemember.success', args: [role.name, user.username])
+			  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.description")
+			  render message(code: 'nimble.role.removemember.success', args: [role.description, user.username])
 		  }
 		  else
 		  {
@@ -311,8 +311,8 @@ class RoleController {
 	  else
 	  {
 		  roleService.deleteMember(user, role)
-		  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.name")
-		  render message(code: 'nimble.role.removemember.success', args: [role.name, user.username])
+		  log.info("Removed user [$user.id]$user.username from role [$role.id]$role.description")
+		  render message(code: 'nimble.role.removemember.success', args: [role.description, user.username])
 	  }
 	  
   }
@@ -327,7 +327,7 @@ class RoleController {
     }
 	else {
 		if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      render message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      response.status = 500
 	    }
@@ -346,8 +346,8 @@ class RoleController {
 			    }
 				else {
 		    		roleService.addGroupMember(group, role)
-				    log.info("Added group [$group.id]$group.name to role [$role.id]$role.name")
-				    render message(code: 'nimble.role.addmember.success', args: [role.name, group.name])
+				    log.info("Added group [$group.id]$group.name to role [$role.id]$role.description")
+				    render message(code: 'nimble.role.addmember.success', args: [role.description, group.name])
 				}
 			}
 		}
@@ -363,7 +363,7 @@ class RoleController {
     }
 	else {
 		if (role.protect) {
-	      log.warn("Role [$role.id]$role.name is protected and can't be updated via the web interface")
+	      log.warn("Role [$role.id]$role.description is protected and can't be updated via the web interface")
 	      render message(code: 'nimble.role.protected.no.modification', args: [params.id])
 	      response.status = 500
 	    }
@@ -382,8 +382,8 @@ class RoleController {
 			    }
 				else {
 		    		roleService.deleteGroupMember(group, role)
-				    log.info("Removed group [$group.id]$group.name from role [$role.id]$role.name")
-				    render message(code: 'nimble.role.removemember.success', args: [role.name, group.name])
+				    log.info("Removed group [$group.id]$group.name from role [$role.id]$role.description")
+				    render message(code: 'nimble.role.removemember.success', args: [role.description, group.name])
 				}
 			}
 		}
@@ -464,7 +464,7 @@ class RoleController {
       	response.status = 500
     }
 	else {
-    	log.debug("Listing permissions for role [$role.id]$role.name")
+    	log.debug("Listing permissions for role [$role.id]$role.description")
     	render(template: '/templates/admin/permissions_list', contextPath: pluginContextPath, model: [permissions: role.permissions, parent: role])
 	}
   }
@@ -489,13 +489,13 @@ class RoleController {
 		else {
 	    	def savedPermission = permissionService.createPermission(permission, role)
 		    if (savedPermission.hasErrors()) {
-		      log.warn("Submitted permission was unable to be assigned to role [$role.id]$role.name")
+		      log.warn("Submitted permission was unable to be assigned to role [$role.id]$role.description")
 		      render(template: "/templates/errors", contextPath: pluginContextPath, model: [bean: savedPermission])
 		      response.status = 500
 		    }
 			else {
-		    	log.info("Assigned permission $savedPermission.id to role [$role.id]$role.name")
-			    render message(code: 'nimble.permission.create.success', args: [role.name])
+		    	log.info("Assigned permission $savedPermission.id to role [$role.id]$role.description")
+			    render message(code: 'nimble.permission.create.success', args: [role.description])
 		    }
 		}
 	}
@@ -517,8 +517,8 @@ class RoleController {
 	    }
 		else {
 	    	permissionService.deletePermission(permission)
-		    log.info("Removed permission $permission.id from role [$role.id]$role.name")
-		    render message(code: 'nimble.permission.remove.success', args: [role.name])
+		    log.info("Removed permission $permission.id from role [$role.id]$role.description")
+		    render message(code: 'nimble.permission.remove.success', args: [role.description])
     	}
   	}
   }

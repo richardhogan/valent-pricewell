@@ -1,9 +1,7 @@
 <%@ page import="com.valent.pricewell.Quotation" %>
 <%@ page import="com.valent.pricewell.QuotationService" %> 
-<%@ page import="com.valent.pricewell.SalesController"%>
 <%
 	def baseurl = request.siteUrl
-	def salesController = new SalesController()
 %>
 	<style>
 		.editableIcon {
@@ -209,8 +207,8 @@
                         	<td align="right">
                         		<input id="quotebutton${quotationInstance.id}" name="quotebutton${quotationInstance.id}" type="button"  value="Show" title="Show Details" class="button quotebutton"/> 
                         	
-                        		<g:if test="${salesController.isConnectwiseIncluded()}">
-	                        		<g:if test="${salesController.isQuoteForConnectwiseOpportunity(quotationInstance.id)}">
+                        		<g:if test="${sales.isConnectwiseIncluded()}">
+	                        		<g:if test="${sales.isQuoteForConnectwiseOpportunity(id: quotationInstance.id)}">
 	                        			
 	                            			| <input id="convertToServiceTicket-${quotationInstance.id }" type="button" title="Create Project Tickets" value="Create Tickets" class="button convertToServiceTicket"/>
 	                            		

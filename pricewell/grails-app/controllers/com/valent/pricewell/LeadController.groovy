@@ -439,7 +439,7 @@ class LeadController {
 		def map = [:]
 		if (billingAddress.save() && leadInstance.save(flush: true)) 
 		{
-			if(leadInstance.createdBy.id != leadInstance.assignTo.id)
+			if(leadInstance.assignTo != null && leadInstance.createdBy?.id != leadInstance.assignTo?.id)
 			{
 				map = new NotificationGenerator(g).sendAssignedToNotification(leadInstance, "Lead")
 				sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/lead/show/"+leadInstance.id)
@@ -649,7 +649,7 @@ class LeadController {
 					return false
 				}
 			}
-			def previousAssignToId = leadInstance.assignTo.id
+			def previousAssignToId = leadInstance.assignTo?.id
 			leadInstance.properties = params
 			leadInstance.phone = params.phone
 			leadInstance.mobile = params.mobile
@@ -663,7 +663,7 @@ class LeadController {
 			def map = [:]
 			if (!leadInstance.hasErrors() && leadInstance.save(flush: true))
 			{
-				if(previousAssignToId != leadInstance.assignTo.id && leadInstance.createdBy.id != leadInstance.assignTo.id)
+				if(previousAssignToId != leadInstance.assignTo?.id && leadInstance.assignTo != null && leadInstance.createdBy?.id != leadInstance.assignTo?.id)
 				{
 					map = new NotificationGenerator(g).sendAssignedToNotification(leadInstance, "Lead")
 					sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/lead/show/"+leadInstance.id)
@@ -826,7 +826,7 @@ class LeadController {
 					leadInstance.currentStep  = params.currentStep
 					*/if (leadInstance.save(flush: true) && contactInstance.save(flush: true))
 					{
-						if(contactInstance.createdBy.id != contactInstance.assignTo.id)
+						if(contactInstance.assignTo != null && contactInstance.createdBy?.id != contactInstance.assignTo?.id)
 						{
 							map = new NotificationGenerator(g).sendAssignedToNotification(contactInstance, "Contact")
 							sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/contact/show/"+contactInstance.id)

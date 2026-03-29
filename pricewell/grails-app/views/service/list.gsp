@@ -1,5 +1,5 @@
 <%@ page import="grails.plugins.nimble.core.*" %>
-<%@ page import="grails.plugins.nimble.core.UserBase" %>
+<%-- UserBase removed: use com.valent.pricewell.User --%>
 <%@ page import="com.valent.pricewell.User" %>
 <%@ page import="com.valent.pricewell.Service" %>
 <%@ page import="com.valent.pricewell.ServiceStageFlow" %>
@@ -290,10 +290,10 @@
 											def responsiblePerson = new ArrayList()
 											def user = PricewellSecurity.currentUser
 								
-											for(UserBase usr : serviceProfileInstance.responsiblePerson())
+											for(def usr : serviceProfileInstance.responsiblePerson())
 											{
-												
-												if(!usr?.roles*.code?.contains('SYSTEM ADMINISTRATOR'))
+												def usrRoleCodes = com.valent.pricewell.UserRole.findAllByUser(usr)*.role*.code
+												if(!usrRoleCodes?.contains('SYSTEM ADMINISTRATOR'))
 												{
 													responsiblePerson.add(usr)
 												}

@@ -134,7 +134,10 @@
                                     <label for="assignTo"><g:message code="opportunity.assignTo.label" default="Assign To" /></label><em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: opportunityInstance, field: 'assignTo', 'errors')}">
-                                	<g:select name="assignToId" from="${new SalesController().generateAssignedToListForNewObject()}" value="" noSelection="['': 'Select Any One']" class="required"/>
+                                	<select name="assignToId" class="required">
+                                        <option value="">Select Any One</option>
+                                        <sales:assignedToOptionsForCurrentUser/>
+                                    </select>
                                 </td>
                                 
                                 <td>&nbsp;&nbsp;</td>

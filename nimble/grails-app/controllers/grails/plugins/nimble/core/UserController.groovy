@@ -442,7 +442,7 @@ import grails.plugins.nimble.InstanceGenerator
 		 groups.each {
 		   if (!it.users.contains(user) && !it.protect) {
 			 nonMembers.add(it)    // Eject groups user is already a part of
-			 log.debug("Adding group identified as [$it.id]$it.name to search results")
+			 log.debug("Adding group identified as [$it.id]$it.description to search results")
 		   }
 		 }
 		 log.info("Search for new groups user [$user.id]$user.username can join complete, returning $nonMembers.size records")
@@ -577,7 +577,7 @@ import grails.plugins.nimble.InstanceGenerator
 	 }
 	 else {
 		 log.debug("Listing roles user [$user.id]$user.username is granted")
-		 render(template: '/templates/admin/roles_list', contextPath: pluginContextPath, model: [roles: user.roles, ownerID: user.id])
+		 render(template: '/templates/admin/roles_list', contextPath: pluginContextPath, model: [roles: com.valent.pricewell.UserRole.findAllByUser(user)*.role, ownerID: user.id])
 	 }
    }
  
@@ -591,12 +591,12 @@ import grails.plugins.nimble.InstanceGenerator
 	   response.status = 500
 	 }
 	 else {
-		 def roles = Role.findAllByNameIlikeOrDescriptionIlike(q, q, false)
+		 def roles = Role.findAllByDescriptionIlike(q)
 		 def respRoles = []
 		 roles.each {
-		   if (!user.roles.contains(it) && !it.protect) {
+		   if (!com.valent.pricewell.UserRole.findByUserAndRole(user, it) && !it.protect) {
 			 respRoles.add(it)    // Eject already assigned roles for this user
-			 log.debug("Adding role identified as [$it.id]$it.name to search results")
+			 log.debug("Adding role identified as [$it.id]$it.description to search results")
 		   }
 		 }
 		 List salesPresidentList = findUsersByRole("SALES PRESIDENT")
@@ -610,7 +610,8 @@ import grails.plugins.nimble.InstanceGenerator
    private List findUsersByRole(roleName)
    {
 	   List tmpList = new ArrayList()
-	   for(UserBase user in Role.findByCode(roleName)?.users)
+	   def roleObj = Role.findByCode(roleName)
+   for(UserBase user in (roleObj ? com.valent.pricewell.UserRole.findAllByRole(roleObj)*.user : []))
 	   {
 		   tmpList.add(UserBase.get(user.id))
 	   }

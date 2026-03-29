@@ -146,8 +146,8 @@
 	                        	
 	                        	<td>${fieldValue(bean: quotaInstance, field: "person")}</td>
 								
-								<g:if test="${new SalesController().isSalesPerson(quotaInstance?.person?.id) && quotaInstance?.currency != quotaInstance?.person?.territory?.currency}">
-									<td>${fieldValue(bean: quotaInstance, field: "amount")} ${fieldValue(bean: quotaInstance, field: "currency")} = ${new SalesController().convertAmountToUserCurrency(quotaInstance?.person?.id, quotaInstance?.amount)} ${quotaInstance?.person?.territory?.currency}</td>
+								<g:if test="${sales.isSalesPerson(userId: quotaInstance?.person?.id) && quotaInstance?.currency != quotaInstance?.person?.territory?.currency}">
+									<td>${fieldValue(bean: quotaInstance, field: "amount")} ${fieldValue(bean: quotaInstance, field: "currency")} = ${sales.convertAmountToUserCurrency(userId: quotaInstance?.person?.id, amount: quotaInstance?.amount)} ${quotaInstance?.person?.territory?.currency}</td>
 								</g:if>
 								<g:else>
 									<td>${fieldValue(bean: quotaInstance, field: "amount")} ${fieldValue(bean: quotaInstance, field: "currency")}</td>

@@ -108,7 +108,10 @@
 		                                    <label for="person"><g:message code="quota.person.label" default="Assign Sales Person" /><em>*</em></label>
 		                                </td>
 		                                <td valign="top" class="value ${hasErrors(bean: quotaInstance, field: 'person', 'errors')}">
-		                                    <g:select name="person.id" class="personId" from="${new SalesController().generateAssignedToListForQuota()}"  value="" noSelection="['': 'Select Any One']" class="required"/>
+		                                    <select name="person.id" class="personId required">
+		                                        <option value="">Select Any One</option>
+		                                        <sales:assignedToOptionsForQuota/>
+		                                    </select>
 		                                </td>
 		                            </tr>
 
@@ -150,7 +153,7 @@
 		                                </td>
 		                                <td valign="top" class="value ${hasErrors(bean: quotaInstance, field: 'amount', 'errors')}">
 		                                    <g:textField name="amount" value="${fieldValue(bean: quotaInstance, field: 'amount')}" class="required" />
-		                                    <g:textField name="currency" value="${new CompanyInformationController().getBaseCurrency()}" class="required" readOnly="true"/>
+		                                    <g:textField name="currency" value="${com.valent.pricewell.CompanyInformation.list()?.getAt(0)?.baseCurrency}" class="required" readOnly="true"/>
 		                                </td>
 		                            </tr>
 		                        

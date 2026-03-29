@@ -270,7 +270,10 @@
                                     <label for="assignTo"><g:message code="contact.assignTo.label" default="Contact Assign To" /></label><em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: contactInstance, field: 'assignTo', 'errors')}">
-                                    <g:select name="assignToId" from="${new SalesController().generateAssignedToList(loginUser.id)}" value="${PricewellSecurity.principalId}" noSelection="['': 'Select Any One']" class="required"/>
+                                    <select name="assignToId" class="required">
+                                        <option value="">Select Any One</option>
+                                        <sales:assignedToOptions selectId="${loginUser.id}"/>
+                                    </select>
                                 </td>
                             </tr>
                             

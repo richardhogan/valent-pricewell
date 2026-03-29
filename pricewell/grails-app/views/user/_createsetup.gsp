@@ -93,14 +93,14 @@
       
       <tr>
 		  	<td>
-	        		<g:if test="${roleInstance.name=='SALES MANAGER'}"> 
+	        		<g:if test="${roleInstance.code=='SALES MANAGER'}"> 
 		        			<label>Select Territories</label></td>
 	        				<td>
 	        					<g:select name="territoriesList" from="${Geo.list()}" value="" optionKey="id" multiple="multiple" noSelection="['': 'Select Multiple']"/>
 	                    	
 	        		</g:if>
 	        		
-	        		<g:if test="${roleInstance.name=='SALES PERSON'}">
+	        		<g:if test="${roleInstance.code=='SALES PERSON'}">
 	        			
 	        			<label>Select Territory</label></td>
 	        			<td>
@@ -108,7 +108,7 @@
 	        			
 	        		</g:if>
 	        		
-	        		<g:if test="${roleInstance.name=='GENERAL MANAGER'}">
+	        		<g:if test="${roleInstance.code=='GENERAL MANAGER'}">
 	        			<label>Select GEO</label></td>
 	        			<td>
 	        				<g:select name="geoGroupID" from="${GeoGroup.list()}" value="" optionKey="id" noSelection="['': 'Select any one']"/>

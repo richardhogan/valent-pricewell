@@ -306,7 +306,7 @@ class OpportunityController {
 		String dateString = params.closeDate
 		
 		
-		def dateFormat = geoInstance.dateFormat
+		def dateFormat = geoInstance?.dateFormat
 		Date closeDate
 		if(dateFormat != "" && dateFormat != null)
 		{
@@ -374,7 +374,7 @@ class OpportunityController {
 		def map = [:]
         if (opportunityInstance.save(flush: true)) 
 		{
-			if(opportunityInstance.createdBy.id != opportunityInstance.assignTo.id)
+			if(opportunityInstance.assignTo != null && opportunityInstance.createdBy?.id != opportunityInstance.assignTo?.id)
 			{
 				map = new NotificationGenerator(g).sendAssignedToNotification(opportunityInstance, "Opportunity")
 				sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/opportunity/show/"+opportunityInstance.id)
@@ -888,7 +888,7 @@ class OpportunityController {
                     return
                 }
             }
-			def previousAssignToId = opportunityInstance.assignTo.id
+			def previousAssignToId = opportunityInstance.assignTo?.id
 	        opportunityInstance.properties['name','probability','amount','discount'] = params
 			def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 			opportunityInstance.assignTo = User.get(params.assignToId)
@@ -941,7 +941,7 @@ class OpportunityController {
 			def map = [:]
             if (!opportunityInstance.hasErrors() && opportunityInstance.save(flush: true)) 
 			{
-				if(previousAssignToId != opportunityInstance.assignTo.id && opportunityInstance.createdBy.id != opportunityInstance.assignTo.id)
+				if(previousAssignToId != opportunityInstance.assignTo?.id && opportunityInstance.assignTo != null && opportunityInstance.createdBy?.id != opportunityInstance.assignTo?.id)
 				{
 					map = new NotificationGenerator(g).sendAssignedToNotification(opportunityInstance, "Opportunity")
 					sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/opportunity/show/"+opportunityInstance.id)

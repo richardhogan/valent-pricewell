@@ -60,7 +60,7 @@
                             <td valign="top" class="value">
                             	<div id="dvCorrectTicketId">
                             		${serviceQuotationTicketInstance?.ticketId?.encodeAsHTML()}
-                            		<g:if test="${new UserSetupController().isSuperAdmin()}">
+                            		<g:if test="${com.valent.pricewell.PricewellSecurity.currentUser?.username == 'superadmin'}">
                             			<button id="correctIdBtn" title="Correct Ticket Id" class="buttons.button button">Correct</button>
                            			</g:if>
                             	</div>

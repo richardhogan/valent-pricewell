@@ -29,8 +29,8 @@ jQuery(document).ready(function()
 <div>
 	<select id="currentrole" >
 	    <g:each in="${roles}" status="i" var="role">
-	    	<g:if test="${role.name != 'USER' }">
-	    			<option>${role.name?.encodeAsHTML()}</option>
+	    	<g:if test="${role.code != 'USER' }">
+	    			<option>${role.description?.encodeAsHTML()}</option>
 	     	</g:if>
 	    </g:each>
     </select>

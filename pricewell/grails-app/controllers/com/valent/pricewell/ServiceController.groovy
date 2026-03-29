@@ -1,4 +1,5 @@
 package com.valent.pricewell
+import com.valent.pricewell.UserRole
 import grails.plugins.nimble.core.Role
 import grails.util.Holders
 // MIGRATION (Nimble→Spring Security): removed Apache Shiro imports; using PricewellSecurity helper instead

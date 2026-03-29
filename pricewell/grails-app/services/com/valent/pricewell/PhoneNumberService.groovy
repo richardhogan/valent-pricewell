@@ -198,6 +198,7 @@ class PhoneNumberService {
 	
 	public String getValidatedPhonenumber(String number, String country)
 	{
+		if (!number) return ""
 		//PhoneNumberFormat numberFormat
 		String result
 	/*	
@@ -228,6 +229,7 @@ class PhoneNumberService {
 		} catch (NumberParseException e) {
 		  System.err.println("NumberParseException was thrown: " + e.toString());
 		}
+		if (numberProto == null) return "Invalid"
 		boolean isValid = phoneUtil.isValidNumber(numberProto)
 		println isValid
 		if(isValid == true)
@@ -244,7 +246,7 @@ class PhoneNumberService {
 	
 	public String getCountryIso(String country)
 	{
-		return iso.get(country.toUpperCase()) 
+		return country ? iso.get(country.toUpperCase()) : null
 	}
 	
 	public def databaseFix(Object ob, String type)
