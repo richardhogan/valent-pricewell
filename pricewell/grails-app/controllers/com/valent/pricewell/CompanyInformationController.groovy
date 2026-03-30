@@ -13,13 +13,12 @@ class CompanyInformationController {
 	}
 
 	def index() {
-		if(CompanyInformation.list().size()!=0) {
-			for(CompanyInformation ci in CompanyInformation.list()) {
-				redirect(action: "show", id: ci.id)
-			}
-		}
-		else {
-			redirect(action: "create", params: params)
+		def list = CompanyInformation.list()
+		if (list) {
+			def companyInformationInstance = list[0]
+			render(view: "show", model: [companyInformationInstance: companyInformationInstance])
+		} else {
+			render(view: "create", model: [companyInformationInstance: new CompanyInformation(params)])
 		}
 	}
 	
@@ -128,9 +127,7 @@ class CompanyInformationController {
 	def create() {
 		def companyInformationInstance = new CompanyInformation()
 		companyInformationInstance.properties = params
-		//render(template: "create", model: [companyInformationInstance: companyInformationInstance])
-
-		model: [companyInformationInstance: companyInformationInstance]
+		[companyInformationInstance: companyInformationInstance]
 	}
 
 	def createFromSetup() {
@@ -233,7 +230,7 @@ class CompanyInformationController {
 			if(params.source == "setup"){
 				render(template: "show", model: [companyInformationInstance: companyInformationInstance, source: params.source])
 			} else{
-				model: [companyInformationInstance: companyInformationInstance]
+				[companyInformationInstance: companyInformationInstance]
 			}
 
 		}
@@ -268,7 +265,7 @@ class CompanyInformationController {
 				def source = (params.source == "firstsetup")?"firstsetup":"setup"
 				render(template: "edit", model: [companyInformationInstance: companyInformationInstance, source: source])
 			} else{
-				model: [companyInformationInstance: companyInformationInstance]
+				[companyInformationInstance: companyInformationInstance]
 			}
 
 		}

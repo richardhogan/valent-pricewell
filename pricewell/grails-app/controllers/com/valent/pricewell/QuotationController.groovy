@@ -634,7 +634,7 @@ class QuotationController {
 				render(template: "show", model: [readOnly: false, "discountReject": discountReject, "serviceQuotations": serquo, "moreDiscountAllowed": moreDiscountAllowed, "quotationInstance": quotationInstance, "notificationList": notificationList, "portfolioList": set.toList(), "canModifyServices": canModifyServices, "requestDone": requestDone]);
 			}
 			else {
-				model: [readOnly: false, "quotationInstance": quotationInstance, "serviceQuotations": serquo, "notificationList": notificationList, "portfolioList": set.toList(), "canModifyServices": canModifyServices, "requestDone": requestDone]
+				[readOnly: false, "quotationInstance": quotationInstance, "serviceQuotations": serquo, "notificationList": notificationList, "portfolioList": set.toList(), "canModifyServices": canModifyServices, "requestDone": requestDone]
 			}
 		}
 	}
