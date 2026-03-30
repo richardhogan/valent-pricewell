@@ -610,6 +610,21 @@ class UserSetupController {
 		render(template: "listsetuproles", model: [usersByRoleList: usersByRoleList, isRoleDisplay: isRoleDisplay, source: params.source])
 	}
 
+	def geoassignment() {
+		if (!PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") && !PricewellSecurity.hasRole("SALES PRESIDENT")) {
+			redirect(controller: "home")
+			return
+		}
+		render(view: "geoassignment")
+	}
+
+	def listgeoassignmentroles() {
+		loadRoleUserCache()
+		def geoRoleCodes = [RoleId.GENERAL_MANAGER.code, RoleId.SALES_MANAGER.code, RoleId.SALES_PERSON.code]
+		def filteredDisplay = roleIds.collect { code -> geoRoleCodes.contains(code) }
+		render(template: "listgeoassignmentroles", model: [usersByRoleList: usersByRoleList, isRoleDisplay: filteredDisplay, source: "geoassignment"])
+	}
+
 	def listsetup() {
 		/*int index = params.roleindex.toInteger(); 
 		def users = usersByRoleList[index]["users"]
