@@ -66,6 +66,7 @@ grails:
                 ajaxLoginFormUrl: '/auth/login'
             successHandler:
                 defaultTargetUrl: '/home/index'
+                alwaysUseDefault: true
             logout:
                 afterLogoutUrl: '/auth/login'
             failureHandler:
