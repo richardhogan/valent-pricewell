@@ -1898,7 +1898,8 @@ class BootStrap {
 					u.errors.each { log.error(it) }
 					throw new RuntimeException("Error creating default user: ${ud.username}")
 				}
-				userManagementService.assignRole(u, adminRole)
+			// admin gets all roles so they can switch between any role dashboard
+				Role.list().each { role -> userManagementService.assignRole(u, role) }
 			}
 		}
 
