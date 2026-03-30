@@ -18,7 +18,7 @@ class CompanyInformationController {
 			def companyInformationInstance = list[0]
 			render(view: "show", model: [companyInformationInstance: companyInformationInstance])
 		} else {
-			render(view: "create", model: [companyInformationInstance: new CompanyInformation(params)])
+			render(view: "create", model: [companyInformationInstance: new CompanyInformation()])
 		}
 	}
 	
