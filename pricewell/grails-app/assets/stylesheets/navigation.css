@@ -58,3 +58,104 @@ Just change the color-values to apply your own color-scheme.
     cursor: default;
 }
 
+/* ============================================================
+   Horizontal drop-down navbar — #nav-one.dropmenu
+   Companion CSS for dropmenu.js (which only handles behaviour).
+   Colours match the existing navigation colour scheme above.
+   ============================================================ */
+
+/* Outer bar */
+ul.dropmenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #525D76;
+    position: relative;
+    overflow: visible;
+    z-index: 100;
+    height: 34px;
+    line-height: 34px;
+}
+
+ul.dropmenu::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+/* Top-level items */
+ul.dropmenu > li {
+    float: left;
+    position: relative;
+    border-right: 1px solid #032D60;
+}
+
+ul.dropmenu > li > a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 0 16px;
+    font: bold 12px verdana, arial, sans-serif;
+    line-height: 34px;
+    white-space: nowrap;
+}
+
+ul.dropmenu > li > a:hover,
+ul.dropmenu > li > a.selected {
+    background-color: #3a4560;
+    color: #fff;
+}
+
+/* Dropdown arrow added by dropmenu.js */
+ul.dropmenu > li > a span.arrow {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #ccc;
+}
+
+/* Dropdown panel (.submenu class added by dropmenu.js) */
+ul.dropmenu .submenu {
+    display: none;
+    position: absolute;
+    top: 34px;
+    left: 0;
+    min-width: 160px;
+    background-color: #525D76;
+    border: 1px solid #032D60;
+    border-top: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 200;
+}
+
+ul.dropmenu .submenu li {
+    float: none;
+    border-right: none;
+    border-bottom: 1px solid #032D60;
+}
+
+ul.dropmenu .submenu li:last-child {
+    border-bottom: none;
+}
+
+ul.dropmenu .submenu li a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    font: 12px verdana, arial, sans-serif;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+ul.dropmenu .submenu li a:hover {
+    background-color: #3a4560;
+    color: #fff;
+}
+

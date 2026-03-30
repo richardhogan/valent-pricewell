@@ -236,8 +236,7 @@
 					</tr>
 				</table>		
 			</font>
-			<g:render template="/layouts/new_navigation"/> 
-		<hr>
+			<g:render template="/layouts/new_navigation"/>
         <g:layoutBody />
         <div id="loader-overlay"></div>
 		<div id="loader-box">
