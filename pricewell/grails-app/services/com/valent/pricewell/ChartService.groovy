@@ -9,6 +9,7 @@ import com.valent.pricewell.ServiceProfile.ServiceProfileType;
 import com.valent.pricewell.util.PricewellUtils;
 
 import java.text.DateFormatSymbols
+import java.util.Calendar
 import java.util.Date
 import java.util.List;
 import java.util.TreeMap
@@ -18,6 +19,17 @@ class ChartService {
 	static transactional = true
 	def serviceCatalogService
 	def dateService
+
+	private Date plusDays(Date date, int days) {
+		Calendar cal = Calendar.getInstance()
+		cal.setTime(date)
+		cal.add(Calendar.DAY_OF_MONTH, days)
+		return cal.getTime()
+	}
+
+	private Date minusDays(Date date, int days) {
+		return plusDays(date, -days)
+	}
 	public static final List types  = [
 		"LEAD",
 		"OPPORTUNITY",
@@ -454,7 +466,7 @@ class ChartService {
 		opportunityList = filterOpportunityByTerritory(opportunityList, territory)
 		
 		def opportunityStagingList = Staging.findAll("FROM Staging st WHERE st.entity = :entity AND :stage IN elements(st.types) ORDER BY sequenceOrder ASC",
-			[entity: Staging.StagingObjectType.OPPORTUNITY, stage: 'NEW_STAGE'])
+			[entity: Staging.StagingObjectType.OPPORTUNITY, stage: Staging.StagingType.NEW_STAGE])
 		
 		def finalData = new ArrayList(opportunityStagingList.size()); def i = 0
 		for(Staging st : opportunityStagingList)
@@ -495,7 +507,7 @@ class ChartService {
 		serviceProfileList = listServiceBetweenDates(serviceProfileList, fromDate, toDate)
 		
 		def serviceStagingList = Staging.findAll("FROM Staging st WHERE st.entity = :entity AND :stage IN elements(st.types) ORDER BY sequenceOrder ASC",
-			[entity: Staging.StagingObjectType.SERVICE, stage: 'NEW_STAGE'])
+			[entity: Staging.StagingObjectType.SERVICE, stage: Staging.StagingType.NEW_STAGE])
 		
 		def finalData = new ArrayList(serviceStagingList.size()); def i = 0
 		for(Staging st : serviceStagingList)
@@ -588,7 +600,7 @@ class ChartService {
 		}*/
 		
 		def leadStagingList = Staging.findAll("FROM Staging st WHERE st.entity = :entity AND :stage IN elements(st.types) ORDER BY sequenceOrder ASC",
-			[entity: Staging.StagingObjectType.LEAD, stage: 'NEW_STAGE'])
+			[entity: Staging.StagingObjectType.LEAD, stage: Staging.StagingType.NEW_STAGE])
 		
 		def finalData = new ArrayList(leadStagingList.size()); def i = 0
 		for(Staging st : leadStagingList)
@@ -650,7 +662,7 @@ class ChartService {
 		}*/
 		
 		def leadStagingList = Staging.findAll("FROM Staging st WHERE st.entity = :entity AND :stage IN elements(st.types) ORDER BY sequenceOrder ASC",
-			[entity: Staging.StagingObjectType.LEAD, stage: 'NEW_STAGE'])
+			[entity: Staging.StagingObjectType.LEAD, stage: Staging.StagingType.NEW_STAGE])
 		
 		def finalData = new ArrayList(leadStagingList.size()); def i = 0
 		for(Staging st : leadStagingList)
@@ -707,7 +719,7 @@ class ChartService {
 			}
 		}
 		quotationList = getQuotationsBetweenDates(quotationList, fromDate, toDate)
-		Date from = fromDate, to = fromDate+6
+		Date from = fromDate, to = plusDays(fromDate, 6)
 		
 		while(to <= toDate)
 		{
@@ -716,8 +728,8 @@ class ChartService {
 			categories.add(to.getDate() + "-" + getMonthName(to.month))
 			data.add(totalSales)
 			//println "quotations : "+totalSales + " Date : " + to.getDate() + "-" + getMonthName(to.month)
-			from = to + 1
-			to = from + 6
+			from = plusDays(to, 1)
+			to = plusDays(from, 6)
 		}
 		if(from <= toDate)
 		{
@@ -803,8 +815,8 @@ class ChartService {
 				categories.add(to.getDate() + "-" + getMonthName(to.month))
 				data.add(totalSales)
 				//println "quotations : "+totalSales + " Date : " + to.getDate() + "-" + getMonthName(to.month)
-				from = to + 1
-				to = to + addDays
+				from = plusDays(to, 1)
+				to = plusDays(to, addDays as int)
 			}
 			if(from <= toDate)
 			{
@@ -1800,11 +1812,11 @@ class ChartService {
 		tmpLeads = leadService.getUserLeads(user, filterCriteria)
 		
 		//for <10 days
-		filterCriteria.setFromDate(today); filterCriteria.setToDate(today-9);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today), removeTime(today-9), "pending")//leadService.getUserLeads(user, filterCriteria)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today), removeTime(today-9), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
-		quoteCount = pendingQuotationCount(opList, removeTime(today), removeTime(today-9))
-		sowCount = pendingSOWCount(opList, removeTime(today), removeTime(today-9))
+		filterCriteria.setFromDate(today); filterCriteria.setToDate(minusDays(today, 9));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today), removeTime(minusDays(today, 9)), "pending")//leadService.getUserLeads(user, filterCriteria)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(today), removeTime(minusDays(today, 9)), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
+		quoteCount = pendingQuotationCount(opList, removeTime(today), removeTime(minusDays(today, 9)))
+		sowCount = pendingSOWCount(opList, removeTime(today), removeTime(minusDays(today, 9)))
 		dataArray.add([name: "<10", data:  [
 				leadList.size(),
 				opportunityList.size(),
@@ -1814,11 +1826,11 @@ class ChartService {
 		
 		
 		//between <10 and <20
-		filterCriteria.setFromDate(today-10); filterCriteria.setToDate(today-19);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today-10), removeTime(today-19), "pending")//leadService.getUserLeads(user, filterCriteria)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today-10), removeTime(today-19), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
-		quoteCount = pendingQuotationCount(opList, removeTime(today-10), removeTime(today-19))
-		sowCount = pendingSOWCount(opList, removeTime(today-10), removeTime(today-19))
+		filterCriteria.setFromDate(minusDays(today, 10)); filterCriteria.setToDate(minusDays(today, 19));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(minusDays(today, 10)), removeTime(minusDays(today, 19)), "pending")//leadService.getUserLeads(user, filterCriteria)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(minusDays(today, 10)), removeTime(minusDays(today, 19)), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
+		quoteCount = pendingQuotationCount(opList, removeTime(minusDays(today, 10)), removeTime(minusDays(today, 19)))
+		sowCount = pendingSOWCount(opList, removeTime(minusDays(today, 10)), removeTime(minusDays(today, 19)))
 		dataArray.add([name: "<20", data:  [
 				leadList.size(),
 				opportunityList.size(),
@@ -1828,11 +1840,11 @@ class ChartService {
 		
 		
 		//netween 20 to 30
-		filterCriteria.setFromDate(today-20); filterCriteria.setToDate(today-29);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today-20), removeTime(today-29), "pending")//leadService.getUserLeads(user, filterCriteria)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today-20), removeTime(today-29), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
-		quoteCount = pendingQuotationCount(opList, removeTime(today-20), removeTime(today-29))
-		sowCount = pendingSOWCount(opList, removeTime(today-20), removeTime(today-29))
+		filterCriteria.setFromDate(minusDays(today, 20)); filterCriteria.setToDate(minusDays(today, 29));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(minusDays(today, 20)), removeTime(minusDays(today, 29)), "pending")//leadService.getUserLeads(user, filterCriteria)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(minusDays(today, 20)), removeTime(minusDays(today, 29)), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
+		quoteCount = pendingQuotationCount(opList, removeTime(minusDays(today, 20)), removeTime(minusDays(today, 29)))
+		sowCount = pendingSOWCount(opList, removeTime(minusDays(today, 20)), removeTime(minusDays(today, 29)))
 		dataArray.add([name: "<30", data:  [
 				leadList.size(),
 				opportunityList.size(),
@@ -1842,11 +1854,11 @@ class ChartService {
 		
 		
 		//between 30 to 40
-		filterCriteria.setFromDate(today-30); filterCriteria.setToDate(today-39);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today-30), removeTime(today-39), "pending")//leadService.getUserLeads(user, filterCriteria)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today-30), removeTime(today-39), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
-		quoteCount = pendingQuotationCount(opList, removeTime(today-30), removeTime(today-39))
-		sowCount = pendingSOWCount(opList, removeTime(today-30), removeTime(today-39))
+		filterCriteria.setFromDate(minusDays(today, 30)); filterCriteria.setToDate(minusDays(today, 39));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(minusDays(today, 30)), removeTime(minusDays(today, 39)), "pending")//leadService.getUserLeads(user, filterCriteria)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(minusDays(today, 30)), removeTime(minusDays(today, 39)), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
+		quoteCount = pendingQuotationCount(opList, removeTime(minusDays(today, 30)), removeTime(minusDays(today, 39)))
+		sowCount = pendingSOWCount(opList, removeTime(minusDays(today, 30)), removeTime(minusDays(today, 39)))
 		dataArray.add([name: "<40", data:  [
 				leadList.size(),
 				opportunityList.size(),
@@ -1856,11 +1868,11 @@ class ChartService {
 		
 		
 		//between 40 to 50
-		filterCriteria.setFromDate(today-40); filterCriteria.setToDate(today-49);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today-40), removeTime(today-49), "pending")//leadService.getUserLeads(user, filterCriteria)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today-40), removeTime(today-49), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
-		quoteCount = pendingQuotationCount(opList, removeTime(today-40), removeTime(today-49))
-		sowCount = pendingSOWCount(opList, removeTime(today-40), removeTime(today-49))
+		filterCriteria.setFromDate(minusDays(today, 40)); filterCriteria.setToDate(minusDays(today, 49));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(minusDays(today, 40)), removeTime(minusDays(today, 49)), "pending")//leadService.getUserLeads(user, filterCriteria)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(minusDays(today, 40)), removeTime(minusDays(today, 49)), "pending")//opportunityService.getUserOppoertunities(user, filterCriteria)
+		quoteCount = pendingQuotationCount(opList, removeTime(minusDays(today, 40)), removeTime(minusDays(today, 49)))
+		sowCount = pendingSOWCount(opList, removeTime(minusDays(today, 40)), removeTime(minusDays(today, 49)))
 		dataArray.add([name: "<50", data:  [
 				leadList.size(),
 				opportunityList.size(),
@@ -1870,12 +1882,12 @@ class ChartService {
 		
 		
 		//between 50 to 60
-		filterCriteria.setFromDate(today-50); filterCriteria.setToDate(null);
-		filterCriteria2.setFromDate(today-50);
-		leadList = listLeadsBetweenDates(tmpLeads, removeTime(today-50), null, "pending")//leadService.getUserLeads(user, filterCriteria2)
-		opportunityList = listOpportunityBetweenDates(opList, removeTime(today-50), null, "pending")//opportunityService.getUserOppoertunities(user, filterCriteria2)
-		quoteCount = pendingQuotationCount(opList, removeTime(today-50), null)
-		sowCount = pendingSOWCount(opList, removeTime(today-50), null)
+		filterCriteria.setFromDate(minusDays(today, 50)); filterCriteria.setToDate(null);
+		filterCriteria2.setFromDate(minusDays(today, 50));
+		leadList = listLeadsBetweenDates(tmpLeads, removeTime(minusDays(today, 50)), null, "pending")//leadService.getUserLeads(user, filterCriteria2)
+		opportunityList = listOpportunityBetweenDates(opList, removeTime(minusDays(today, 50)), null, "pending")//opportunityService.getUserOppoertunities(user, filterCriteria2)
+		quoteCount = pendingQuotationCount(opList, removeTime(minusDays(today, 50)), null)
+		sowCount = pendingSOWCount(opList, removeTime(minusDays(today, 50)), null)
 		dataArray.add([name: ">=50", data:  [
 				leadList.size(),
 				opportunityList.size(),
