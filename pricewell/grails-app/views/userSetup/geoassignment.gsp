@@ -12,16 +12,46 @@
 		// no-op: GEO assignment page has no sidebar nav to refresh
 	}
 
-	jQuery(document).ready(function() {
+	function refreshGeoGroupList(){
 		jQuery.ajax({
 			type: "POST",
-			url: "${baseurl}/userSetup/listgeoassignmentroles",
-			data: {source: "geoassignment"},
+			url: "${baseurl}/userSetup/geoassignmentview",
 			success: function(data) {
 				jQuery('#contents').html(data);
+				initResultDialog();
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {}
 		});
+	}
+
+	function initResultDialog(){
+		jQuery(".resultDialog").dialog({
+			modal: true,
+			autoOpen: false,
+			resizable: false,
+			close: function(event, ui){ jQuery(this).html(''); },
+			buttons: {
+				OK: function(){
+					jQuery(".resultDialog").dialog("close");
+					refreshGeoGroupList();
+					return false;
+				}
+			}
+		});
+	}
+
+	jQuery(document).ready(function() {
+
+		jQuery("#userDialog").dialog({
+			autoOpen: false,
+			position: { my: "center", at: "center", of: window },
+			modal: true,
+			close: function(event, ui){ jQuery(this).html(''); }
+		});
+
+		initResultDialog();
+
+		refreshGeoGroupList();
 	});
 
 </script>
@@ -34,5 +64,8 @@
 			<p>Loading...</p>
 		</div>
 	</div>
+
+	<div id="userDialog" title=""></div>
+	<div class="resultDialog"></div>
 </body>
 </html>

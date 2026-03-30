@@ -33,7 +33,7 @@
 				return this.optional(element) || /^[+]?([0-9]*[\.\s\-\(\)]|[0-9]+){3,24}$/i.test(value); 
 			}, "Please enter a valid number.");
 				
-			if("firstsetup" == "${source}")
+			if("firstsetup" == "${source}" || "geoassignment" == "${source}")
 				{var xdialogDiv = "#userDialog";}
 			else
 				{var xdialogDiv = "#userSetupDialog";}
@@ -81,7 +81,7 @@
 								jQuery(".resultDialog").dialog( "open" ); jQuery(".resultDialog").dialog( "option", "title", "Success" );
 								jQuery(".resultDialog").html('User edited successfully.'); 
 								
-								if("firstsetup" == "${source}")
+								if("firstsetup" == "${source}" || "geoassignment" == "${source}")
 									{refreshGeoGroupList();}
 							} else{
 								jQuery( xdialogDiv ).dialog( "close" );
@@ -166,14 +166,17 @@
 	    	
 			jQuery("#cancelUser").click(function()
 			{
-				showLoadingBox();
-				jQuery.post( '${baseurl}/userSetup/listroles' , 
-				  	{source: "firstsetup"},
-			      	function( data ) 
-			      	{
-					  	hideLoadingBox();
-			          	jQuery('#contents').html('').html(data);
-			      	});
+				if ("geoassignment" == "${source}") {
+					refreshGeoGroupList();
+				} else {
+					showLoadingBox();
+					jQuery.post( '${baseurl}/userSetup/listroles' ,
+					  	{source: "firstsetup"},
+				      	function( data ) {
+						  	hideLoadingBox();
+				          	jQuery('#contents').html('').html(data);
+				      	});
+				}
 				return false;
 			});
 
@@ -419,14 +422,14 @@
        
        			<span class="button"><button title="Update User" id="saveUser"> Update </button></span>
        
-		       	<g:if test="${source=='firstsetup' && sourceFrom != 'geoGroup' && sourceFrom != 'geo'}">
+		       	<g:if test="${(source=='firstsetup' || source=='geoassignment') && sourceFrom != 'geoGroup' && sourceFrom != 'geo'}">
 		       		<span class="button"><button id="cancelUser" title="Cancel"> Cancel </button></span>
 		   		</g:if>
    		
 			</div>
   		</g:form>
   
-		<g:if test="${source=='firstsetup' && sourceFrom != 'geoGroup' && sourceFrom != 'geo'}">
+		<g:if test="${(source=='firstsetup' || source=='geoassignment') && sourceFrom != 'geoGroup' && sourceFrom != 'geo'}">
 				</div>
 			</div>
 		</g:if>
