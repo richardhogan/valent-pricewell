@@ -11,11 +11,13 @@
 		<li><a href="${baseurl}/home">Home</a></li>
 		<li><a href="${baseurl}/reviewRequest">Inbox</a></li>
 
-		<g:if test="${currentRole == 'SYSTEM ADMINISTRATOR' || currentRole == 'SALES PRESIDENT'}">
-			<li id="menu-item-geo"><a href="${baseurl}/userSetup/geoassignment">Assign GEOs</a></li>
-		</g:if>
 		<g:if test="${currentRole == 'SYSTEM ADMINISTRATOR' || currentRole == 'PORTFOLIO MANAGER' || currentRole == 'PRODUCT MANAGER' || currentRole == 'SALES PRESIDENT' || currentRole == 'GENERAL MANAGER' || currentRole == 'SALES MANAGER'}">
-			<li id="menu-item-1"><a href="${baseurl}/setup/firstsetup">Setup</a>
+			<li id="menu-item-setup"><a href="${baseurl}/setup/firstsetup">Setup</a>
+				<g:if test="${currentRole == 'SYSTEM ADMINISTRATOR' || currentRole == 'SALES PRESIDENT'}">
+					<ul>
+						<li><a href="${baseurl}/userSetup/geoassignment">Assign GEOs</a></li>
+					</ul>
+				</g:if>
 			</li>
 		</g:if>
 		<g:elseif test="${currentRole == 'DELIVERY ROLE MANAGER'}">
