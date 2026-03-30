@@ -70,6 +70,7 @@ class BootStrap {
 		createDefaultUsers()
 		changeAdminProtectedField()
 		
+		createDefaultGeoGroups()
 		//1) Adding staging for service
 		addServiceStages();
 
@@ -1939,6 +1940,14 @@ class BootStrap {
 		for(Quota q : Quota.list())
 		{
 			q.delete(flush: true)
+		}
+	}
+
+	void createDefaultGeoGroups() {
+		['AMER', 'EMEA', 'APAC'].each { geoName ->
+			if (!GeoGroup.findByName(geoName)) {
+				new GeoGroup(name: geoName).save(flush: true)
+			}
 		}
 	}
 
