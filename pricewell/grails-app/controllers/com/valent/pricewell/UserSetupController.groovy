@@ -854,7 +854,6 @@ class UserSetupController {
 					  user.profile.country = params.phoneCountry
 					  
 					  user.profile.lastUpdated = new Date()
-					  user.lastUpdated = new Date()
 					  
 					  Role role = Role.get(params.roleId.toLong())
 					  /*if(params?.primaryGeo?.id != null)
@@ -923,11 +922,11 @@ class UserSetupController {
 										
 										def territoryIdList = []
 										List filteredList = generateTerritoryList(params.territoriesList?.toString())
-										filteredList.add(primaryTerritory?.id)
+										if(primaryTerritory?.id != null) filteredList.add(primaryTerritory.id)
 										
 										for(Object i in filteredList)
 										{
-											territoryIdList.add(i.toLong())//}
+											if(i != null) territoryIdList.add(i.toLong())
 										}
 										
 										for(Long selectedId : territoryIdList)
