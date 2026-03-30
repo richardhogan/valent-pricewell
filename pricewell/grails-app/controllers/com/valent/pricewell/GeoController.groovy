@@ -216,7 +216,7 @@ class GeoController {
 		else
 		{
 			def salesManager, salesPerson
-			bindData(geoInstance, params, ['geoGroup']);
+			bindData(geoInstance, params, ['geoGroup', 'geoGroupId']);
 			geoInstance.name = params.geoName
 			/*if(params.geoGroup){
 				geoInstance.geoGroup = GeoGroup.get(params.geoGroup.toLong())
@@ -459,7 +459,7 @@ class GeoController {
 				{
 					geoInstance.convert_rate = 1
 				}
-				bindData(geoInstance, params, ['geoGroup']);
+				bindData(geoInstance, params, ['geoGroup', 'geoGroupId']);
 				geoInstance.name = params.geoName
 				
 				if(params.geoGroup){
