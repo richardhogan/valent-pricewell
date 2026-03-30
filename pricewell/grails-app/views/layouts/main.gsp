@@ -7,7 +7,7 @@
     <head>
         <title>Price Well</title>
                          
-        <asset:image src="valentlogo.png" rel="shortcut icon" type="image/x-icon" />
+        <link rel="shortcut icon" href="/assets/valentlogo.png" type="image/x-icon" />
 
          <asset:javascript src="application.js"/>
          <asset:stylesheet href="application.css"/>
