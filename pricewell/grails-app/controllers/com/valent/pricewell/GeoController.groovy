@@ -39,7 +39,7 @@ class GeoController {
 		Geo geoInstance = Geo.get(params.id.toLong())
 		GeoGroup geo = GeoGroup.get(params.geoId.toLong())
 		geoInstance.geoGroup = geo
-		geoInstance.save()
+		geoInstance.save(flush: true)
 		render "success"
 	}
     

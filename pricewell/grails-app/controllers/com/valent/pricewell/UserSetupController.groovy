@@ -280,12 +280,12 @@ class UserSetupController {
 		//user.country = params.country
 		def territory = Geo.get(params.primaryTerritory.toLong())
 		user.primaryTerritory = territory
-		user.save()
-		
+		user.save(flush: true)
+
 		if(territory?.country == null || territory?.country == "NULL" || territory?.country == "")
 		{
 			territory.country = params.country
-			territory.save()
+			territory.save(flush: true)
 		}
 		render "success"
 		//redirect(action: "create", controller: session['controller'])
