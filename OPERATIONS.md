@@ -61,16 +61,16 @@ The application uses `dbCreate: update` (Hibernate `hbm2ddl.auto: update`) for d
 ```bash
 # Create the database and user
 mysql -u root -p <<'SQL'
-CREATE DATABASE IF NOT EXISTS smp_pricewell CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS pricewell CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER IF NOT EXISTS 'usr'@'localhost' IDENTIFIED BY 'sa';
-GRANT ALL PRIVILEGES ON smp_pricewell.* TO 'usr'@'localhost';
+GRANT ALL PRIVILEGES ON pricewell.* TO 'usr'@'localhost';
 FLUSH PRIVILEGES;
 SQL
 ```
 
 To import an existing data dump:
 ```bash
-mysql -u root -p smp_pricewell < backup.sql
+mysql -u root -p pricewell < backup.sql
 ```
 
 ### Production database credentials

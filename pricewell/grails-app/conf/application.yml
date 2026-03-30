@@ -134,7 +134,7 @@ environments:
             serverURL: ''
         dataSource:
             dbCreate: update
-            url: 'jdbc:mysql://localhost:3306/smp_pricewell'
+            url: 'jdbc:mysql://localhost:3306/pricewell'
             username: root
             password: ''
             properties:

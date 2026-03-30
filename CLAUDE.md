@@ -23,7 +23,7 @@ grails run-app                               # Start development server
 CI pipeline (Jenkins): Build → Test → Deploy.
 
 **Databases:**
-- Development/Production: MySQL (`jdbc:mysql://localhost:3306/smp_pricewell`, user: `root`)
+- Development/Production: MySQL (`jdbc:mysql://localhost:3306/pricewell`, user: `root`)
 - Tests: H2 in-memory (`jdbc:h2:mem:testDb`) — auto-configured, no setup needed
 
 ## Architecture
