@@ -30,7 +30,7 @@ jQuery(document).ready(function()
 	<select id="currentrole" >
 	    <g:each in="${roles}" status="i" var="role">
 	    	<g:if test="${role.code != 'USER' }">
-	    			<option>${role.description?.encodeAsHTML()}</option>
+	    			<option value="${role.code?.encodeAsHTML()}">${role.description?.encodeAsHTML()}</option>
 	     	</g:if>
 	    </g:each>
     </select>
