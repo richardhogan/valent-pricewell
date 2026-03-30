@@ -69,6 +69,8 @@ grails:
                 alwaysUseDefault: true
             logout:
                 afterLogoutUrl: '/auth/login'
+                filterProcessesUrl: '/auth/logout'
+                postOnly: false
             failureHandler:
                 defaultFailureUrl: '/auth/login?login_error=1'
             adh:
