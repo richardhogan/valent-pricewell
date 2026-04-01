@@ -429,11 +429,11 @@
 				 		
 				 					 			
 							 		<tr>
-							    		<td><label>Primary Territory</label><em>*</em></td>
-						  				
+							    		<td><label>Primary Territory</label><g:if test="${territoriesList}"><em>*</em></g:if></td>
+
 						  				<td>
 						  					<div id="primaryTerritoryList">
-						  						<g:select name="primaryTerritory" from="${territoriesList?.sort {it?.name}}" value="" optionKey="id"  noSelection="['': 'Select Any One']" class="required"/>
+						  						<g:select name="primaryTerritory" from="${territoriesList?.sort {it?.name}}" value="" optionKey="id"  noSelection="['': 'Select Any One']" class="${territoriesList ? 'required' : ''}"/>
 						  						<g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
 						  							<g:if test="${roleInstance?.code != 'SALES MANAGER'}"> 
 						  								<button id="newPrimaryTerritory" class="roundNewButton" title="Create New Territory">+</button>
