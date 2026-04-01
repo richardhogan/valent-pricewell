@@ -23,6 +23,6 @@ class UrlMappings {
 		"/auth/logout"(controller: "auth", action: "logout")
 		"/auth/denied"(controller: "auth", action: "denied")
 
-		"500"(controller: 'errors', action: 'handle')
+		"500"(view: '/error')
 	}
 }

@@ -11,24 +11,25 @@ class ErrorsController {
 	}
 	
 	def handle() {
-		def exception = request.exception.cause.class
-		
-		
-		if(request.exception?.cause instanceof org.hibernate.HibernateException ){
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("Error occured at time: " + new Date() + " \n");
-			sb.append("Request Object: " + "\n");
-			
-			sb.append(org.apache.commons.lang.builder.ReflectionToStringBuilder.toString(request) + "\n");
-			//sb.append(request as JSON + "\n");
-			sb.append("Exception FullStackTrace:" + "\n")
-			sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(request.exception?.cause));
-		    print sb.toString()
-			render(view: '/errors', str: sb.toString())
-		} else {
-		render(view: '/error', exception: request.exception)
+		def ex = request.exception
+		if (ex == null) {
+			render(view: '/error')
+			return
 		}
-			
+		def cause = ex.cause
+		if (cause instanceof org.hibernate.HibernateException) {
+			StringBuilder sb = new StringBuilder()
+			sb.append("Error occurred at time: " + new Date() + " \n")
+			sb.append("Request Object: \n")
+			try {
+				sb.append(org.apache.commons.lang.builder.ReflectionToStringBuilder.toString(request) + "\n")
+			} catch (Exception ignored) {}
+			sb.append("Exception FullStackTrace:\n")
+			sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(cause))
+			print sb.toString()
+			render(view: '/errors', model: [str: sb.toString()])
+		} else {
+			render(view: '/error', model: [exception: ex])
+		}
 	}
 }
