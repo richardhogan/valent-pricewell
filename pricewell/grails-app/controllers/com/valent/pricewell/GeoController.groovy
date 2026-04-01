@@ -216,11 +216,23 @@ class GeoController {
 		else
 		{
 			def salesManager, salesPerson
-			bindData(geoInstance, params, ['geoGroup', 'geoGroupId']);
 			geoInstance.name = params.geoName
+			geoInstance.description = params.description ?: ''
+			geoInstance.currency = params.currency
+			geoInstance.currencySymbol = params.currencySymbol
+			geoInstance.dateFormat = params.dateFormat
+			geoInstance.country = params.country
+			if (params.taxPercent) geoInstance.taxPercent = new BigDecimal(params.taxPercent)
+			if (params.convert_rate) geoInstance.convert_rate = new BigDecimal(params.convert_rate)
+			geoInstance.terms = params.terms
+			geoInstance.billing_terms = params.billing_terms
+			geoInstance.signature_block = params.signature_block
+			geoInstance.sowTemplate = params.sowTemplate
+			geoInstance.sowLabel = params.sowLabel
+			geoInstance.isExternal = params.isExternal
 			/*if(params.geoGroup){
 				geoInstance.geoGroup = GeoGroup.get(params.geoGroup.toLong())
-			}*/		
+			}*/
 			
 			if(params.sourceFrom != "geoGroup" && params.sourceFrom != "user")
 			{
@@ -241,17 +253,20 @@ class GeoController {
 				}
 			}
 			
-			if(params.salesManagerId != null && params.salesManagerId != "")
+			// Grails 7: salesManagerId is renamed to _salesManagerId in the form to avoid
+			// GORM's auto-binding of read-only association ID properties.
+			def smId = params._salesManagerId ?: params.salesManagerId
+			if(smId != null && smId != "")
 			{
-				salesManager = User.get(params.salesManagerId.toLong())	
+				salesManager = User.get(smId.toLong())
 				geoInstance.salesManager = salesManager
 			}
 			
 			def map = [:]
-		
+
 			if (geoInstance.save(flush: true))
-			{			
-				if(params.salesManagerId != null && params.salesManagerId != "")
+			{
+				if((params._salesManagerId ?: params.salesManagerId) != null && (params._salesManagerId ?: params.salesManagerId) != "")
 				{
 					map = new NotificationGenerator(g).sendAssignedToSalesManagerNotification(geoInstance)
 					sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/geo/show/"+geoInstance.id)
@@ -459,21 +474,21 @@ class GeoController {
 				{
 					geoInstance.convert_rate = 1
 				}
-				bindData(geoInstance, params, ['geoGroup', 'geoGroupId']);
+				bindData(geoInstance, params, [exclude: ['geoGroup', 'geoGroupId']]);
 				geoInstance.name = params.geoName
-				
+
 				if(params.geoGroup){
 					geoInstance.geoGroup = GeoGroup.get(params.geoGroup.toLong())
 				}
 				boolean changed = false
 				
-				if(params.salesManagerId != null && params.salesManagerId != "")
+				if((params._salesManagerId ?: params.salesManagerId) != null && (params._salesManagerId ?: params.salesManagerId) != "")
 				{
-					if((geoInstance?.salesManager != null && geoInstance?.salesManager?.id != params.salesManagerId) || geoInstance?.salesManager == null)
+					if((geoInstance?.salesManager != null && geoInstance?.salesManager?.id != (params._salesManagerId ?: params.salesManagerId)) || geoInstance?.salesManager == null)
 					{
 						changed = true
 					}
-					geoInstance.salesManager = User.get(params.salesManagerId.toLong())
+					geoInstance.salesManager = User.get((params._salesManagerId ?: params.salesManagerId).toLong())
 				}
 				
 				//*******adding removing territories*********
@@ -508,7 +523,7 @@ class GeoController {
 					 def map = [:]
 	            if (!geoInstance.hasErrors() && geoInstance.save(flush: true)) 
 				{
-					if(params.salesManagerId != null && params.salesManagerId != "")
+					if((params._salesManagerId ?: params.salesManagerId) != null && (params._salesManagerId ?: params.salesManagerId) != "")
 					{
 						if(changed == true)
 						{

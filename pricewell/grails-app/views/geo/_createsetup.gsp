@@ -17,10 +17,19 @@
 		em { font-weight: bold; padding-right: 1em; vertical-align: top; }
 	</style>
 		<script>
-			 
-				  jQuery(document).ready(function()
-				  {				 
-					    jQuery(".geoCreate").validate();
+			// Grails 7/GORM: association-ID params (salesManagerId, salesPersonId) cause
+			// "Cannot set readonly property" errors during data binding. Rename them so
+			// GORM's auto-binder doesn't see them, but the controller can still read them.
+			function serializeGeoForm() {
+				return jQuery(".geoCreate").serialize()
+					.replace(/&?salesManagerId=/g, '&_salesManagerId=')
+					.replace(/&?salesPersonId=/g, '&_salesPersonId=')
+					.replace(/^&/, '');
+			}
+
+			  jQuery(document).ready(function()
+			  {
+				    jQuery(".geoCreate").validate();
 					    jQuery('#geoName').keyup(function(){
 						    this.value = this.value.toUpperCase();
 						 });  
@@ -36,7 +45,7 @@
 								jQuery.ajax({
 									type: "POST",
 									url: "${baseurl}/geo/save",
-									data:jQuery(".geoCreate").serialize(),
+									data:serializeGeoForm(),
 									success: function(data)
 									{
 										hideLoadingBox();
@@ -102,7 +111,7 @@
 								jQuery.ajax({
 									type: "POST",
 									url: "${baseurl}/geo/save",
-									data:jQuery(".geoCreate").serialize(),
+									data:serializeGeoForm(),
 									success: function(data)
 									{
 										hideLoadingBox();
