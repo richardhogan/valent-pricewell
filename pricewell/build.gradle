@@ -33,6 +33,14 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+// The mail:4.0.2 plugin transitively pulls old org.grails:* 7.0.0-SNAPSHOT artifacts
+// whose classes (e.g. ResponseRenderer) conflict with org.apache.grails:* 7.0.9.
+// Exclude the old artifacts globally so the new ones always win.
+configurations.all {
+    exclude group: 'org.grails', module: 'grails-plugin-controllers'
+    exclude group: 'org.grails', module: 'grails-plugin-sitemesh3'
+}
+
 dependencies {
     // Import the Grails BOM to align all Grails dependency versions
     implementation platform("org.apache.grails:grails-bom:7.0.9")
@@ -56,7 +64,7 @@ dependencies {
     // Security
     implementation "org.apache.grails:grails-spring-security:7.0.1"
 
-    // Mail (5.0.3 does not exist; latest stable for Grails 7 is 4.0.2)
+    // Mail (latest stable for Grails 7 is 4.0.2)
     implementation "org.grails.plugins:mail:4.0.2"
     // Spring Boot 3 / Spring 6's JavaMailSenderImpl requires jakarta.mail.*
     implementation "jakarta.mail:jakarta.mail-api:2.1.3"
@@ -69,6 +77,9 @@ dependencies {
     // Asset pipeline (5.0.9 POM references grails-bom:7.0.0-SNAPSHOT which doesn't resolve;
     // 5.0.8 has a clean POM)
     assets "com.bertramlabs.plugins:asset-pipeline-grails:5.0.8"
+
+    // spring-boot-starter-web and logging were transitively provided by sitemesh3 plugin (now excluded)
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
     // Databases
     runtimeOnly "com.mysql:mysql-connector-j:8.4.0"

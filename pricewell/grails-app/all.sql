@@ -1,1304 +1,2081 @@
--- MySQL dump 10.11
---
--- Host: localhost    Database: pricewell
--- ------------------------------------------------------
--- Server version	5.0.77-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `_group`
---
-
-DROP TABLE IF EXISTS `_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_group` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_created` datetime default NULL,
-  `description` varchar(255) default NULL,
-  `external` bit(1) NOT NULL,
-  `last_updated` datetime default NULL,
-  `name` varchar(255) NOT NULL,
-  `protect` bit(1) NOT NULL,
-  `realm` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_group`
---
-
-LOCK TABLES `_group` WRITE;
-/*!40000 ALTER TABLE `_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `_group_roles`
---
-
-DROP TABLE IF EXISTS `_group_roles`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_group_roles` (
-  `group_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`group_id`,`role_id`),
-  KEY `FK1C8B2B3E42555646` (`role_id`),
-  KEY `FK1C8B2B3E35C9368E` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_group_roles`
---
-
-LOCK TABLES `_group_roles` WRITE;
-/*!40000 ALTER TABLE `_group_roles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `_group_roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `_group_users`
---
-
-DROP TABLE IF EXISTS `_group_users`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_group_users` (
-  `user_base_id` bigint(20) NOT NULL,
-  `group_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`group_id`,`user_base_id`),
-  KEY `FK1CB72A89FA4F085D` (`user_base_id`),
-  KEY `FK1CB72A8935C9368E` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_group_users`
---
-
-LOCK TABLES `_group_users` WRITE;
-/*!40000 ALTER TABLE `_group_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `_group_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `_role`
---
-
-DROP TABLE IF EXISTS `_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_role` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_created` datetime default NULL,
-  `description` varchar(255) default NULL,
-  `external` bit(1) NOT NULL,
-  `last_updated` datetime default NULL,
-  `name` varchar(255) NOT NULL,
-  `protect` bit(1) NOT NULL,
-  `realm` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_role`
---
-
-LOCK TABLES `_role` WRITE;
-/*!40000 ALTER TABLE `_role` DISABLE KEYS */;
-INSERT INTO `_role` VALUES (1,13,'2011-05-03 21:51:22','Issued to all users','\0','2011-06-28 14:35:45','USER','',NULL),(2,1,'2011-05-03 21:51:22','Assigned to users who are considered to be system wide administrators','\0','2011-05-03 21:51:24','SYSTEM ADMINISTRATOR','',NULL),(3,6,'2011-05-03 21:51:24','Portfolio Manager','\0','2011-05-04 15:16:03','PORTFOLIO MANAGER','\0',NULL),(4,4,'2011-05-03 21:51:24','Product Manager','\0','2011-05-04 15:19:30','PRODUCT MANAGER','\0',NULL),(5,4,'2011-05-03 21:51:24','Service Designer','\0','2011-05-04 19:04:45','SERVICE DESIGNER','\0',NULL),(6,4,'2011-05-03 21:51:24','Sales Person','\0','2011-05-04 20:02:55','SALES PERSON','\0',NULL),(7,5,'2011-05-03 21:51:24','Delivery Role Manager','\0','2011-05-04 15:17:49','DELIVERY ROLE MANAGER','\0',NULL);
-/*!40000 ALTER TABLE `_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `_role_users`
---
-
-DROP TABLE IF EXISTS `_role_users`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_role_users` (
-  `user_base_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`role_id`,`user_base_id`),
-  KEY `FKADD6169EFA4F085D` (`user_base_id`),
-  KEY `FKADD6169E42555646` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_role_users`
---
-
-LOCK TABLES `_role_users` WRITE;
-/*!40000 ALTER TABLE `_role_users` DISABLE KEYS */;
-INSERT INTO `_role_users` VALUES (1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1),(8,1),(9,1),(10,1),(11,1),(12,1),(13,1),(2,2),(7,3),(8,3),(5,4),(10,4),(6,5),(11,5),(4,6),(12,6),(3,7),(9,7);
-/*!40000 ALTER TABLE `_role_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `_user`
---
-
 DROP TABLE IF EXISTS `_user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `_user` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `action_hash` varchar(255) default NULL,
-  `date_created` datetime default NULL,
-  `enabled` bit(1) NOT NULL,
-  `expiration` datetime default NULL,
-  `external` bit(1) NOT NULL,
-  `federated` bit(1) NOT NULL,
-  `federation_provider_id` bigint(20) default NULL,
-  `last_updated` datetime default NULL,
-  `password_hash` varchar(255) default NULL,
-  `profile_id` bigint(20) NOT NULL,
-  `realm` varchar(255) default NULL,
-  `remoteapi` bit(1) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `username` varchar(255) NOT NULL,
-  `class` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `username` (`username`),
-  KEY `FK571A4AA6F1935BF` (`profile_id`),
-  KEY `FK571A4AA6D69CCD` (`federation_provider_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_user`
---
+  `password` varchar(255) NOT NULL,
+  `enabled` bit(1) NOT NULL,
+  `account_expired` bit(1) NOT NULL,
+  `account_locked` bit(1) NOT NULL,
+  `password_expired` bit(1) NOT NULL,
+  `action_hash` varchar(255) DEFAULT NULL,
+  `expiration` datetime(6) DEFAULT NULL,
+  `remoteapi` bit(1) NOT NULL,
+  `last_login_role` varchar(255) DEFAULT NULL,
+  `primary_territory_id` bigint DEFAULT NULL,
+  `territory_id` bigint DEFAULT NULL,
+  `geo_group_id` bigint DEFAULT NULL,
+  `supervisor_id` bigint DEFAULT NULL,
+  `date_created` datetime(6) DEFAULT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_nlcolwbx8ujaen5h0u2kr2bn2` (`username`),
+  KEY `FKdsd1rsjcm7w8tqr8agfd6n4u0` (`primary_territory_id`),
+  KEY `FKgme6fr9hve1jkysjdcqqfplq0` (`territory_id`),
+  KEY `FKo4owm5lx4ul0snm66fhc4tirg` (`geo_group_id`),
+  KEY `FKf4p55d7bxhmoqleikl3t1wlpf` (`supervisor_id`),
+  CONSTRAINT `FKdsd1rsjcm7w8tqr8agfd6n4u0` FOREIGN KEY (`primary_territory_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FKf4p55d7bxhmoqleikl3t1wlpf` FOREIGN KEY (`supervisor_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKgme6fr9hve1jkysjdcqqfplq0` FOREIGN KEY (`territory_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FKo4owm5lx4ul0snm66fhc4tirg` FOREIGN KEY (`geo_group_id`) REFERENCES `geo_group` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `_user` WRITE;
 /*!40000 ALTER TABLE `_user` DISABLE KEYS */;
-INSERT INTO `_user` VALUES (1,1,'860800f0b968ef5980ab5d87b28f68a1f9d3b493659438de08141348dcb01de1','2011-05-03 21:51:23','',NULL,'\0','\0',NULL,'2011-05-03 21:51:23','dfdc545fc8feccab949d24d643973f12030c724c31756f4fc23a735ae7d0bada',1,NULL,'\0','user','com.valent.pricewell.User'),(2,50,'f512965128b66c01d6725c67c3f358ec14baf07791f7a9a6c12317584b54f5bf','2011-05-03 21:51:23','',NULL,'\0','\0',NULL,'2011-07-21 01:57:19','3e6b76727a8dfffa94fdf4e9fbc01c1a16f008e6e91a9f5e0de06d1c620e068c',2,NULL,'\0','admin','com.valent.pricewell.User'),(3,5,'19044ee8f12885072e78badf03833da9ddb1a4e3ab42c981d05339ce6dc84870','2011-05-04 15:03:25','',NULL,'\0','\0',NULL,'2011-05-04 19:55:11','cd2c02d2a5bc4bdfb030dc5d3d18d0280f432acdcc1861193c3c4f513193722f',3,NULL,'\0','tbadmun','com.valent.pricewell.User'),(4,11,'1a433f3bf9cab817d20a416a9e69d923d31d99fbe721565501d0ddf9bd3a82c2','2011-05-04 15:06:11','',NULL,'\0','\0',NULL,'2011-05-23 19:06:35','743ab648214de4ee9be75604f3f7a60a4e4418ced235da33cf645b54cddd0354',4,NULL,'\0','rswanson','com.valent.pricewell.User'),(5,8,'349bc365ae975f2d341771fc8047697f620603dc07a3145a03fa7f7e85c97c50','2011-05-04 15:07:55','',NULL,'\0','\0',NULL,'2011-05-04 21:01:58','56eea93f0d70d1fe1c73a08fa0300ef7de5812c4f6992c3eced890d3d5d1639a',5,NULL,'\0','nronde','com.valent.pricewell.User'),(6,6,'cdb731f42935f1489b34525a5ac55ec162dc61e9c381a0ac7e1b851407c12ad3','2011-05-04 15:10:47','',NULL,'\0','\0',NULL,'2011-05-15 15:42:52','b71713d34643d3de850503d648402737e17ccfd10d654effa7415d1e9643bc89',6,NULL,'\0','jpodge','com.valent.pricewell.User'),(7,14,'20a3b3cfa1bb3bb7cb647a636f4ab03163fd69158fe5e5a821c7b560d2fe78bb','2011-05-04 15:12:35','',NULL,'\0','\0',NULL,'2011-05-23 18:41:20','7d82803a9e33e72012c85f35847a90b986ed428a750b04fd9e848447c54e16d5',7,NULL,'\0','jcubeline','com.valent.pricewell.User'),(8,8,'915b7ac898e8e5537fcf50630ac387d110725c30236280acfa8df9be48ffe43c','2011-05-04 15:15:33','',NULL,'\0','\0',NULL,'2011-05-15 15:29:29','cfd733b239871916150b2bbb3611af1038a643caf059d269ee673390fa5bb8c2',8,NULL,'\0','anot','com.valent.pricewell.User'),(9,3,'550ee3b07e526cabec873f7d84800d04a4519a2a307b05c87f6a89fc21c5e4f9','2011-05-04 15:17:31','',NULL,'\0','\0',NULL,'2011-05-04 15:17:52','a92bd6fe04baee69d76e5c8cf65cc2e206a4464f154a92bfc9f5ba47bd27d235',9,NULL,'\0','blinman','com.valent.pricewell.User'),(10,13,'c70c23f4e7099047ab131c7969b1128c76b4541622adc50a9f1ca3aa3d32483b','2011-05-04 15:19:11','',NULL,'\0','\0',NULL,'2011-05-15 15:35:24','3ed3e0061061265ac5ec0701ceab5e6a9feb56526c9ac0288d636bce682ca87f',10,NULL,'\0','dlang','com.valent.pricewell.User'),(11,4,'359acc1b01bdb75378866f78b0360e3f0a1cd0b9603d238dc7d949eb085abd84','2011-05-04 19:04:34','',NULL,'\0','\0',NULL,'2011-05-04 19:08:09','cea0ebd447c1d86cff7fc3b4a396a14ea1ea7c3d44aa0fba8b655423d4108143',11,NULL,'\0','qturner','com.valent.pricewell.User'),(12,5,'a8ad2c09206d77124afd47e09e32b02a30160435bce591345378876128c62b78','2011-05-04 20:02:24','',NULL,'\0','\0',NULL,'2011-05-05 00:46:41','f77ee13338e775ba5feff3145c8302017e9542249eb0979c673f038f730f0874',12,NULL,'\0','mreece','com.valent.pricewell.User'),(13,3,'d457266ffb8709810719fd5eb985d7c88c477a29a00437122d6aaba05c0c5692','2011-06-28 14:35:45','',NULL,'\0','\0',NULL,'2011-06-28 14:37:46','ef12e1c2eb268a5c68eaf394e8a9bdb0bb5bcadcc9250dc043206bfcd1df1c12',13,NULL,'','ratan','com.valent.pricewell.User');
+INSERT INTO `_user` VALUES (1,1,'admin','{bcrypt}$2a$10$m0CVZs.bN.rt.yczMmCiVuXpdPgdP8bjq4Hzvs49rMMqef5cGtBN2',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0','SYSTEM ADMINISTRATOR',NULL,NULL,NULL,NULL,'2026-03-31 20:22:16.057000',NULL),(2,0,'superadmin','{bcrypt}$2a$10$VfTlnvUVYKSSKXUcnvoY8utmbAjvyfbdxWXR7vDU7ftoqgTXTztYi',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0',NULL,NULL,NULL,NULL,NULL,'2026-03-31 20:22:16.228000',NULL),(3,0,'nobody','{bcrypt}$2a$10$/3THb6nHQtOiQe1S5iYNButhp3/ZGgqVf5j03ltDXVeFCv71I029S',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0',NULL,NULL,NULL,NULL,NULL,'2026-03-31 20:22:16.343000',NULL),(4,1,'gm.amer','{bcrypt}$2a$10$BYJ5WlfIwiTx9nWdNVbeWe79EkWimCuQyXNUJUPyLDUMiSvnIAYQG',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0',NULL,NULL,NULL,1,NULL,'2026-03-31 20:22:16.469000',NULL),(5,1,'gm.emea','{bcrypt}$2a$10$GThdiIDgtbsOCynv46aCjurotRwCfaAQk3uFZLAQ1yzIjYQiI.qfe',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0',NULL,NULL,NULL,2,NULL,'2026-03-31 20:22:16.633000',NULL),(6,1,'gm.apac','{bcrypt}$2a$10$P5ILWO1Xn5se9ARliagtVeHM.cWfSXCIchpBUpDEoJ/k1GzFJ5Vve',_binary '',_binary '\0',_binary '\0',_binary '\0',NULL,NULL,_binary '\0',NULL,NULL,NULL,3,NULL,'2026-03-31 20:22:16.730000',NULL);
 /*!40000 ALTER TABLE `_user` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `account` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `assign_to_id` bigint DEFAULT NULL,
+  `logo_id` bigint DEFAULT NULL,
+  `image_file_id` bigint DEFAULT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `fax` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `billing_address_id` bigint DEFAULT NULL,
+  `shipping_address_id` bigint DEFAULT NULL,
+  `external_id` varchar(255) DEFAULT NULL,
+  `external_source` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_jfarbv64d68y4tm9c9ms5fh7b` (`account_name`),
+  KEY `FKt7h2s8dugj9q2bu9gpbam7v48` (`assign_to_id`),
+  KEY `FKgq9jtubst5stfhsugs1jlel2h` (`logo_id`),
+  KEY `FKc3c2ajggplpvm5at3ag0jbn14` (`image_file_id`),
+  KEY `FK1c0ktrk0l62qnoehvrl7i6uys` (`created_by_id`),
+  KEY `FKibve7gcre5dqxbhyr4mwtgia6` (`modified_by_id`),
+  KEY `FKaddb3t7rd5iwkc2w5r5p1twpr` (`billing_address_id`),
+  KEY `FK4c36gw4g8pj95ifeurb30egkd` (`shipping_address_id`),
+  CONSTRAINT `FK1c0ktrk0l62qnoehvrl7i6uys` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK4c36gw4g8pj95ifeurb30egkd` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`id`),
+  CONSTRAINT `FKaddb3t7rd5iwkc2w5r5p1twpr` FOREIGN KEY (`billing_address_id`) REFERENCES `billing_address` (`id`),
+  CONSTRAINT `FKc3c2ajggplpvm5at3ag0jbn14` FOREIGN KEY (`image_file_id`) REFERENCES `upload_file` (`id`),
+  CONSTRAINT `FKgq9jtubst5stfhsugs1jlel2h` FOREIGN KEY (`logo_id`) REFERENCES `logo_image` (`id`),
+  CONSTRAINT `FKibve7gcre5dqxbhyr4mwtgia6` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKt7h2s8dugj9q2bu9gpbam7v48` FOREIGN KEY (`assign_to_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `_user__user`
---
-
-DROP TABLE IF EXISTS `_user__user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_user__user` (
-  `user_base_followers_id` bigint(20) default NULL,
-  `user_base_id` bigint(20) default NULL,
-  `user_base_follows_id` bigint(20) default NULL,
-  KEY `FKB31804D5131C54DA` (`user_base_follows_id`),
-  KEY `FKB31804D5A829B447` (`user_base_followers_id`),
-  KEY `FKB31804D5FA4F085D` (`user_base_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_user__user`
---
-
-LOCK TABLES `_user__user` WRITE;
-/*!40000 ALTER TABLE `_user__user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `_user__user` ENABLE KEYS */;
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `_user_passwd_history`
---
-
-DROP TABLE IF EXISTS `_user_passwd_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `_user_passwd_history` (
-  `user_base_id` bigint(20) default NULL,
-  `passwd_history_string` varchar(255) default NULL,
-  KEY `FKA4C16028FA4F085D` (`user_base_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `_user_passwd_history`
---
-
-LOCK TABLES `_user_passwd_history` WRITE;
-/*!40000 ALTER TABLE `_user_passwd_history` DISABLE KEYS */;
-INSERT INTO `_user_passwd_history` VALUES (1,'dfdc545fc8feccab949d24d643973f12030c724c31756f4fc23a735ae7d0bada'),(2,'3e6b76727a8dfffa94fdf4e9fbc01c1a16f008e6e91a9f5e0de06d1c620e068c'),(3,'cd2c02d2a5bc4bdfb030dc5d3d18d0280f432acdcc1861193c3c4f513193722f'),(4,'743ab648214de4ee9be75604f3f7a60a4e4418ced235da33cf645b54cddd0354'),(5,'56eea93f0d70d1fe1c73a08fa0300ef7de5812c4f6992c3eced890d3d5d1639a'),(6,'b71713d34643d3de850503d648402737e17ccfd10d654effa7415d1e9643bc89'),(7,'7d82803a9e33e72012c85f35847a90b986ed428a750b04fd9e848447c54e16d5'),(8,'cfd733b239871916150b2bbb3611af1038a643caf059d269ee673390fa5bb8c2'),(9,'a92bd6fe04baee69d76e5c8cf65cc2e206a4464f154a92bfc9f5ba47bd27d235'),(10,'3ed3e0061061265ac5ec0701ceab5e6a9feb56526c9ac0288d636bce682ca87f'),(11,'cea0ebd447c1d86cff7fc3b4a396a14ea1ea7c3d44aa0fba8b655423d4108143'),(12,'f77ee13338e775ba5feff3145c8302017e9542249eb0979c673f038f730f0874'),(13,'ef12e1c2eb268a5c68eaf394e8a9bdb0bb5bcadcc9250dc043206bfcd1df1c12');
-/*!40000 ALTER TABLE `_user_passwd_history` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `activity_role_time`
---
-
 DROP TABLE IF EXISTS `activity_role_time`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `activity_role_time` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `estimated_time_in_hours_flat` float NOT NULL,
-  `estimated_time_in_hours_per_base_units` float NOT NULL,
-  `role_id` bigint(20) NOT NULL,
-  `service_activity_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK45E70BC6E0F86BBC` (`role_id`),
-  KEY `FK45E70BC67A21A037` (`service_activity_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `activity_role_time`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `role_id` bigint NOT NULL,
+  `estimated_time_in_hours_per_base_units` decimal(19,2) NOT NULL,
+  `estimated_time_in_hours_flat` decimal(19,2) NOT NULL,
+  `service_activity_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK1h8x7fd3vhlhvv3brgprww9bp` (`role_id`),
+  KEY `FKmpprwkw0t3qoli1w7o861fiht` (`service_activity_id`),
+  CONSTRAINT `FK1h8x7fd3vhlhvv3brgprww9bp` FOREIGN KEY (`role_id`) REFERENCES `delivery_role` (`id`),
+  CONSTRAINT `FKmpprwkw0t3qoli1w7o861fiht` FOREIGN KEY (`service_activity_id`) REFERENCES `service_activity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `activity_role_time` WRITE;
 /*!40000 ALTER TABLE `activity_role_time` DISABLE KEYS */;
-INSERT INTO `activity_role_time` VALUES (1,0,20,0.1,3,2),(2,0,6,0,1,3),(3,0,4,0,1,4),(4,0,4,0,1,5),(5,0,5,0.125,2,6),(6,0,4,0,3,7);
 /*!40000 ALTER TABLE `activity_role_time` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `billing_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `billing_address` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `bill_address_line1` varchar(255) DEFAULT NULL,
+  `bill_address_line2` varchar(255) DEFAULT NULL,
+  `bill_city` varchar(255) DEFAULT NULL,
+  `bill_state` varchar(255) DEFAULT NULL,
+  `bill_postalcode` varchar(255) DEFAULT NULL,
+  `bill_country` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `delivery_role`
---
+LOCK TABLES `billing_address` WRITE;
+/*!40000 ALTER TABLE `billing_address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `billing_address` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `clarizen_credentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clarizen_credentials` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `instance_uri` varchar(255) DEFAULT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKcnyjop0ra77dkqokblyjtx7v6` (`created_by_id`),
+  KEY `FKhereowll7icax26oxdrn7lg43` (`modified_by_id`),
+  CONSTRAINT `FKcnyjop0ra77dkqokblyjtx7v6` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKhereowll7icax26oxdrn7lg43` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `delivery_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `delivery_role` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `description` varchar(255) default NULL,
+LOCK TABLES `clarizen_credentials` WRITE;
+/*!40000 ALTER TABLE `clarizen_credentials` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clarizen_credentials` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `company_information`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `company_information` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+  `logo_id` bigint DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `smtpserver` varchar(255) DEFAULT NULL,
+  `from_email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) DEFAULT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  `shipping_address_id` bigint DEFAULT NULL,
+  `base_currency` varchar(255) NOT NULL,
+  `base_currency_symbol` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKe38madjxofc0li1ceoxhj9gb5` (`logo_id`),
+  KEY `FKo3vm6x4lv4nfwf0aovpu5mx2m` (`shipping_address_id`),
+  CONSTRAINT `FKe38madjxofc0li1ceoxhj9gb5` FOREIGN KEY (`logo_id`) REFERENCES `logo_image` (`id`),
+  CONSTRAINT `FKo3vm6x4lv4nfwf0aovpu5mx2m` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `delivery_role`
---
+LOCK TABLES `company_information` WRITE;
+/*!40000 ALTER TABLE `company_information` DISABLE KEYS */;
+/*!40000 ALTER TABLE `company_information` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `connectwise_credentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `connectwise_credentials` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `site_url` varchar(255) NOT NULL,
+  `company_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `update_hours` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK8hudr275yfrah41rgjsi09kke` (`created_by_id`),
+  KEY `FKpjx4tlxqyi4svwh6128bdnspl` (`modified_by_id`),
+  CONSTRAINT `FK8hudr275yfrah41rgjsi09kke` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKpjx4tlxqyi4svwh6128bdnspl` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `connectwise_credentials` WRITE;
+/*!40000 ALTER TABLE `connectwise_credentials` DISABLE KEYS */;
+/*!40000 ALTER TABLE `connectwise_credentials` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contact` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `assign_to_id` bigint DEFAULT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `alt_email` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `fax` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `created_by_id` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `billing_address_id` bigint DEFAULT NULL,
+  `account_id` bigint DEFAULT NULL,
+  `iso` varchar(255) DEFAULT NULL,
+  `format` varchar(255) DEFAULT NULL,
+  `external_id` varchar(255) DEFAULT NULL,
+  `external_source` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK5q36f7trp9gxgyfefb4pjd0wm` (`assign_to_id`),
+  KEY `FKjnowqyoxcuc461tey50dm4i4t` (`created_by_id`),
+  KEY `FK64vqfmlg216vj0tw2pgr5cwb8` (`modified_by_id`),
+  KEY `FK5sbq1ovd3iqpiwymsswagdxv7` (`billing_address_id`),
+  KEY `FK3ctagodg5h629t8ltnam39l5w` (`account_id`),
+  CONSTRAINT `FK3ctagodg5h629t8ltnam39l5w` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+  CONSTRAINT `FK5q36f7trp9gxgyfefb4pjd0wm` FOREIGN KEY (`assign_to_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK5sbq1ovd3iqpiwymsswagdxv7` FOREIGN KEY (`billing_address_id`) REFERENCES `billing_address` (`id`),
+  CONSTRAINT `FK64vqfmlg216vj0tw2pgr5cwb8` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKjnowqyoxcuc461tey50dm4i4t` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `contact` WRITE;
+/*!40000 ALTER TABLE `contact` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contact` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `contact_billing_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contact_billing_address` (
+  `contact_address_id` bigint NOT NULL,
+  `billing_address_id` bigint DEFAULT NULL,
+  KEY `FKhj8c4sc077o2i2hb6vt6yg43d` (`billing_address_id`),
+  KEY `FKob2a8wojatb3r3o51xrofbk1r` (`contact_address_id`),
+  CONSTRAINT `FKhj8c4sc077o2i2hb6vt6yg43d` FOREIGN KEY (`billing_address_id`) REFERENCES `billing_address` (`id`),
+  CONSTRAINT `FKob2a8wojatb3r3o51xrofbk1r` FOREIGN KEY (`contact_address_id`) REFERENCES `contact` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `contact_billing_address` WRITE;
+/*!40000 ALTER TABLE `contact_billing_address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contact_billing_address` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `contact_quotation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contact_quotation` (
+  `contact_quotation_id` bigint NOT NULL,
+  `quotation_id` bigint DEFAULT NULL,
+  KEY `FKk56i0qcx8dktd6kqkgy0u8jpr` (`quotation_id`),
+  KEY `FKed0ayje5uegn6tjb6wklgn20d` (`contact_quotation_id`),
+  CONSTRAINT `FKed0ayje5uegn6tjb6wklgn20d` FOREIGN KEY (`contact_quotation_id`) REFERENCES `contact` (`id`),
+  CONSTRAINT `FKk56i0qcx8dktd6kqkgy0u8jpr` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `contact_quotation` WRITE;
+/*!40000 ALTER TABLE `contact_quotation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contact_quotation` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `correction_in_activity_role_time`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `correction_in_activity_role_time` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `role_id` bigint NOT NULL,
+  `extra_hours` decimal(19,2) DEFAULT NULL,
+  `original_hours` decimal(19,2) DEFAULT NULL,
+  `service_activity_id` bigint DEFAULT NULL,
+  `service_quotation_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK2ijg5w1lbq6x623dsj5jrmdik` (`role_id`),
+  KEY `FKkbt8kpd0kmjb2dnrw88gtqkp7` (`service_activity_id`),
+  KEY `FKj35dffm0dclr507almxgbfupa` (`service_quotation_id`),
+  CONSTRAINT `FK2ijg5w1lbq6x623dsj5jrmdik` FOREIGN KEY (`role_id`) REFERENCES `delivery_role` (`id`),
+  CONSTRAINT `FKj35dffm0dclr507almxgbfupa` FOREIGN KEY (`service_quotation_id`) REFERENCES `service_quotation` (`id`),
+  CONSTRAINT `FKkbt8kpd0kmjb2dnrw88gtqkp7` FOREIGN KEY (`service_activity_id`) REFERENCES `service_activity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `correction_in_activity_role_time` WRITE;
+/*!40000 ALTER TABLE `correction_in_activity_role_time` DISABLE KEYS */;
+/*!40000 ALTER TABLE `correction_in_activity_role_time` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `delivery_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `delivery_role` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `delivery_role` WRITE;
 /*!40000 ALTER TABLE `delivery_role` DISABLE KEYS */;
-INSERT INTO `delivery_role` VALUES (1,0,'Project Manager','PROJECT MANAGER '),(2,0,'Solution Architect','ARCHITECT'),(3,0,'Product Specialist','PRODUCT SPECIALIST');
 /*!40000 ALTER TABLE `delivery_role` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `description`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `description` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `value` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `details`
---
-
-DROP TABLE IF EXISTS `details`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `details` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `description` varchar(255) default NULL,
-  `display_name` varchar(255) default NULL,
-  `logo` varchar(255) default NULL,
-  `logo_small` varchar(255) default NULL,
-  `name` varchar(255) default NULL,
-  `url_id` bigint(20) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK5CD8F242E6644D8E` (`url_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `details`
---
-
-LOCK TABLES `details` WRITE;
-/*!40000 ALTER TABLE `details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `details` ENABLE KEYS */;
+LOCK TABLES `description` WRITE;
+/*!40000 ALTER TABLE `description` DISABLE KEYS */;
+/*!40000 ALTER TABLE `description` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `document_template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `document_template` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `document_name` varchar(255) DEFAULT NULL,
+  `document_file_id` bigint DEFAULT NULL,
+  `is_default` bit(1) DEFAULT NULL,
+  `territory_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKajqg32ugosenhxk1daqc5obfx` (`document_file_id`),
+  KEY `FK8jv32o0kpwbvmqmvenev7iqgw` (`territory_id`),
+  CONSTRAINT `FK8jv32o0kpwbvmqmvenev7iqgw` FOREIGN KEY (`territory_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FKajqg32ugosenhxk1daqc5obfx` FOREIGN KEY (`document_file_id`) REFERENCES `upload_file` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `federation_provider`
---
-
-DROP TABLE IF EXISTS `federation_provider`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `federation_provider` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `auto_provision` bit(1) NOT NULL,
-  `details_id` bigint(20) NOT NULL,
-  `uid` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK25943B6DA98E7EAE` (`details_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `federation_provider`
---
-
-LOCK TABLES `federation_provider` WRITE;
-/*!40000 ALTER TABLE `federation_provider` DISABLE KEYS */;
-/*!40000 ALTER TABLE `federation_provider` ENABLE KEYS */;
+LOCK TABLES `document_template` WRITE;
+/*!40000 ALTER TABLE `document_template` DISABLE KEYS */;
+/*!40000 ALTER TABLE `document_template` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `federation_provider_props`
---
-
-DROP TABLE IF EXISTS `federation_provider_props`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `federation_provider_props` (
-  `props` bigint(20) default NULL,
-  `props_idx` varchar(255) default NULL,
-  `props_elt` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `federation_provider_props`
---
-
-LOCK TABLES `federation_provider_props` WRITE;
-/*!40000 ALTER TABLE `federation_provider_props` DISABLE KEYS */;
-/*!40000 ALTER TABLE `federation_provider_props` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `geo`
---
-
-DROP TABLE IF EXISTS `geo`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `geo` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `currency` varchar(255) NOT NULL,
-  `description` varchar(255) default NULL,
+DROP TABLE IF EXISTS `email_setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `email_setting` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+  `value` longtext NOT NULL,
+  `secret` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `geo`
---
+LOCK TABLES `email_setting` WRITE;
+/*!40000 ALTER TABLE `email_setting` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_setting` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `extra_unit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extra_unit` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `unit_of_sale` varchar(255) NOT NULL,
+  `extra_unit` int NOT NULL,
+  `short_name` varchar(255) DEFAULT NULL,
+  `service_profile_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKc5iwt5yqh0p045caaf6xl9ndc` (`service_profile_id`),
+  CONSTRAINT `FKc5iwt5yqh0p045caaf6xl9ndc` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `extra_unit` WRITE;
+/*!40000 ALTER TABLE `extra_unit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `extra_unit` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `field_mapping`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `field_mapping` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `value` longtext NOT NULL,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `field_mapping` WRITE;
+/*!40000 ALTER TABLE `field_mapping` DISABLE KEYS */;
+/*!40000 ALTER TABLE `field_mapping` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `general_staging_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `general_staging_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `from_stage_id` bigint DEFAULT NULL,
+  `to_stage_id` bigint DEFAULT NULL,
+  `comment` varchar(255) NOT NULL,
+  `modified_by` varchar(255) NOT NULL,
+  `revision` int NOT NULL,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKbjmga27kajqj91xlq60lhm09c` (`from_stage_id`),
+  KEY `FK6vhci2p0058fp92n8l0e77sk` (`to_stage_id`),
+  CONSTRAINT `FK6vhci2p0058fp92n8l0e77sk` FOREIGN KEY (`to_stage_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKbjmga27kajqj91xlq60lhm09c` FOREIGN KEY (`from_stage_id`) REFERENCES `staging` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `general_staging_log` WRITE;
+/*!40000 ALTER TABLE `general_staging_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `general_staging_log` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `geo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `geo` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `date_format` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
+  `currency_symbol` varchar(255) DEFAULT NULL,
+  `tax_percent` decimal(19,2) NOT NULL,
+  `terms` longtext,
+  `billing_terms` longtext,
+  `signature_block` longtext,
+  `sow_template` longtext,
+  `sow_label` varchar(255) DEFAULT NULL,
+  `sales_manager_id` bigint DEFAULT NULL,
+  `sow_file_id` bigint DEFAULT NULL,
+  `country` longtext,
+  `is_external` varchar(255) DEFAULT NULL,
+  `convert_rate` decimal(19,2) NOT NULL,
+  `geo_group_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK6old14e6dp1q8jklvx3bb3c9q` (`sales_manager_id`),
+  KEY `FKolxt95xya0r2yg40pregvfifo` (`sow_file_id`),
+  KEY `FK7moy960lk33c6wfxny660bcr8` (`geo_group_id`),
+  CONSTRAINT `FK6old14e6dp1q8jklvx3bb3c9q` FOREIGN KEY (`sales_manager_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK7moy960lk33c6wfxny660bcr8` FOREIGN KEY (`geo_group_id`) REFERENCES `geo_group` (`id`),
+  CONSTRAINT `FKolxt95xya0r2yg40pregvfifo` FOREIGN KEY (`sow_file_id`) REFERENCES `upload_file` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `geo` WRITE;
 /*!40000 ALTER TABLE `geo` DISABLE KEYS */;
-INSERT INTO `geo` VALUES (1,0,'USD','United States of America','UNITED STATES'),(2,0,'GBP','United Kingdom','UK'),(3,0,'EUR','Germany','GERMANY'),(4,0,'JPY','Japan','JAPAN');
 /*!40000 ALTER TABLE `geo` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `geo_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `geo_group` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `level_permission_fifth`
---
-
-DROP TABLE IF EXISTS `level_permission_fifth`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_fifth` (
-  `level_permission_id` bigint(20) default NULL,
-  `fifth_string` varchar(255) default NULL,
-  KEY `FKC93CB6A2D7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_fifth`
---
-
-LOCK TABLES `level_permission_fifth` WRITE;
-/*!40000 ALTER TABLE `level_permission_fifth` DISABLE KEYS */;
-/*!40000 ALTER TABLE `level_permission_fifth` ENABLE KEYS */;
+LOCK TABLES `geo_group` WRITE;
+/*!40000 ALTER TABLE `geo_group` DISABLE KEYS */;
+INSERT INTO `geo_group` VALUES (1,0,'AMER',NULL),(2,0,'EMEA',NULL),(3,0,'APAC',NULL);
+/*!40000 ALTER TABLE `geo_group` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `geo_sow_discounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `geo_sow_discounts` (
+  `geo_id` bigint NOT NULL,
+  `sow_discount_id` bigint NOT NULL,
+  PRIMARY KEY (`geo_id`,`sow_discount_id`),
+  KEY `FKatqq9woidsh234ew1m7mx8rye` (`sow_discount_id`),
+  CONSTRAINT `FKatqq9woidsh234ew1m7mx8rye` FOREIGN KEY (`sow_discount_id`) REFERENCES `sow_discount` (`id`),
+  CONSTRAINT `FKllib5kx02ix4o9jnicwpapldm` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `level_permission_first`
---
-
-DROP TABLE IF EXISTS `level_permission_first`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_first` (
-  `level_permission_id` bigint(20) default NULL,
-  `first_string` varchar(255) default NULL,
-  KEY `FKC93CE39BD7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_first`
---
-
-LOCK TABLES `level_permission_first` WRITE;
-/*!40000 ALTER TABLE `level_permission_first` DISABLE KEYS */;
-INSERT INTO `level_permission_first` VALUES (4,'portfolio'),(5,'*'),(6,'service'),(7,'reports'),(8,'service'),(9,'*'),(10,'service'),(11,'*'),(12,'*'),(13,'quotation'),(14,'*'),(15,'deliveryRole'),(16,'geo');
-/*!40000 ALTER TABLE `level_permission_first` ENABLE KEYS */;
+LOCK TABLES `geo_sow_discounts` WRITE;
+/*!40000 ALTER TABLE `geo_sow_discounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `geo_sow_discounts` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `internal_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `internal_map` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `internal_key` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `level_permission_fourth`
---
-
-DROP TABLE IF EXISTS `level_permission_fourth`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_fourth` (
-  `level_permission_id` bigint(20) default NULL,
-  `fourth_string` varchar(255) default NULL,
-  KEY `FK5EB5768FD7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_fourth`
---
-
-LOCK TABLES `level_permission_fourth` WRITE;
-/*!40000 ALTER TABLE `level_permission_fourth` DISABLE KEYS */;
-/*!40000 ALTER TABLE `level_permission_fourth` ENABLE KEYS */;
+LOCK TABLES `internal_map` WRITE;
+/*!40000 ALTER TABLE `internal_map` DISABLE KEYS */;
+INSERT INTO `internal_map` VALUES (1,0,'bootstrap','revision','1');
+/*!40000 ALTER TABLE `internal_map` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `lead`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lead` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `assign_to_id` bigint DEFAULT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `company` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `alt_email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `iso` varchar(255) DEFAULT NULL,
+  `format` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `created_by_id` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `billing_address_id` bigint DEFAULT NULL,
+  `contact_id` bigint DEFAULT NULL,
+  `staging_status_id` bigint DEFAULT NULL,
+  `current_step` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKg6etcyn4tpwquaorx7sm2qlhk` (`assign_to_id`),
+  KEY `FKfxjdnlirnosw736erapgp6wql` (`created_by_id`),
+  KEY `FK35tm4t3at8vgi56x44iq00xnj` (`modified_by_id`),
+  KEY `FKp13p3tbjuqw1y5v4qlkyjl4po` (`billing_address_id`),
+  KEY `FK2j9aik1br9klt17cmgbubp9e1` (`contact_id`),
+  KEY `FK4go68big4c4idbdok0iwecg4c` (`staging_status_id`),
+  CONSTRAINT `FK2j9aik1br9klt17cmgbubp9e1` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`id`),
+  CONSTRAINT `FK35tm4t3at8vgi56x44iq00xnj` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK4go68big4c4idbdok0iwecg4c` FOREIGN KEY (`staging_status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKfxjdnlirnosw736erapgp6wql` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKg6etcyn4tpwquaorx7sm2qlhk` FOREIGN KEY (`assign_to_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKp13p3tbjuqw1y5v4qlkyjl4po` FOREIGN KEY (`billing_address_id`) REFERENCES `billing_address` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `level_permission_second`
---
-
-DROP TABLE IF EXISTS `level_permission_second`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_second` (
-  `level_permission_id` bigint(20) default NULL,
-  `second_string` varchar(255) default NULL,
-  KEY `FK744F50E9D7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_second`
---
-
-LOCK TABLES `level_permission_second` WRITE;
-/*!40000 ALTER TABLE `level_permission_second` DISABLE KEYS */;
-INSERT INTO `level_permission_second` VALUES (4,'update'),(5,'read'),(6,'update'),(6,'create'),(6,'design'),(7,'show'),(8,'update'),(8,'design'),(9,'read'),(10,'design'),(11,'read'),(12,'read'),(13,'create'),(14,'read'),(15,'create'),(16,'create');
-/*!40000 ALTER TABLE `level_permission_second` ENABLE KEYS */;
+LOCK TABLES `lead` WRITE;
+/*!40000 ALTER TABLE `lead` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lead` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `lead_general_staging_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lead_general_staging_log` (
+  `lead_general_staging_logs_id` bigint NOT NULL,
+  `general_staging_log_id` bigint DEFAULT NULL,
+  KEY `FKelo2aw8wmmdl84ke1klfr856w` (`general_staging_log_id`),
+  KEY `FKrntheu6rqul2wsd3lmx8nvxyi` (`lead_general_staging_logs_id`),
+  CONSTRAINT `FKelo2aw8wmmdl84ke1klfr856w` FOREIGN KEY (`general_staging_log_id`) REFERENCES `general_staging_log` (`id`),
+  CONSTRAINT `FKrntheu6rqul2wsd3lmx8nvxyi` FOREIGN KEY (`lead_general_staging_logs_id`) REFERENCES `lead` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `level_permission_sixth`
---
-
-DROP TABLE IF EXISTS `level_permission_sixth`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_sixth` (
-  `level_permission_id` bigint(20) default NULL,
-  `sixth_string` varchar(255) default NULL,
-  KEY `FKC9F42BC1D7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_sixth`
---
-
-LOCK TABLES `level_permission_sixth` WRITE;
-/*!40000 ALTER TABLE `level_permission_sixth` DISABLE KEYS */;
-/*!40000 ALTER TABLE `level_permission_sixth` ENABLE KEYS */;
+LOCK TABLES `lead_general_staging_log` WRITE;
+/*!40000 ALTER TABLE `lead_general_staging_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lead_general_staging_log` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `level_permission_third`
---
-
-DROP TABLE IF EXISTS `level_permission_third`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `level_permission_third` (
-  `level_permission_id` bigint(20) default NULL,
-  `third_string` varchar(255) default NULL,
-  KEY `FKCA019652D7151CB7` (`level_permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `level_permission_third`
---
-
-LOCK TABLES `level_permission_third` WRITE;
-/*!40000 ALTER TABLE `level_permission_third` DISABLE KEYS */;
-/*!40000 ALTER TABLE `level_permission_third` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `login_record`
---
-
 DROP TABLE IF EXISTS `login_record`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `login_record` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_created` datetime default NULL,
-  `last_updated` datetime default NULL,
-  `owner_id` bigint(20) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `remote_addr` varchar(255) NOT NULL,
   `remote_host` varchar(255) NOT NULL,
   `user_agent` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKF43101E7165461AF` (`owner_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `login_record`
---
+  `date_created` datetime(6) DEFAULT NULL,
+  `last_updated` datetime(6) DEFAULT NULL,
+  `owner_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKjj0fb4t24xipdbndx05j80lti` (`owner_id`),
+  CONSTRAINT `FKjj0fb4t24xipdbndx05j80lti` FOREIGN KEY (`owner_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `login_record` WRITE;
 /*!40000 ALTER TABLE `login_record` DISABLE KEYS */;
-INSERT INTO `login_record` VALUES (1,0,'2011-05-03 21:53:16','2011-05-03 21:53:16',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.0.4) Gecko/2008102920 Firefox/3.0.4'),(2,0,'2011-05-04 00:08:32','2011-05-04 00:08:32',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(3,0,'2011-05-04 14:40:44','2011-05-04 14:40:44',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(4,0,'2011-05-04 15:28:11','2011-05-04 15:28:11',10,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(5,0,'2011-05-04 15:34:01','2011-05-04 15:34:01',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(6,0,'2011-05-04 15:42:17','2011-05-04 15:42:17',10,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(7,0,'2011-05-04 17:07:32','2011-05-04 17:07:32',2,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(8,0,'2011-05-04 17:08:11','2011-05-04 17:08:11',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(9,0,'2011-05-04 17:16:34','2011-05-04 17:16:34',10,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(10,0,'2011-05-04 17:19:32','2011-05-04 17:19:32',8,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(11,0,'2011-05-04 17:23:51','2011-05-04 17:23:51',10,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(12,0,'2011-05-04 17:31:39','2011-05-04 17:31:39',6,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(13,0,'2011-05-04 17:33:38','2011-05-04 17:33:38',10,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(14,0,'2011-05-04 17:34:52','2011-05-04 17:34:52',6,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(15,0,'2011-05-04 17:49:08','2011-05-04 17:49:08',10,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(16,0,'2011-05-04 17:50:38','2011-05-04 17:50:38',8,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(17,0,'2011-05-04 17:54:42','2011-05-04 17:54:42',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(18,0,'2011-05-04 18:42:31','2011-05-04 18:42:31',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(19,0,'2011-05-04 18:42:43','2011-05-04 18:42:43',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(20,0,'2011-05-04 18:43:39','2011-05-04 18:43:39',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(21,0,'2011-05-04 18:49:02','2011-05-04 18:49:02',5,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(22,0,'2011-05-04 18:55:35','2011-05-04 18:55:35',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(23,0,'2011-05-04 18:58:52','2011-05-04 18:58:52',5,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(24,0,'2011-05-04 19:03:10','2011-05-04 19:03:10',2,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(25,0,'2011-05-04 19:05:13','2011-05-04 19:05:13',5,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(26,0,'2011-05-04 19:08:09','2011-05-04 19:08:09',11,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(27,0,'2011-05-04 19:19:58','2011-05-04 19:19:58',10,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(28,0,'2011-05-04 19:45:43','2011-05-04 19:45:43',5,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(29,0,'2011-05-04 19:48:36','2011-05-04 19:48:36',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(30,0,'2011-05-04 19:52:59','2011-05-04 19:52:59',3,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(31,0,'2011-05-04 19:54:02','2011-05-04 19:54:02',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(32,0,'2011-05-04 19:55:11','2011-05-04 19:55:11',3,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(33,0,'2011-05-04 19:56:25','2011-05-04 19:56:25',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(34,0,'2011-05-04 19:57:15','2011-05-04 19:57:15',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(35,0,'2011-05-04 19:59:48','2011-05-04 19:59:48',8,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(36,0,'2011-05-04 20:01:19','2011-05-04 20:01:19',2,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(37,0,'2011-05-04 20:03:18','2011-05-04 20:03:18',12,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(38,0,'2011-05-04 20:05:37','2011-05-04 20:05:37',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(39,0,'2011-05-04 20:06:13','2011-05-04 20:06:13',10,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(40,0,'2011-05-04 21:01:58','2011-05-04 21:01:58',5,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(41,0,'2011-05-04 21:03:56','2011-05-04 21:03:56',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(42,0,'2011-05-04 23:38:25','2011-05-04 23:38:25',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(43,0,'2011-05-04 23:47:10','2011-05-04 23:47:10',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(44,0,'2011-05-05 00:43:14','2011-05-05 00:43:14',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(45,0,'2011-05-05 00:46:41','2011-05-05 00:46:41',12,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(46,0,'2011-05-05 02:04:42','2011-05-05 02:04:42',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(47,0,'2011-05-05 02:12:47','2011-05-05 02:12:47',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_5; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.205 Safari/534.16'),(48,0,'2011-05-05 15:31:23','2011-05-05 15:31:23',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A306 Safari/6531.22.7'),(49,0,'2011-05-05 16:42:03','2011-05-05 16:42:03',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(50,0,'2011-05-05 23:08:47','2011-05-05 23:08:47',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24'),(51,0,'2011-05-06 22:57:20','2011-05-06 22:57:20',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(52,0,'2011-05-07 14:37:51','2011-05-07 14:37:51',2,'117.196.32.120','117.196.32.120','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.65 Safari/534.24'),(53,0,'2011-05-08 01:13:52','2011-05-08 01:13:52',2,'117.196.102.211','117.196.102.211','Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; InfoPath.2; MASN)'),(54,0,'2011-05-08 13:26:38','2011-05-08 13:26:38',2,'113.193.205.163','113.193.205.163','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24'),(55,0,'2011-05-10 21:59:39','2011-05-10 21:59:39',10,'64.125.181.75','64.125.181.75','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(56,0,'2011-05-10 22:00:06','2011-05-10 22:00:06',8,'64.125.181.75','64.125.181.75','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(57,0,'2011-05-10 22:13:09','2011-05-10 22:13:09',4,'64.125.181.75','64.125.181.75','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(58,0,'2011-05-10 22:24:46','2011-05-10 22:24:46',2,'64.125.181.75','64.125.181.75','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(59,0,'2011-05-11 06:20:33','2011-05-11 06:20:33',2,'80.239.242.176','80.239.242.176','Opera/9.80 (J2ME/MIDP; Opera Mini/4.1.13906/24.816; U; en) Presto/2.5.25 Version/10.54'),(60,0,'2011-05-15 14:54:11','2011-05-15 14:54:11',2,'76.102.30.157','76.102.30.157','Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(61,0,'2011-05-15 15:29:29','2011-05-15 15:29:29',8,'76.102.30.157','76.102.30.157','Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(62,0,'2011-05-15 15:35:24','2011-05-15 15:35:24',10,'76.102.30.157','76.102.30.157','Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(63,0,'2011-05-15 15:42:52','2011-05-15 15:42:52',6,'76.102.30.157','76.102.30.157','Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(64,0,'2011-05-15 15:43:28','2011-05-15 15:43:28',4,'76.102.30.157','76.102.30.157','Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(65,0,'2011-05-16 10:11:41','2011-05-16 10:11:41',2,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(66,0,'2011-05-19 05:15:57','2011-05-19 05:15:57',2,'117.229.76.114','117.229.76.114','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'),(67,0,'2011-05-23 18:41:20','2011-05-23 18:41:20',7,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.17) Gecko/20110420 Firefox/3.6.17'),(68,0,'2011-05-23 19:06:35','2011-05-23 19:06:35',4,'76.126.66.3','76.126.66.3','Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.17) Gecko/20110420 Firefox/3.6.17'),(69,0,'2011-06-07 18:13:27','2011-06-07 18:13:27',2,'65.113.40.1','65.113.40.1','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2'),(70,0,'2011-06-17 02:39:29','2011-06-17 02:39:29',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(71,0,'2011-06-17 02:40:06','2011-06-17 02:40:06',2,'113.193.201.20','113.193.201.20','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(72,0,'2011-06-17 03:44:39','2011-06-17 03:44:39',2,'113.193.193.91','113.193.193.91','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(73,0,'2011-06-17 03:46:28','2011-06-17 03:46:28',2,'113.193.193.91','113.193.193.91','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(74,0,'2011-06-17 07:13:30','2011-06-17 07:13:30',2,'113.193.201.20','113.193.201.20','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(75,0,'2011-06-17 13:46:58','2011-06-17 13:46:58',2,'113.193.201.20','113.193.201.20','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(76,0,'2011-06-17 15:26:13','2011-06-17 15:26:13',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(77,0,'2011-06-17 16:04:26','2011-06-17 16:04:26',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(78,0,'2011-06-24 01:27:09','2011-06-24 01:27:09',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(79,0,'2011-06-24 01:36:57','2011-06-24 01:36:57',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(80,0,'2011-06-24 07:36:47','2011-06-24 07:36:47',2,'113.193.205.174','113.193.205.174','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(81,0,'2011-06-24 08:29:07','2011-06-24 08:29:07',2,'113.193.205.174','113.193.205.174','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(82,0,'2011-06-28 14:28:44','2011-06-28 14:28:44',2,'113.193.205.105','113.193.205.105','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(83,0,'2011-06-28 14:31:47','2011-06-28 14:31:47',2,'113.193.205.105','113.193.205.105','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(84,0,'2011-06-28 14:34:47','2011-06-28 14:34:47',2,'113.193.205.105','113.193.205.105','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(85,0,'2011-06-28 14:37:14','2011-06-28 14:37:14',2,'113.193.205.105','113.193.205.105','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(86,0,'2011-06-28 22:13:18','2011-06-28 22:13:18',2,'113.193.201.116','113.193.201.116','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(87,0,'2011-06-28 22:50:13','2011-06-28 22:50:13',2,'113.193.201.116','113.193.201.116','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(88,0,'2011-06-29 00:40:31','2011-06-29 00:40:31',2,'113.193.201.116','113.193.201.116','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30'),(89,0,'2011-06-30 13:51:23','2011-06-30 13:51:23',2,'113.193.202.7','113.193.202.7','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(90,0,'2011-07-01 13:28:11','2011-07-01 13:28:11',2,'113.193.206.104','113.193.206.104','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(91,0,'2011-07-10 19:28:48','2011-07-10 19:28:48',2,'24.5.197.88','24.5.197.88','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(92,0,'2011-07-11 02:13:13','2011-07-11 02:13:13',2,'67.169.142.44','67.169.142.44','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(93,0,'2011-07-11 04:29:45','2011-07-11 04:29:45',2,'67.169.142.44','67.169.142.44','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(94,0,'2011-07-12 19:38:12','2011-07-12 19:38:12',2,'64.134.225.132','64.134.225.132','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30'),(95,0,'2011-07-21 01:57:19','2011-07-21 01:57:19',2,'1.23.249.59','1.23.249.59','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.122 Safari/534.30');
 /*!40000 ALTER TABLE `login_record` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `logo_image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `logo_image` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `image` mediumblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `permission`
---
-
-DROP TABLE IF EXISTS `permission`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `permission` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `actions` varchar(255) NOT NULL,
-  `group_id` bigint(20) default NULL,
-  `managed` bit(1) NOT NULL,
-  `possible_actions` varchar(255) NOT NULL,
-  `role_id` bigint(20) default NULL,
-  `target` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `user_id` bigint(20) default NULL,
-  `class` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKE125C5CF42555646` (`role_id`),
-  KEY `FKE125C5CFAA6DB197` (`user_id`),
-  KEY `FKE125C5CF35C9368E` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `permission`
---
-
-LOCK TABLES `permission` WRITE;
-/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES (1,0,'*',NULL,'','*',NULL,'profile:edit:1','grails.plugins.nimble.auth.WildcardPermission',1,'grails.plugins.nimble.core.Permission'),(2,0,'*',NULL,'','*',NULL,'profile:edit:2','grails.plugins.nimble.auth.WildcardPermission',2,'grails.plugins.nimble.core.Permission'),(3,0,'*',NULL,'','*',NULL,'*','grails.plugins.nimble.auth.AllPermission',2,'grails.plugins.nimble.core.Permission'),(4,0,'*',NULL,'\0','*',3,'portfolio:update','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(5,0,'*',NULL,'\0','*',3,'*:read','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(6,0,'*',NULL,'\0','*',3,'service:create,design,update','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(7,0,'*',NULL,'\0','*',3,'reports:show','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(8,0,'*',NULL,'\0','*',4,'service:design,update','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(9,0,'*',NULL,'\0','*',4,'*:read','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(10,0,'*',NULL,'\0','*',5,'service:design','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(11,0,'*',NULL,'\0','*',5,'*:read','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(12,0,'*',NULL,'\0','*',6,'*:read','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(13,0,'*',NULL,'\0','*',6,'quotation:create','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(14,0,'*',NULL,'\0','*',7,'*:read','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(15,0,'*',NULL,'\0','*',7,'deliveryRole:create','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(16,0,'*',NULL,'\0','*',7,'geo:create','grails.plugins.nimble.auth.WildcardPermission',NULL,'grails.plugins.nimble.core.LevelPermission'),(17,0,'*',NULL,'','*',NULL,'profile:edit:3','grails.plugins.nimble.auth.WildcardPermission',3,'grails.plugins.nimble.core.Permission'),(18,0,'*',NULL,'','*',NULL,'profile:edit:4','grails.plugins.nimble.auth.WildcardPermission',4,'grails.plugins.nimble.core.Permission'),(19,0,'*',NULL,'','*',NULL,'profile:edit:5','grails.plugins.nimble.auth.WildcardPermission',5,'grails.plugins.nimble.core.Permission'),(20,0,'*',NULL,'','*',NULL,'profile:edit:6','grails.plugins.nimble.auth.WildcardPermission',6,'grails.plugins.nimble.core.Permission'),(21,0,'*',NULL,'','*',NULL,'profile:edit:7','grails.plugins.nimble.auth.WildcardPermission',7,'grails.plugins.nimble.core.Permission'),(22,0,'*',NULL,'','*',NULL,'profile:edit:8','grails.plugins.nimble.auth.WildcardPermission',8,'grails.plugins.nimble.core.Permission'),(23,0,'*',NULL,'','*',NULL,'profile:edit:9','grails.plugins.nimble.auth.WildcardPermission',9,'grails.plugins.nimble.core.Permission'),(24,0,'*',NULL,'','*',NULL,'profile:edit:10','grails.plugins.nimble.auth.WildcardPermission',10,'grails.plugins.nimble.core.Permission'),(25,0,'*',NULL,'','*',NULL,'profile:edit:11','grails.plugins.nimble.auth.WildcardPermission',11,'grails.plugins.nimble.core.Permission'),(26,0,'*',NULL,'','*',NULL,'profile:edit:12','grails.plugins.nimble.auth.WildcardPermission',12,'grails.plugins.nimble.core.Permission'),(27,0,'*',NULL,'','*',NULL,'profile:edit:13','grails.plugins.nimble.auth.WildcardPermission',13,'grails.plugins.nimble.core.Permission');
-/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+LOCK TABLES `logo_image` WRITE;
+/*!40000 ALTER TABLE `logo_image` DISABLE KEYS */;
+/*!40000 ALTER TABLE `logo_image` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `note`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `note` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `created_by_id` bigint NOT NULL,
+  `modified_by_id` bigint NOT NULL,
+  `created_date` datetime(6) NOT NULL,
+  `modified_date` datetime(6) NOT NULL,
+  `opportunity_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK2t1lq0t6hnukun5v5r5fcehfr` (`created_by_id`),
+  KEY `FK3fja7gdchsslkp03nsq1d4jd9` (`modified_by_id`),
+  KEY `FKdtgeoagm5wnw5am4diwilnvgy` (`opportunity_id`),
+  CONSTRAINT `FK2t1lq0t6hnukun5v5r5fcehfr` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK3fja7gdchsslkp03nsq1d4jd9` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKdtgeoagm5wnw5am4diwilnvgy` FOREIGN KEY (`opportunity_id`) REFERENCES `opportunity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `portfolio`
---
+LOCK TABLES `note` WRITE;
+/*!40000 ALTER TABLE `note` DISABLE KEYS */;
+/*!40000 ALTER TABLE `note` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notification` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `active` bit(1) NOT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `review_request_id` bigint DEFAULT NULL,
+  `object_type` varchar(255) DEFAULT NULL,
+  `object_id` bigint NOT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKifwukkimmgdrt2qjvpmsmci9n` (`review_request_id`),
+  KEY `FK5of19hh0xu63hajx0kre6jr0m` (`created_by_id`),
+  CONSTRAINT `FK5of19hh0xu63hajx0kre6jr0m` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKifwukkimmgdrt2qjvpmsmci9n` FOREIGN KEY (`review_request_id`) REFERENCES `review_request` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `notification` WRITE;
+/*!40000 ALTER TABLE `notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `notification__user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notification__user` (
+  `notification_receiver_users_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  KEY `FKdtjom4019xwkb1juwfsef0e49` (`user_id`),
+  KEY `FKg9ry0tiwb8qaj3n8ugxk689fo` (`notification_receiver_users_id`),
+  CONSTRAINT `FKdtjom4019xwkb1juwfsef0e49` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKg9ry0tiwb8qaj3n8ugxk689fo` FOREIGN KEY (`notification_receiver_users_id`) REFERENCES `notification` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `notification__user` WRITE;
+/*!40000 ALTER TABLE `notification__user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification__user` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `notification_receiver_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notification_receiver_groups` (
+  `notification_id` bigint NOT NULL,
+  `role_id` varchar(255) DEFAULT NULL,
+  KEY `FKcqp1fv4p9o16y6o3rivlhip64` (`notification_id`),
+  CONSTRAINT `FKcqp1fv4p9o16y6o3rivlhip64` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `notification_receiver_groups` WRITE;
+/*!40000 ALTER TABLE `notification_receiver_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification_receiver_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `object_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `object_type` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` longtext NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `description` longtext,
+  `sequence_order` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `object_type` WRITE;
+/*!40000 ALTER TABLE `object_type` DISABLE KEYS */;
+INSERT INTO `object_type` VALUES (1,1,'INSTALL','SERVICE_DELIVERABLE',NULL,0),(2,1,'TRAINING','SERVICE_DELIVERABLE',NULL,0),(3,1,'INSTALL','SERVICE_ACTIVITY',NULL,0),(4,1,'TRAINING','SERVICE_ACTIVITY',NULL,0),(5,0,'INITIAL PAYMENT','SOW_MILESTONE',NULL,0),(6,0,'SECOND MILESTONE','SOW_MILESTONE',NULL,0),(7,0,'THIRD PAYMENT','SOW_MILESTONE',NULL,0),(8,0,'NEXT PAYABLE AMOUNT','SOW_MILESTONE',NULL,0),(9,0,'LAST PAYMENT AMOUNT','SOW_MILESTONE',NULL,0),(10,0,'FINAL MILESTONE','SOW_MILESTONE',NULL,0),(11,1,'DEFAULT STARTUP PHASE','DELIVERABLE_PHASE','This is default startup phase created for already existing published services to continue the process.',1);
+/*!40000 ALTER TABLE `object_type` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `opportunity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `opportunity` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `assign_to_id` bigint DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `probability` int DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `discount` int DEFAULT NULL,
+  `close_date` datetime(6) DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `created_by_id` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `account_id` bigint DEFAULT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  `staging_status_id` bigint DEFAULT NULL,
+  `current_step` int NOT NULL,
+  `primary_contact_id` bigint DEFAULT NULL,
+  `notes` longtext,
+  `external_id` varchar(255) DEFAULT NULL,
+  `external_source` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKpdq320jxpewu7tauictjf5fb` (`assign_to_id`),
+  KEY `FKal1qby3346qp0bulq18giuo11` (`created_by_id`),
+  KEY `FKo7f2asw75xn6bsuggyfq0ywmn` (`modified_by_id`),
+  KEY `FK9mvhqgny93la8u8k2gd531nex` (`account_id`),
+  KEY `FKtfarx5px9ddoidqctpnx4a9c3` (`geo_id`),
+  KEY `FKabofe6exhw4b976scsysgjgng` (`staging_status_id`),
+  KEY `FK97fqxdmpfnjyhex00q15e0uyu` (`primary_contact_id`),
+  CONSTRAINT `FK97fqxdmpfnjyhex00q15e0uyu` FOREIGN KEY (`primary_contact_id`) REFERENCES `contact` (`id`),
+  CONSTRAINT `FK9mvhqgny93la8u8k2gd531nex` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+  CONSTRAINT `FKabofe6exhw4b976scsysgjgng` FOREIGN KEY (`staging_status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKal1qby3346qp0bulq18giuo11` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKo7f2asw75xn6bsuggyfq0ywmn` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKpdq320jxpewu7tauictjf5fb` FOREIGN KEY (`assign_to_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKtfarx5px9ddoidqctpnx4a9c3` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `opportunity` WRITE;
+/*!40000 ALTER TABLE `opportunity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `opportunity` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `opportunity_general_staging_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `opportunity_general_staging_log` (
+  `opportunity_general_staging_logs_id` bigint NOT NULL,
+  `general_staging_log_id` bigint DEFAULT NULL,
+  KEY `FK8ht1qqtvbt2vvw4ryho2fm7jh` (`general_staging_log_id`),
+  KEY `FKbjspdfmutxhxckcdbt90qcpub` (`opportunity_general_staging_logs_id`),
+  CONSTRAINT `FK8ht1qqtvbt2vvw4ryho2fm7jh` FOREIGN KEY (`general_staging_log_id`) REFERENCES `general_staging_log` (`id`),
+  CONSTRAINT `FKbjspdfmutxhxckcdbt90qcpub` FOREIGN KEY (`opportunity_general_staging_logs_id`) REFERENCES `opportunity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `opportunity_general_staging_log` WRITE;
+/*!40000 ALTER TABLE `opportunity_general_staging_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `opportunity_general_staging_log` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `pending_mail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pending_mail` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `email_id` varchar(255) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `create_date` datetime(6) NOT NULL,
+  `active` bit(1) NOT NULL,
+  `active_bit` int NOT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `pending_mail` WRITE;
+/*!40000 ALTER TABLE `pending_mail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pending_mail` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `portfolio`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `portfolio` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_modified` datetime NOT NULL,
-  `description` varchar(255) default NULL,
-  `portfolio_manager_id` bigint(20) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `portfolio_name` varchar(255) NOT NULL,
+  `description` longtext,
+  `date_modified` datetime(6) NOT NULL,
   `staging_status` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK42DD0548E07DB3BD` (`portfolio_manager_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `portfolio`
---
+  `portfolio_manager_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKgpisrcbl3pquinxo5qbifs45l` (`portfolio_manager_id`),
+  CONSTRAINT `FKgpisrcbl3pquinxo5qbifs45l` FOREIGN KEY (`portfolio_manager_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `portfolio` WRITE;
 /*!40000 ALTER TABLE `portfolio` DISABLE KEYS */;
-INSERT INTO `portfolio` VALUES (2,0,'2011-05-04 15:22:19','Portfolio of service offerings designed to drive adoption of virtual desktop products.',8,'vDesktop','Published'),(3,0,'2011-05-04 15:23:10','Portfolio of services designed to drive adoption of nebulous clouds.\r\n',7,'vCloud','Published');
 /*!40000 ALTER TABLE `portfolio` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `portfolio__user`
---
-
 DROP TABLE IF EXISTS `portfolio__user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `portfolio__user` (
-  `portfolio_designers_id` bigint(20) default NULL,
-  `user_id` bigint(20) default NULL,
-  `portfolio_other_portfolio_managers_id` bigint(20) default NULL,
-  KEY `FKF093F6F31EED4788` (`user_id`),
-  KEY `FKF093F6F3F1826F11` (`portfolio_other_portfolio_managers_id`),
-  KEY `FKF093F6F3A9A6CFC3` (`portfolio_designers_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `portfolio__user`
---
+  `portfolio_designers_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `portfolio_other_portfolio_managers_id` bigint NOT NULL,
+  KEY `FK9gc4y7j918voswqiile3gg33g` (`user_id`),
+  KEY `FK3unue48xaopt9xjjch0w7b8bp` (`portfolio_designers_id`),
+  KEY `FKbbv402t1wej0g7l4xqyymdh0u` (`portfolio_other_portfolio_managers_id`),
+  CONSTRAINT `FK3unue48xaopt9xjjch0w7b8bp` FOREIGN KEY (`portfolio_designers_id`) REFERENCES `portfolio` (`id`),
+  CONSTRAINT `FK9gc4y7j918voswqiile3gg33g` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKbbv402t1wej0g7l4xqyymdh0u` FOREIGN KEY (`portfolio_other_portfolio_managers_id`) REFERENCES `portfolio` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `portfolio__user` WRITE;
 /*!40000 ALTER TABLE `portfolio__user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `portfolio__user` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `pricelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pricelist` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `service_profile_id` bigint NOT NULL,
+  `geo_id` bigint NOT NULL,
+  `base_price` decimal(19,2) NOT NULL,
+  `additional_price` decimal(19,2) NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `is_temporary` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKhnl8vdej27gd5ot5xxjeqiv8h` (`service_profile_id`),
+  KEY `FK63uxk7f1ubqtl3lu9glbiwqu3` (`geo_id`),
+  KEY `FK9ghw3yuyd4vmh75qum7c7d2ms` (`modified_by_id`),
+  CONSTRAINT `FK63uxk7f1ubqtl3lu9glbiwqu3` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FK9ghw3yuyd4vmh75qum7c7d2ms` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKhnl8vdej27gd5ot5xxjeqiv8h` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `profile_base`
---
-
-DROP TABLE IF EXISTS `profile_base`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `profile_base` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_created` datetime default NULL,
-  `email` varchar(255) default NULL,
-  `email_hash` varchar(255) default NULL,
-  `full_name` varchar(255) default NULL,
-  `last_updated` datetime default NULL,
-  `nick_name` varchar(255) default NULL,
-  `non_verified_email` varchar(255) default NULL,
-  `class` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `profile_base`
---
-
-LOCK TABLES `profile_base` WRITE;
-/*!40000 ALTER TABLE `profile_base` DISABLE KEYS */;
-INSERT INTO `profile_base` VALUES (1,0,'2011-05-03 21:51:23',NULL,NULL,'Test User','2011-05-03 21:51:23',NULL,NULL,'com.valent.pricewell.Profile'),(2,0,'2011-05-03 21:51:23',NULL,NULL,'Administrator','2011-05-03 21:51:23',NULL,NULL,'com.valent.pricewell.Profile'),(3,0,'2011-05-04 15:03:25','tbadmun@valent-sw.com','f4eb12133998b0f74277af36961e4891','Tracy Badmun','2011-05-04 15:03:25',NULL,NULL,'com.valent.pricewell.Profile'),(4,0,'2011-05-04 15:06:11','rswanson@valent-sw.com','12a269e5737ad7e3682a6d725b2c22a7','Rick Swanson','2011-05-04 15:06:11',NULL,NULL,'com.valent.pricewell.Profile'),(5,0,'2011-05-04 15:07:55','nronde@valent-sw.com','d635fc75009d4abdd092334c35576cf2','Nathaniel Ronde','2011-05-04 15:07:55',NULL,NULL,'com.valent.pricewell.Profile'),(6,0,'2011-05-04 15:10:47','jpodge@valent-sw.com','02f7224254b6cc2748e05e18688c41c4','John Podge','2011-05-04 15:10:47',NULL,NULL,'com.valent.pricewell.Profile'),(7,0,'2011-05-04 15:12:35','jcubeline@valent-sw.com','2a9a33a495ad5ad4369f6652e35e47fd','Jennifer Cubeline','2011-05-04 15:12:35',NULL,NULL,'com.valent.pricewell.Profile'),(8,0,'2011-05-04 15:15:33','anot@valent-sw.com','4a569b4aeb828024e77690ff20ff7b52','Andy Not','2011-05-04 15:15:33',NULL,NULL,'com.valent.pricewell.Profile'),(9,0,'2011-05-04 15:17:31','blinman@valent-sw.com','aa89cb54a873ba3eeff65b94379eaf86','Ben Linman','2011-05-04 15:17:31',NULL,NULL,'com.valent.pricewell.Profile'),(10,0,'2011-05-04 15:19:11','dlang@valentsw.com','bacd14d3c6ed37595b69a741d8e60f7b','Dale Lang','2011-05-04 15:19:11',NULL,NULL,'com.valent.pricewell.Profile'),(11,0,'2011-05-04 19:04:34','qturner@valent-sw.com','4b513cc037c00fb04bf8c8bb0253ed94','Queensly Turner','2011-05-04 19:04:34',NULL,NULL,'com.valent.pricewell.Profile'),(12,0,'2011-05-04 20:02:24','mreece@valent-sw.com','3fdf7cd9b33397a253c07877ca845091','Michelle Reece','2011-05-04 20:02:24',NULL,NULL,'com.valent.pricewell.Profile'),(13,0,'2011-06-28 14:35:45','ratan_30@yahoo.co.in','dfb1841d7abee2def35d036caa012734','Ratan Mistry','2011-06-28 14:35:45',NULL,NULL,'com.valent.pricewell.Profile');
-/*!40000 ALTER TABLE `profile_base` ENABLE KEYS */;
+LOCK TABLES `pricelist` WRITE;
+/*!40000 ALTER TABLE `pricelist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pricelist` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `product_id` varchar(255) DEFAULT NULL,
+  `unit_of_sale` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) DEFAULT NULL,
+  `date_published` datetime(6) DEFAULT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `product_type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `quotation`
---
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `product_pricelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_pricelist` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `geo_id` bigint NOT NULL,
+  `unit_price` decimal(19,2) NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `product_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKq8mp6rd7faepexeqvcld2csj0` (`geo_id`),
+  KEY `FKcfjuf9u0l0bpqbdwu08vtgxoe` (`modified_by_id`),
+  KEY `FKg1qcb4h72yk6vnrojaiuhmkxv` (`product_id`),
+  CONSTRAINT `FKcfjuf9u0l0bpqbdwu08vtgxoe` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKg1qcb4h72yk6vnrojaiuhmkxv` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `FKq8mp6rd7faepexeqvcld2csj0` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `product_pricelist` WRITE;
+/*!40000 ALTER TABLE `product_pricelist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_pricelist` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `profile` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `nick_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) DEFAULT NULL,
+  `last_updated` datetime(6) DEFAULT NULL,
+  `owner_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_9d5dpsf2ufa6rjbi3y0elkdcd` (`email`),
+  KEY `FKana1hy6piii6uawnrm7nqy8va` (`owner_id`),
+  CONSTRAINT `FKana1hy6piii6uawnrm7nqy8va` FOREIGN KEY (`owner_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `profile` WRITE;
+/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
+INSERT INTO `profile` VALUES (1,0,'Administrator',NULL,'rlsar.valent2010@gmail.com',NULL,NULL,'2026-03-31 20:22:16.062000','2026-03-31 20:22:16.062000',1),(2,0,'Super Administrator',NULL,NULL,NULL,NULL,'2026-03-31 20:22:16.229000','2026-03-31 20:22:16.229000',2),(3,0,'No Body',NULL,NULL,NULL,NULL,'2026-03-31 20:22:16.344000','2026-03-31 20:22:16.344000',3),(4,0,'GM Americas',NULL,'gm.amer@example.com',NULL,NULL,'2026-03-31 20:22:16.470000','2026-03-31 20:22:16.470000',4),(5,0,'GM Europe',NULL,'gm.emea@example.com',NULL,NULL,'2026-03-31 20:22:16.633000','2026-03-31 20:22:16.633000',5),(6,0,'GM Asia Pacific',NULL,'gm.apac@example.com',NULL,NULL,'2026-03-31 20:22:16.731000','2026-03-31 20:22:16.731000',6);
+/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `project_parameter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `project_parameter` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `value` longtext NOT NULL,
+  `sequence_order` int DEFAULT NULL,
+  `quotation_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKihkgvkf4rn9lp2s372tgmbdgj` (`quotation_id`),
+  CONSTRAINT `FKihkgvkf4rn9lp2s372tgmbdgj` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `project_parameter` WRITE;
+/*!40000 ALTER TABLE `project_parameter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `project_parameter` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `quota`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quota` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `amount` decimal(19,2) DEFAULT NULL,
+  `timespan` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `territory_id` bigint DEFAULT NULL,
+  `from_date` datetime(6) DEFAULT NULL,
+  `to_date` datetime(6) DEFAULT NULL,
+  `person_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK79xnjpesgnmpjljtnmcfnkudu` (`created_by_id`),
+  KEY `FKdnf4hmy433jf3ico4ivme9a4b` (`territory_id`),
+  KEY `FKtrj3jiec3lfdbfhhaf04g58xb` (`person_id`),
+  CONSTRAINT `FK79xnjpesgnmpjljtnmcfnkudu` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKdnf4hmy433jf3ico4ivme9a4b` FOREIGN KEY (`territory_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FKtrj3jiec3lfdbfhhaf04g58xb` FOREIGN KEY (`person_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `quota` WRITE;
+/*!40000 ALTER TABLE `quota` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quota` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `quotation`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `quotation` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `created_by_id` bigint(20) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `customer_name` varchar(255) default NULL,
-  `customer_type` varchar(255) default NULL,
-  `geo_id` bigint(20) default NULL,
-  `modified_date` datetime default NULL,
-  `status` varchar(255) NOT NULL,
-  `total_quoted_price` float NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKA771958C433108AC` (`geo_id`),
-  KEY `FKA771958C9C09DF65` (`created_by_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `quotation`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `created_by_id` bigint NOT NULL,
+  `account_id` bigint NOT NULL,
+  `customer_type` varchar(255) DEFAULT NULL,
+  `created_date` datetime(6) NOT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `status_change_date` datetime(6) NOT NULL,
+  `status_id` bigint NOT NULL,
+  `contract_status_id` bigint NOT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  `total_quoted_price` decimal(19,2) NOT NULL,
+  `request_level1` bit(1) NOT NULL,
+  `request_level2` bit(1) NOT NULL,
+  `request_level3` bit(1) NOT NULL,
+  `flat_discount` bit(1) NOT NULL,
+  `forecast_value` decimal(19,2) NOT NULL,
+  `discount_percent` decimal(19,2) NOT NULL,
+  `discount_amount` decimal(19,2) NOT NULL,
+  `tax_percent` decimal(19,2) NOT NULL,
+  `tax_amount` decimal(19,2) NOT NULL,
+  `final_price` decimal(19,2) NOT NULL,
+  `validity_in_days` int NOT NULL,
+  `template_text` varchar(255) NOT NULL,
+  `billing_text` varchar(255) NOT NULL,
+  `discount_from` decimal(19,2) DEFAULT NULL,
+  `discount_to` decimal(19,2) DEFAULT NULL,
+  `current_review_request_id` bigint DEFAULT NULL,
+  `confidence_percentage` decimal(19,2) NOT NULL,
+  `local_discount` decimal(19,2) DEFAULT NULL,
+  `local_discount_description` longtext,
+  `expense_amount` decimal(19,2) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `is_light` bit(1) DEFAULT NULL,
+  `sow_introduction_setting_id` bigint DEFAULT NULL,
+  `sow_start_date` datetime(6) DEFAULT NULL,
+  `sow_end_date` datetime(6) DEFAULT NULL,
+  `sow_document_template_id` bigint DEFAULT NULL,
+  `convert_to_ticket` varchar(255) DEFAULT NULL,
+  `is_corrected` varchar(255) DEFAULT NULL,
+  `opportunity_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKivb674h3ldni7e6dc8ogctv1q` (`created_by_id`),
+  KEY `FK7vajsuhk5172qvlu7p6ip9jlm` (`account_id`),
+  KEY `FKqxiwj2d0ot74is3w5439wiwqr` (`status_id`),
+  KEY `FKa3rj0npqkbx0vvp6h5xmhuyx6` (`contract_status_id`),
+  KEY `FK16p7svtr7shrawp8y9y5ipkyv` (`geo_id`),
+  KEY `FKjso6mq4gle3frk6bjo3hx6cor` (`current_review_request_id`),
+  KEY `FKjxhsbm4rqrar97tvjatm8d22r` (`sow_introduction_setting_id`),
+  KEY `FKrv0v4il34lgk4gpume2a5p3f5` (`sow_document_template_id`),
+  KEY `FKlvqc2b9fruqvgmrbk9ro0rrwn` (`opportunity_id`),
+  CONSTRAINT `FK16p7svtr7shrawp8y9y5ipkyv` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FK7vajsuhk5172qvlu7p6ip9jlm` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+  CONSTRAINT `FKa3rj0npqkbx0vvp6h5xmhuyx6` FOREIGN KEY (`contract_status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKivb674h3ldni7e6dc8ogctv1q` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKjso6mq4gle3frk6bjo3hx6cor` FOREIGN KEY (`current_review_request_id`) REFERENCES `review_request` (`id`),
+  CONSTRAINT `FKjxhsbm4rqrar97tvjatm8d22r` FOREIGN KEY (`sow_introduction_setting_id`) REFERENCES `setting` (`id`),
+  CONSTRAINT `FKlvqc2b9fruqvgmrbk9ro0rrwn` FOREIGN KEY (`opportunity_id`) REFERENCES `opportunity` (`id`),
+  CONSTRAINT `FKqxiwj2d0ot74is3w5439wiwqr` FOREIGN KEY (`status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKrv0v4il34lgk4gpume2a5p3f5` FOREIGN KEY (`sow_document_template_id`) REFERENCES `document_template` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `quotation` WRITE;
 /*!40000 ALTER TABLE `quotation` DISABLE KEYS */;
-INSERT INTO `quotation` VALUES (1,3,4,'2011-05-04 17:08:52','Acme Investments, LLC','Financial Services',1,'2011-05-04 17:08:52','QUOTE',12656.2),(2,2,12,'2011-05-04 20:04:02','Plenty Of Fish dot Com','Dot Com',3,'2011-05-04 20:04:02','QUOTE',49640.6),(3,1,4,'2011-05-23 19:08:49','Tim M.','Expert',3,'2011-05-23 19:08:49','QUOTE',3289.06);
 /*!40000 ALTER TABLE `quotation` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `quotation_general_staging_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotation_general_staging_log` (
+  `quotation_general_staging_logs_id` bigint NOT NULL,
+  `general_staging_log_id` bigint DEFAULT NULL,
+  KEY `FK729w7slti4rnmf8a79t679t1i` (`general_staging_log_id`),
+  KEY `FK61lokl6i7aivs6o11mya30i9a` (`quotation_general_staging_logs_id`),
+  CONSTRAINT `FK61lokl6i7aivs6o11mya30i9a` FOREIGN KEY (`quotation_general_staging_logs_id`) REFERENCES `quotation` (`id`),
+  CONSTRAINT `FK729w7slti4rnmf8a79t679t1i` FOREIGN KEY (`general_staging_log_id`) REFERENCES `general_staging_log` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `relation_delivery_geo`
---
+LOCK TABLES `quotation_general_staging_log` WRITE;
+/*!40000 ALTER TABLE `quotation_general_staging_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quotation_general_staging_log` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `quotation_milestone`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotation_milestone` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `milestone` varchar(255) DEFAULT NULL,
+  `amount` decimal(19,2) NOT NULL,
+  `percentage` decimal(19,2) DEFAULT NULL,
+  `quotation_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKgwondminja318scomifx2waim` (`quotation_id`),
+  CONSTRAINT `FKgwondminja318scomifx2waim` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `quotation_milestone` WRITE;
+/*!40000 ALTER TABLE `quotation_milestone` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quotation_milestone` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `quotation_sow_discounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotation_sow_discounts` (
+  `quotation_id` bigint NOT NULL,
+  `sow_discount_id` bigint NOT NULL,
+  PRIMARY KEY (`quotation_id`,`sow_discount_id`),
+  KEY `FKr5x6jf2wm5jrjgtb0cj1k5d0g` (`sow_discount_id`),
+  CONSTRAINT `FK841duionrmaoqmcw16uyehbry` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`),
+  CONSTRAINT `FKr5x6jf2wm5jrjgtb0cj1k5d0g` FOREIGN KEY (`sow_discount_id`) REFERENCES `sow_discount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `quotation_sow_discounts` WRITE;
+/*!40000 ALTER TABLE `quotation_sow_discounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quotation_sow_discounts` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `relation_delivery_geo`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `relation_delivery_geo` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `cost_per_day` float NOT NULL,
-  `delivery_role_id` bigint(20) NOT NULL,
-  `geo_id` bigint(20) NOT NULL,
-  `rate_per_day` float NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKFEA549E9433108AC` (`geo_id`),
-  KEY `FKFEA549E9428BFA71` (`delivery_role_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `relation_delivery_geo`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `cost_per_day` decimal(19,2) NOT NULL,
+  `rate_per_day` decimal(19,2) NOT NULL,
+  `geo_id` bigint NOT NULL,
+  `delivery_role_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKd5x02q2ekq42uf5bleb1y5uso` (`geo_id`),
+  KEY `FK5tln86i7m20df6v8xklinil2` (`delivery_role_id`),
+  CONSTRAINT `FK5tln86i7m20df6v8xklinil2` FOREIGN KEY (`delivery_role_id`) REFERENCES `delivery_role` (`id`),
+  CONSTRAINT `FKd5x02q2ekq42uf5bleb1y5uso` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `relation_delivery_geo` WRITE;
 /*!40000 ALTER TABLE `relation_delivery_geo` DISABLE KEYS */;
-INSERT INTO `relation_delivery_geo` VALUES (1,0,400,1,1,600),(2,0,30000,1,4,55000),(3,0,350,1,2,500),(4,0,375,1,3,550),(5,0,1000,2,1,1750),(6,0,90000,2,4,160000),(7,0,700,2,2,1450),(8,0,750,2,3,1500),(9,0,800,3,1,1400),(10,0,66000,3,4,110000),(11,0,600,3,2,1300),(12,0,700,3,3,1400);
 /*!40000 ALTER TABLE `relation_delivery_geo` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `review_comment`
---
-
 DROP TABLE IF EXISTS `review_comment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `review_comment` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `status_changed` varchar(255) DEFAULT NULL,
   `comment` varchar(255) NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_modified` datetime default NULL,
-  `review_request_id` bigint(20) NOT NULL,
-  `status_changed` varchar(255) default NULL,
-  `submitter_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK5E23B478ADAAD98A` (`submitter_id`),
-  KEY `FK5E23B478CBCC4E3B` (`review_request_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `review_comment`
---
+  `submitter_id` bigint NOT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  `review_request_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKhr3gkhb5mv5xcgjb2o3del30c` (`submitter_id`),
+  KEY `FKiibhrsh1lpk24o7rdww1q6iw9` (`review_request_id`),
+  CONSTRAINT `FKhr3gkhb5mv5xcgjb2o3del30c` FOREIGN KEY (`submitter_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKiibhrsh1lpk24o7rdww1q6iw9` FOREIGN KEY (`review_request_id`) REFERENCES `review_request` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `review_comment` WRITE;
 /*!40000 ALTER TABLE `review_comment` DISABLE KEYS */;
-INSERT INTO `review_comment` VALUES (1,0,'The customer deliverables look good and the ballpark estimate on delivery time and market size are compelling.  Concept is approved for further development.','2011-05-04 17:21:13','2011-05-04 17:21:13',1,'Stage changed from REVIEW to APPROVED',8),(2,0,'Thanks John - let\'s do it. ','2011-05-04 17:34:08','2011-05-04 17:34:08',2,'Stage changed from REVIEW to APPROVED',10),(3,0,'Approved for sales.','2011-05-04 17:53:10','2011-05-04 17:53:10',4,'Stage changed from REVIEW to APPROVED',8),(4,0,'Nathaniel - looks compelling.  Please proceed and get a design estimate.','2011-05-04 18:56:41','2011-05-04 18:56:41',5,'Stage changed from REVIEW to APPROVED',7),(5,0,'I\'ve adjusted everything and request design approval.','2011-05-04 19:45:26','2011-05-04 19:45:25',6,'Stage changed from REVIEW to REVIEW',11),(6,0,'Looks great, team!  Kudos to Nathaniel and Queensly for a job well done to complete this one early :)','2011-05-04 19:50:14','2011-05-04 19:50:14',7,'Stage changed from REVIEW to APPROVED',7),(7,0,'OK, ready for sales operations.  GO SELL!','2011-05-04 19:53:38','2011-05-04 19:53:38',8,'Stage changed from REVIEW to APPROVED',3),(8,0,'GO SELL.  Nebulous cloud storm to ensue,,,','2011-05-04 19:55:55','2011-05-04 19:55:55',9,'Stage changed from REVIEW to APPROVED',3),(9,0,'','2011-05-15 15:33:09','2011-05-15 15:33:09',3,'Stage changed from REVIEW to REVIEW',8),(10,0,'','2011-05-15 15:33:18','2011-05-15 15:33:18',3,'Stage changed from REVIEW to REJECTED',8);
 /*!40000 ALTER TABLE `review_comment` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `review_request`
---
-
 DROP TABLE IF EXISTS `review_request`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `review_request` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_modified` datetime default NULL,
-  `description` varchar(255) default NULL,
-  `open` bit(1) NOT NULL,
-  `service_profile_id` bigint(20) NOT NULL,
-  `status` varchar(255) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `subject` varchar(255) NOT NULL,
-  `submitter_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK66CCB8A8ADAAD98A` (`submitter_id`),
-  KEY `FK66CCB8A838D9D89D` (`service_profile_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `review_request`
---
+  `description` varchar(255) DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  `open` bit(1) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `submitter_id` bigint NOT NULL,
+  `from_stage_id` bigint DEFAULT NULL,
+  `to_stage_id` bigint DEFAULT NULL,
+  `service_profile_id` bigint DEFAULT NULL,
+  `quotation_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKgi0wvm98yb8ip1hy1q28u6svj` (`submitter_id`),
+  KEY `FKqv5omj5edoura2kglwlsxxe5o` (`from_stage_id`),
+  KEY `FKp7gwpgpda08kod2roh6d3qrc1` (`to_stage_id`),
+  KEY `FKi3dvccodc8l73jrid2r7t8j5r` (`service_profile_id`),
+  KEY `FKhy7jh2pujddo832x0x446h215` (`quotation_id`),
+  CONSTRAINT `FKgi0wvm98yb8ip1hy1q28u6svj` FOREIGN KEY (`submitter_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKhy7jh2pujddo832x0x446h215` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`),
+  CONSTRAINT `FKi3dvccodc8l73jrid2r7t8j5r` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKp7gwpgpda08kod2roh6d3qrc1` FOREIGN KEY (`to_stage_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKqv5omj5edoura2kglwlsxxe5o` FOREIGN KEY (`from_stage_id`) REFERENCES `staging` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `review_request` WRITE;
 /*!40000 ALTER TABLE `review_request` DISABLE KEYS */;
-INSERT INTO `review_request` VALUES (1,1,'2011-05-04 17:18:36','2011-05-04 17:18:36','Hi Andy,\r\n\r\nBased on the customer deliverables I\'ve defined and the market opportunity, can you approve this service for concept approval so that I  can get an estimate on service development time from the service design team?','',1,'APPROVED','Review for Concept Approval for Migration Planning Service ',10),(2,1,'2011-05-04 17:33:26','2011-05-04 17:33:26','Hi Dale,\r\n\r\nI\'ve fleshed out all of the key activities and think that the service engineering work can be completed in about 21 person days of effort.  Sounds good.  What\'s your budget?','',1,'APPROVED','Review of Design for Migration Planning Service ',6),(3,2,'2011-05-04 17:50:26','2011-05-04 17:50:25','Andy - please review for sales readiness and approval.','',1,'REJECTED','Sales Review Request for Migration Planning Service ',10),(4,1,'2011-05-04 17:52:37','2011-05-04 17:52:37','Ben and Tracy - please publish this new Migration Planning Service.','',1,'APPROVED','Request to publish for Migration Planning Service ',8),(5,1,'2011-05-04 18:55:15','2011-05-04 18:55:15','Jennifer - I think we have all the right stuff now that I have the customer facing work products for this Nebulous Cloudstart offering figured out.  Don\'t you agree?\r\n','',2,'APPROVED','Review for Concept Approval for Nebulous Cloudstart',5),(6,1,'2011-05-04 19:07:53','2011-05-04 19:07:53','Queensly - since you have been assigned as the new service design lead, can you please review the current state and send me any revisions for approval?  We need to get this out the door!','',2,'REVIEW','Review of Design for Nebulous Cloudstart',5),(7,1,'2011-05-04 19:48:14','2011-05-04 19:48:14','Jennifer - after lots of hard work by Queensly, this service is ready to add to the catalog.  Can you please review for sales readiness?','',2,'APPROVED','Sales Review Request for Nebulous Cloudstart',5),(8,1,'2011-05-04 19:52:37','2011-05-04 19:52:37','For release to price list','',2,'APPROVED','Publication Review',7),(9,1,'2011-05-04 19:54:51','2011-05-04 19:54:51','Tracy - please approve for publication to the current sales catalog','',2,'APPROVED','Request to publish for Nebulous Cloudstart',7);
 /*!40000 ALTER TABLE `review_request` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `review_request__user`
---
-
 DROP TABLE IF EXISTS `review_request__user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `review_request__user` (
-  `review_request_assignees_id` bigint(20) NOT NULL,
-  `user_id` bigint(20) default NULL,
-  KEY `FKF707A2539EB07F16` (`review_request_assignees_id`),
-  KEY `FKF707A2531EED4788` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `review_request__user`
---
+  `review_request_assignees_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  KEY `FK2k1x2cgdsfqpsqtru74n5c0ft` (`user_id`),
+  KEY `FK9i4qeqiw4ombjn17sltfojed9` (`review_request_assignees_id`),
+  CONSTRAINT `FK2k1x2cgdsfqpsqtru74n5c0ft` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK9i4qeqiw4ombjn17sltfojed9` FOREIGN KEY (`review_request_assignees_id`) REFERENCES `review_request` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `review_request__user` WRITE;
 /*!40000 ALTER TABLE `review_request__user` DISABLE KEYS */;
-INSERT INTO `review_request__user` VALUES (1,8),(2,10),(3,8),(4,9),(5,7),(6,11),(7,7),(8,3),(9,3);
 /*!40000 ALTER TABLE `review_request__user` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `authority` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `protect` bit(1) NOT NULL,
+  `date_created` datetime(6) DEFAULT NULL,
+  `last_updated` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_irsamgnera6angm0prq1kemt2` (`authority`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `service`
---
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES (1,0,'ROLE_SYSTEM_ADMINISTRATOR','System Administrator','SYSTEM ADMINISTRATOR',_binary '\0','2026-03-31 20:22:15.923000','2026-03-31 20:22:15.923000'),(2,0,'ROLE_PORTFOLIO_MANAGER','Portfolio Manager','PORTFOLIO MANAGER',_binary '\0','2026-03-31 20:22:15.934000','2026-03-31 20:22:15.934000'),(3,0,'ROLE_PRODUCT_MANAGER','Product Manager','PRODUCT MANAGER',_binary '\0','2026-03-31 20:22:15.936000','2026-03-31 20:22:15.936000'),(4,0,'ROLE_SERVICE_DESIGNER','Service Designer','SERVICE DESIGNER',_binary '\0','2026-03-31 20:22:15.938000','2026-03-31 20:22:15.938000'),(5,0,'ROLE_SALES_PRESIDENT','Sales President','SALES PRESIDENT',_binary '\0','2026-03-31 20:22:15.940000','2026-03-31 20:22:15.940000'),(6,0,'ROLE_SALES_MANAGER','Sales Manager','SALES MANAGER',_binary '\0','2026-03-31 20:22:15.941000','2026-03-31 20:22:15.941000'),(7,0,'ROLE_SALES_PERSON','Sales Person','SALES PERSON',_binary '\0','2026-03-31 20:22:15.943000','2026-03-31 20:22:15.943000'),(8,0,'ROLE_DELIVERY_ROLE_MANAGER','Delivery Role Manager','DELIVERY ROLE MANAGER',_binary '\0','2026-03-31 20:22:15.945000','2026-03-31 20:22:15.945000'),(9,0,'ROLE_GENERAL_MANAGER','General Manager','GENERAL MANAGER',_binary '\0','2026-03-31 20:22:15.947000','2026-03-31 20:22:15.947000');
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `salesforce_credentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `salesforce_credentials` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `security_token` varchar(255) DEFAULT NULL,
+  `instance_uri` varchar(255) DEFAULT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKsuliepbd0bj0x1il972l6jeou` (`created_by_id`),
+  KEY `FKjpvb0f1lx44wq6oowachsa0eq` (`modified_by_id`),
+  CONSTRAINT `FKjpvb0f1lx44wq6oowachsa0eq` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKsuliepbd0bj0x1il972l6jeou` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `salesforce_credentials` WRITE;
+/*!40000 ALTER TABLE `salesforce_credentials` DISABLE KEYS */;
+/*!40000 ALTER TABLE `salesforce_credentials` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `service`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `created_by_id` bigint(20) NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_modified` datetime NOT NULL,
-  `description` varchar(255) default NULL,
-  `modified_by_id` bigint(20) default NULL,
-  `portfolio_id` bigint(20) NOT NULL,
-  `product_manager_id` bigint(20) default NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `service_name` varchar(255) NOT NULL,
-  `service_profile_id` bigint(20) default NULL,
-  `sku_name` varchar(255) NOT NULL,
-  `tags` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK7643C6B59C09DF65` (`created_by_id`),
-  KEY `FK7643C6B5C43D6DB6` (`product_manager_id`),
-  KEY `FK7643C6B5AFD3FBCC` (`portfolio_id`),
-  KEY `FK7643C6B538D9D89D` (`service_profile_id`),
-  KEY `FK7643C6B543F73686` (`modified_by_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service`
---
+  `sku_name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `service_profile_id` bigint DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `created_by_id` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `product_manager_id` bigint DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  `service_description_id` bigint DEFAULT NULL,
+  `active` bit(1) NOT NULL,
+  `portfolio_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_3fdbfgw6oo8g5ivmiyk7tssmo` (`service_name`),
+  KEY `FKgslpmnakroetc395udp4j1sfs` (`service_profile_id`),
+  KEY `FK3ln20ydgj3ahfsngddwe3bpnq` (`created_by_id`),
+  KEY `FKke68ue17xwqhgx2n3xl9e509h` (`modified_by_id`),
+  KEY `FKgw8brlf0yhnwiqjkabi6cx7a0` (`product_manager_id`),
+  KEY `FK843i32gykj4epc0bm5bgtfm03` (`service_description_id`),
+  KEY `FK4wmc0qxlad5mcqc2dwkxvgwuq` (`portfolio_id`),
+  CONSTRAINT `FK3ln20ydgj3ahfsngddwe3bpnq` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FK4wmc0qxlad5mcqc2dwkxvgwuq` FOREIGN KEY (`portfolio_id`) REFERENCES `portfolio` (`id`),
+  CONSTRAINT `FK843i32gykj4epc0bm5bgtfm03` FOREIGN KEY (`service_description_id`) REFERENCES `description` (`id`),
+  CONSTRAINT `FKgslpmnakroetc395udp4j1sfs` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKgw8brlf0yhnwiqjkabi6cx7a0` FOREIGN KEY (`product_manager_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKke68ue17xwqhgx2n3xl9e509h` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service` WRITE;
 /*!40000 ALTER TABLE `service` DISABLE KEYS */;
-INSERT INTO `service` VALUES (1,2,2,'2011-05-04 15:27:25','2011-05-04 15:27:25',NULL,NULL,2,10,'Migration Planning Service ',1,'VDI-MIGRATE','vdi desktop migration'),(2,3,7,'2011-05-04 18:48:10','2011-05-04 18:48:10','Installation and demonstration of a reference implementation of up to 3 nebulous clouds using Nebulousity software.',NULL,3,5,'Nebulous Cloudstart',2,'CS-NEB','nebulous cloudstart cloud vCloud ');
 /*!40000 ALTER TABLE `service` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service__user`
---
-
 DROP TABLE IF EXISTS `service__user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service__user` (
-  `service_other_product_managers_id` bigint(20) default NULL,
-  `user_id` bigint(20) default NULL,
-  KEY `FK982D32A01EED4788` (`user_id`),
-  KEY `FK982D32A08ACE93D2` (`service_other_product_managers_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service__user`
---
+  `service_other_product_managers_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  KEY `FKfa61odlhl9uc50n68pusq8mi6` (`user_id`),
+  KEY `FK82pdv5uanbuiwn1pbqqwtm8s0` (`service_other_product_managers_id`),
+  CONSTRAINT `FK82pdv5uanbuiwn1pbqqwtm8s0` FOREIGN KEY (`service_other_product_managers_id`) REFERENCES `service` (`id`),
+  CONSTRAINT `FKfa61odlhl9uc50n68pusq8mi6` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service__user` WRITE;
 /*!40000 ALTER TABLE `service__user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `service__user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service_activity`
---
-
 DROP TABLE IF EXISTS `service_activity`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_activity` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `category` varchar(255) NOT NULL,
-  `description` varchar(255) default NULL,
-  `estimated_time_in_hours_flat` float NOT NULL,
-  `estimated_time_in_hours_per_base_units` float NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
-  `results` varchar(255) default NULL,
-  `sequence_order` int(11) NOT NULL,
-  `service_deliverable_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKD391959C12B375D` (`service_deliverable_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_activity`
---
+  `description` varchar(255) DEFAULT NULL,
+  `estimated_time_in_hours_per_base_units` decimal(19,2) DEFAULT NULL,
+  `estimated_time_in_hours_flat` decimal(19,2) DEFAULT NULL,
+  `category` varchar(255) NOT NULL,
+  `results` varchar(255) DEFAULT NULL,
+  `sequence_order` int NOT NULL,
+  `service_deliverable_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK5gxy4o56af8irqgbdc3dj6s4t` (`service_deliverable_id`),
+  CONSTRAINT `FK5gxy4o56af8irqgbdc3dj6s4t` FOREIGN KEY (`service_deliverable_id`) REFERENCES `service_deliverable` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_activity` WRITE;
 /*!40000 ALTER TABLE `service_activity` DISABLE KEYS */;
-INSERT INTO `service_activity` VALUES (1,0,'Gather key customer data',NULL,1,0,'Review Customer Order',NULL,1,1),(2,2,'Documentation',NULL,20,0.1,'Create Proposal','Migration Plan for each unit',1,2),(3,2,'Customer Acceptance','Customer Acceptance',6,0,'Engagement Wrap-up','Signed CAF Received',1,3),(4,3,'Meeting','Remote or On Site',4,0,'Orient Customer','Oriented customer',2,4),(5,3,'Phone call - prep','Preparation for Orientation',4,0,'Prepare Customer for Orientation','Customer prepared for orientation',1,4),(6,2,'Architect Time','Prepare customer facing drawings',5,0.125,'Modify template drawings for customer specific characteristics','Customer ready VISIO diagrams',1,5),(7,2,'Customer BOM','Prepare and tailor parts list for customer implementation',4,0,'Review and Finalize Parts List','Final BOM',1,6),(8,0,'INFRASTRUCTURE','Reference solution',4,0.125,'Install Reference Implementation','Ready to demo reference solution',1,7);
 /*!40000 ALTER TABLE `service_activity` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service_activity_delivery_role`
---
-
 DROP TABLE IF EXISTS `service_activity_delivery_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_activity_delivery_role` (
-  `service_activity_roles_required_id` bigint(20) default NULL,
-  `delivery_role_id` bigint(20) default NULL,
-  KEY `FK5E21917B428BFA71` (`delivery_role_id`),
-  KEY `FK5E21917B2DB99849` (`service_activity_roles_required_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_activity_delivery_role`
---
+  `service_activity_roles_required_id` bigint NOT NULL,
+  `delivery_role_id` bigint DEFAULT NULL,
+  KEY `FKaibesqfgvobx9o2t4yu8v4941` (`delivery_role_id`),
+  KEY `FKhynh627ngxc2b00t7fo50ja3t` (`service_activity_roles_required_id`),
+  CONSTRAINT `FKaibesqfgvobx9o2t4yu8v4941` FOREIGN KEY (`delivery_role_id`) REFERENCES `delivery_role` (`id`),
+  CONSTRAINT `FKhynh627ngxc2b00t7fo50ja3t` FOREIGN KEY (`service_activity_roles_required_id`) REFERENCES `service_activity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_activity_delivery_role` WRITE;
 /*!40000 ALTER TABLE `service_activity_delivery_role` DISABLE KEYS */;
-INSERT INTO `service_activity_delivery_role` VALUES (2,3),(3,1),(4,1),(5,1),(6,2),(7,3);
 /*!40000 ALTER TABLE `service_activity_delivery_role` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_activity_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_activity_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `task` longtext,
+  `sequence_order` int DEFAULT NULL,
+  `service_activity_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKewyld42j1ko9at0tr6dnwi4xb` (`service_activity_id`),
+  CONSTRAINT `FKewyld42j1ko9at0tr6dnwi4xb` FOREIGN KEY (`service_activity_id`) REFERENCES `service_activity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `service_deliverable`
---
-
+LOCK TABLES `service_activity_task` WRITE;
+/*!40000 ALTER TABLE `service_activity_task` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_activity_task` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `service_deliverable`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_deliverable` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `description` varchar(255) default NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `sequence_order` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `sequence_order` int(11) NOT NULL,
-  `service_profile_id` bigint(20) NOT NULL,
-  `type` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKC5D1417538D9D89D` (`service_profile_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_deliverable`
---
+  `type` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `phase` varchar(255) DEFAULT NULL,
+  `new_description_id` bigint DEFAULT NULL,
+  `service_profile_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKfb22e963c7vnca1iybboh2mne` (`new_description_id`),
+  KEY `FKtiowtd9fs4523xxstudqxboo6` (`service_profile_id`),
+  CONSTRAINT `FKfb22e963c7vnca1iybboh2mne` FOREIGN KEY (`new_description_id`) REFERENCES `description` (`id`),
+  CONSTRAINT `FKtiowtd9fs4523xxstudqxboo6` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_deliverable` WRITE;
 /*!40000 ALTER TABLE `service_deliverable` DISABLE KEYS */;
-INSERT INTO `service_deliverable` VALUES (1,1,'Presentation delivery to customer','Project Kick-off Presentation',1,1,'Presentation'),(2,1,'Proposal for migrating desktops','Desktop Migration Proposal',2,1,'PDF'),(3,1,'Summarize and review migration proposal','Customer Project Review',3,1,'Meeting'),(4,2,'web conference or on-site','Cloudstart Orientation',1,2,'PPT / Meeting'),(5,1,'Reference Implementation Diagrams','Architecture Drawings',2,2,'VISIO'),(6,1,'List of all products included in reference implemenation','Bill of Materials',3,2,'WORD'),(7,1,'Demonstrable Reference Implementation','Reference Nebulous Cloud Implementation',4,2,'INFRASTRUCTURE');
 /*!40000 ALTER TABLE `service_deliverable` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_portfolio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_portfolio` (
+  `service_other_portfolios_id` bigint NOT NULL,
+  `portfolio_id` bigint DEFAULT NULL,
+  KEY `FKcdi8r29h0cfvkr97qc7kyos7h` (`portfolio_id`),
+  KEY `FK6jces4seayhkbn5wlfecrjstt` (`service_other_portfolios_id`),
+  CONSTRAINT `FK6jces4seayhkbn5wlfecrjstt` FOREIGN KEY (`service_other_portfolios_id`) REFERENCES `service` (`id`),
+  CONSTRAINT `FKcdi8r29h0cfvkr97qc7kyos7h` FOREIGN KEY (`portfolio_id`) REFERENCES `portfolio` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `service_product_item`
---
-
+LOCK TABLES `service_portfolio` WRITE;
+/*!40000 ALTER TABLE `service_portfolio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_portfolio` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `service_product_item`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_product_item` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `product_name` varchar(255) NOT NULL,
-  `product_type` varchar(255) NOT NULL,
-  `quantity` varchar(255) NOT NULL,
-  `service_profile_id` bigint(20) NOT NULL,
-  `total_cost` decimal(19,2) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK97115AD38D9D89D` (`service_profile_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_product_item`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `units_sold_per_base_units` decimal(19,2) DEFAULT NULL,
+  `units_sold_rate_per_additional_unit` decimal(19,2) NOT NULL,
+  `service_profile_id` bigint NOT NULL,
+  `product_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKion5p71yqrb35j68sa9vur907` (`service_profile_id`),
+  KEY `FKiiot5atiutssevlbsvhw3wirv` (`product_id`),
+  CONSTRAINT `FKiiot5atiutssevlbsvhw3wirv` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `FKion5p71yqrb35j68sa9vur907` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_product_item` WRITE;
 /*!40000 ALTER TABLE `service_product_item` DISABLE KEYS */;
 /*!40000 ALTER TABLE `service_product_item` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service_product_item_service_profile`
---
-
-DROP TABLE IF EXISTS `service_product_item_service_profile`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `service_product_item_service_profile` (
-  `service_product_item_service_profiles_id` bigint(20) default NULL,
-  `service_profile_id` bigint(20) default NULL,
-  KEY `FKEE31E38D5AF6AD4F` (`service_product_item_service_profiles_id`),
-  KEY `FKEE31E38D38D9D89D` (`service_profile_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_product_item_service_profile`
---
-
-LOCK TABLES `service_product_item_service_profile` WRITE;
-/*!40000 ALTER TABLE `service_product_item_service_profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `service_product_item_service_profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `service_profile`
---
-
 DROP TABLE IF EXISTS `service_profile`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_profile` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `base_units` int(11) NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_modified` datetime NOT NULL,
-  `date_published` datetime default NULL,
-  `premium_percent` float NOT NULL,
-  `revision` int(11) NOT NULL,
-  `service_id` bigint(20) NOT NULL,
-  `service_designer_lead_id` bigint(20) default NULL,
-  `staging_status_id` bigint(20) NOT NULL,
-  `total_estimate_in_hours_flat` float NOT NULL,
-  `total_estimate_in_hours_per_base_units` float NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `unit_of_sale` varchar(255) NOT NULL,
-  `version_string` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FKBF9E721FB8202D51` (`staging_status_id`),
-  KEY `FKBF9E721FA3F6852C` (`service_id`),
-  KEY `FKBF9E721F438DBD4D` (`service_designer_lead_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_profile`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `revision` int NOT NULL,
+  `version_string` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `unit_of_sale` varchar(255) DEFAULT NULL,
+  `base_units` int DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `date_published` datetime(6) DEFAULT NULL,
+  `date_modified` datetime(6) DEFAULT NULL,
+  `total_estimate_in_hours_per_base_units` decimal(19,2) DEFAULT NULL,
+  `total_estimate_in_hours_flat` decimal(19,2) DEFAULT NULL,
+  `premium_percent` decimal(19,2) NOT NULL,
+  `staging_status_id` bigint DEFAULT NULL,
+  `current_step` int NOT NULL,
+  `service_designer_lead_id` bigint DEFAULT NULL,
+  `old_profile_id` bigint DEFAULT NULL,
+  `new_profile_id` bigint DEFAULT NULL,
+  `current_review_request_id` bigint DEFAULT NULL,
+  `definition` longtext,
+  `workflow_mode` varchar(255) DEFAULT NULL,
+  `is_imported` varchar(255) DEFAULT NULL,
+  `import_service_stage` varchar(255) DEFAULT NULL,
+  `service_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK4i2bl2lfj53nnyy7lbjvsa0ff` (`staging_status_id`),
+  KEY `FK72ku93yvjkk0tskbi2k7bcqkj` (`service_designer_lead_id`),
+  KEY `FKkyoebygus40armqau44jffj6u` (`old_profile_id`),
+  KEY `FKdw37l2uieoati7u8orp27wiaw` (`new_profile_id`),
+  KEY `FKdttsoeex698d2w581bet5umv2` (`current_review_request_id`),
+  KEY `FKhj8lfvesmyvjny0x5dcoxpppv` (`service_id`),
+  CONSTRAINT `FK4i2bl2lfj53nnyy7lbjvsa0ff` FOREIGN KEY (`staging_status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FK72ku93yvjkk0tskbi2k7bcqkj` FOREIGN KEY (`service_designer_lead_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKdttsoeex698d2w581bet5umv2` FOREIGN KEY (`current_review_request_id`) REFERENCES `review_request` (`id`),
+  CONSTRAINT `FKdw37l2uieoati7u8orp27wiaw` FOREIGN KEY (`new_profile_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKhj8lfvesmyvjny0x5dcoxpppv` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`),
+  CONSTRAINT `FKkyoebygus40armqau44jffj6u` FOREIGN KEY (`old_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_profile` WRITE;
 /*!40000 ALTER TABLE `service_profile` DISABLE KEYS */;
-INSERT INTO `service_profile` VALUES (1,17,20,'2011-05-04 15:27:25','2011-05-04 15:27:25',NULL,0,1,1,6,10,80,3,'DEVELOP','Desktop','1.0'),(2,20,3,'2011-05-04 18:48:10','2011-05-04 18:48:10',NULL,0,1,2,11,10,40,4,'DEVELOP','Nebulous Cloud','1.0');
 /*!40000 ALTER TABLE `service_profile` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service_profile__user`
---
-
 DROP TABLE IF EXISTS `service_profile__user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_profile__user` (
-  `service_profile_other_service_designers_id` bigint(20) default NULL,
-  `user_id` bigint(20) default NULL,
-  KEY `FKA6F0268A1EED4788` (`user_id`),
-  KEY `FKA6F0268A834EA46D` (`service_profile_other_service_designers_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_profile__user`
---
+  `service_profile_other_service_designers_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  KEY `FKgg3172dhew9h6tl72wl0w28ys` (`user_id`),
+  KEY `FKiobnpwwye323uxqwmc16n0je9` (`service_profile_other_service_designers_id`),
+  CONSTRAINT `FKgg3172dhew9h6tl72wl0w28ys` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKiobnpwwye323uxqwmc16n0je9` FOREIGN KEY (`service_profile_other_service_designers_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_profile__user` WRITE;
 /*!40000 ALTER TABLE `service_profile__user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `service_profile__user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service_profile_delivery_role`
---
-
 DROP TABLE IF EXISTS `service_profile_delivery_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_profile_delivery_role` (
-  `service_profile_roles_required_id` bigint(20) default NULL,
-  `delivery_role_id` bigint(20) default NULL,
-  KEY `FK680117C1428BFA71` (`delivery_role_id`),
-  KEY `FK680117C133231A7B` (`service_profile_roles_required_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_profile_delivery_role`
---
+  `service_profile_roles_required_id` bigint NOT NULL,
+  `delivery_role_id` bigint DEFAULT NULL,
+  KEY `FK7tx90gw7edgmmi0pf5e0guya8` (`delivery_role_id`),
+  KEY `FK66nh4urmkfoqvexy2iqrnffrx` (`service_profile_roles_required_id`),
+  CONSTRAINT `FK66nh4urmkfoqvexy2iqrnffrx` FOREIGN KEY (`service_profile_roles_required_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FK7tx90gw7edgmmi0pf5e0guya8` FOREIGN KEY (`delivery_role_id`) REFERENCES `delivery_role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_profile_delivery_role` WRITE;
 /*!40000 ALTER TABLE `service_profile_delivery_role` DISABLE KEYS */;
 /*!40000 ALTER TABLE `service_profile_delivery_role` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_profile_metaphors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_profile_metaphors` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `definition_string_id` bigint DEFAULT NULL,
+  `sequence_order` int DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
+  `service_profile_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKjrp7w8dpuk22y2uxnxao3mrp3` (`definition_string_id`),
+  KEY `FKf3waqc80slryqoe0cei6auuge` (`service_profile_id`),
+  CONSTRAINT `FKf3waqc80slryqoe0cei6auuge` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKjrp7w8dpuk22y2uxnxao3mrp3` FOREIGN KEY (`definition_string_id`) REFERENCES `setting` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `service_quotation`
---
+LOCK TABLES `service_profile_metaphors` WRITE;
+/*!40000 ALTER TABLE `service_profile_metaphors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_profile_metaphors` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_profilesowdef`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_profilesowdef` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `sp_id` bigint DEFAULT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  `part` varchar(255) DEFAULT NULL,
+  `definition_setting_id` bigint NOT NULL,
+  `definition` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKl1cc722gvw96xo4hpyckodwfa` (`sp_id`),
+  KEY `FKom5ki9gikebr6ltkpcex1ibx` (`geo_id`),
+  KEY `FKmr4hdf6vkbcy3lv1ih9mo4ojd` (`definition_setting_id`),
+  CONSTRAINT `FKl1cc722gvw96xo4hpyckodwfa` FOREIGN KEY (`sp_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKmr4hdf6vkbcy3lv1ih9mo4ojd` FOREIGN KEY (`definition_setting_id`) REFERENCES `setting` (`id`),
+  CONSTRAINT `FKom5ki9gikebr6ltkpcex1ibx` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `service_profilesowdef` WRITE;
+/*!40000 ALTER TABLE `service_profilesowdef` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_profilesowdef` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `service_quotation`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `service_quotation` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `geo_id` bigint(20) default NULL,
-  `price` float default NULL,
-  `profile_id` bigint(20) NOT NULL,
-  `quotation_id` bigint(20) NOT NULL,
-  `service_id` bigint(20) NOT NULL,
-  `total_units` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK35293882B8E8E54C` (`quotation_id`),
-  KEY `FK35293882433108AC` (`geo_id`),
-  KEY `FK35293882F9D1CD3` (`profile_id`),
-  KEY `FK35293882A3F6852C` (`service_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `service_quotation`
---
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `service_id` bigint NOT NULL,
+  `profile_id` bigint NOT NULL,
+  `total_units` int DEFAULT NULL,
+  `old_units` int DEFAULT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  `price` decimal(19,2) DEFAULT NULL,
+  `staging_status_id` bigint DEFAULT NULL,
+  `old_stage` varchar(255) DEFAULT NULL,
+  `is_corrected` varchar(255) DEFAULT NULL,
+  `additional_unit_of_sale_json_array` varchar(255) DEFAULT NULL,
+  `sequence_order` int DEFAULT NULL,
+  `quotation_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKlq2cdmkn9dd4jgfxjx5lp4567` (`service_id`),
+  KEY `FKlktatr53n66uoa98t7wpssety` (`profile_id`),
+  KEY `FKfglmuu3879g0y2n6vly0wmmuh` (`geo_id`),
+  KEY `FKebruwgen0pm939eb5jh7y9wim` (`staging_status_id`),
+  KEY `FKe6681cxu6lvnyo88oyo521a4e` (`quotation_id`),
+  CONSTRAINT `FKe6681cxu6lvnyo88oyo521a4e` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`),
+  CONSTRAINT `FKebruwgen0pm939eb5jh7y9wim` FOREIGN KEY (`staging_status_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKfglmuu3879g0y2n6vly0wmmuh` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`),
+  CONSTRAINT `FKlktatr53n66uoa98t7wpssety` FOREIGN KEY (`profile_id`) REFERENCES `service_profile` (`id`),
+  CONSTRAINT `FKlq2cdmkn9dd4jgfxjx5lp4567` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `service_quotation` WRITE;
 /*!40000 ALTER TABLE `service_quotation` DISABLE KEYS */;
-INSERT INTO `service_quotation` VALUES (1,0,1,4037.5,1,1,1,25),(2,0,1,6225,1,1,1,150),(3,0,1,2393.75,2,1,2,3),(4,0,3,2328.12,2,2,2,9),(5,0,3,47312.5,1,2,1,2500),(6,0,3,3289.06,2,3,2,50);
 /*!40000 ALTER TABLE `service_quotation` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_quotation_ticket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_quotation_ticket` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `role_id` bigint DEFAULT NULL,
+  `budget_hours` decimal(19,2) DEFAULT NULL,
+  `actual_hours` decimal(19,2) DEFAULT NULL,
+  `service_activity_id` bigint DEFAULT NULL,
+  `summary` varchar(255) DEFAULT NULL,
+  `ticket_id` int DEFAULT NULL,
+  `created_by_id` bigint DEFAULT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  `service_quotation_id` bigint DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKoilhwbfmxa4k61m4g5y3jt2r2` (`role_id`),
+  KEY `FKb03kpajg3147n8x51rtjhrdj4` (`service_activity_id`),
+  KEY `FKsb9m0o68wr0je0reh0v2bk9hf` (`created_by_id`),
+  KEY `FKaeabg2yt675nqf4ggkh55smgy` (`modified_by_id`),
+  KEY `FK3md9ndtb31umubextrtfcn7ta` (`service_quotation_id`),
+  CONSTRAINT `FK3md9ndtb31umubextrtfcn7ta` FOREIGN KEY (`service_quotation_id`) REFERENCES `service_quotation` (`id`),
+  CONSTRAINT `FKaeabg2yt675nqf4ggkh55smgy` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`),
+  CONSTRAINT `FKb03kpajg3147n8x51rtjhrdj4` FOREIGN KEY (`service_activity_id`) REFERENCES `service_activity` (`id`),
+  CONSTRAINT `FKoilhwbfmxa4k61m4g5y3jt2r2` FOREIGN KEY (`role_id`) REFERENCES `delivery_role` (`id`),
+  CONSTRAINT `FKsb9m0o68wr0je0reh0v2bk9hf` FOREIGN KEY (`created_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `staging`
---
-
-DROP TABLE IF EXISTS `staging`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `staging` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `description` varchar(255) default NULL,
-  `display_name` varchar(255) NOT NULL,
-  `entity` varchar(255) NOT NULL,
+LOCK TABLES `service_quotation_ticket` WRITE;
+/*!40000 ALTER TABLE `service_quotation_ticket` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_quotation_ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `setting` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
-  `sequence_order` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+  `value` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `staging`
---
+LOCK TABLES `setting` WRITE;
+/*!40000 ALTER TABLE `setting` DISABLE KEYS */;
+INSERT INTO `setting` VALUES (1,0,'sowLabel',''),(2,0,'sowTemplate','<p> Use following tags to put place holder for dynamically generated contents. </p><ul><li> [@@sow_introduction_input@@] a placeholder where sales person can add introduction </li><li> [@@services@@] for print services details </li><li> [@@terms@@] for terms and conditions for given GEO </li><li> [@@billing_terms@@] for billing terms for given GEO </li><li> [@@signature_block@@] </li></ul>'),(3,0,'services','Currently This is disable.'),(4,0,'terms',''),(5,0,'billing_terms',''),(6,0,'signature_block','');
+/*!40000 ALTER TABLE `setting` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `shipping_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `shipping_address` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `ship_address_line1` varchar(255) DEFAULT NULL,
+  `ship_address_line2` varchar(255) DEFAULT NULL,
+  `ship_city` varchar(255) DEFAULT NULL,
+  `ship_state` varchar(255) DEFAULT NULL,
+  `ship_postalcode` varchar(255) DEFAULT NULL,
+  `ship_country` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `shipping_address` WRITE;
+/*!40000 ALTER TABLE `shipping_address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shipping_address` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `solution_bundle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solution_bundle` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_date` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `solution_bundle` WRITE;
+/*!40000 ALTER TABLE `solution_bundle` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solution_bundle` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `solution_bundle_service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solution_bundle_service` (
+  `solution_bundle_solution_bundle_services_id` bigint NOT NULL,
+  `service_id` bigint DEFAULT NULL,
+  `solution_bundle_services_idx` int DEFAULT NULL,
+  KEY `FKonxenrm1hcvt47pub2myy7qj9` (`service_id`),
+  CONSTRAINT `FKonxenrm1hcvt47pub2myy7qj9` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `solution_bundle_service` WRITE;
+/*!40000 ALTER TABLE `solution_bundle_service` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solution_bundle_service` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `sow_discount`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sow_discount` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `description` longtext,
+  `amount` decimal(19,2) DEFAULT NULL,
+  `amount_percentage` decimal(19,2) DEFAULT NULL,
+  `is_global` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `sow_discount` WRITE;
+/*!40000 ALTER TABLE `sow_discount` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sow_discount` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `sow_introduction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sow_introduction` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `sow_text` longtext NOT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKprdr9nm20axhcdpuyb6ni9f8x` (`geo_id`),
+  CONSTRAINT `FKprdr9nm20axhcdpuyb6ni9f8x` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `sow_introduction` WRITE;
+/*!40000 ALTER TABLE `sow_introduction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sow_introduction` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `sow_support_parameter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sow_support_parameter` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `project_parameter_text` longtext,
+  `geo_id` bigint DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKbhedphdxs46m5swkudg6w4uha` (`geo_id`),
+  CONSTRAINT `FKbhedphdxs46m5swkudg6w4uha` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `sow_support_parameter` WRITE;
+/*!40000 ALTER TABLE `sow_support_parameter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sow_support_parameter` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `sow_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sow_tag` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `quotation_id` bigint NOT NULL,
+  `tag_name` varchar(255) NOT NULL,
+  `tag_value` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKll7lck2jj6secsketc3fvbid` (`quotation_id`),
+  CONSTRAINT `FKll7lck2jj6secsketc3fvbid` FOREIGN KEY (`quotation_id`) REFERENCES `quotation` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `sow_tag` WRITE;
+/*!40000 ALTER TABLE `sow_tag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sow_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `staging`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `staging` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `entity` varchar(255) NOT NULL,
+  `sequence_order` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `scope_of_authorized_role` varchar(255) NOT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `staging` WRITE;
 /*!40000 ALTER TABLE `staging` DISABLE KEYS */;
-INSERT INTO `staging` VALUES (1,0,'conceptulization','Conceptulization','SERVICE','conceptulization',1),(2,0,'reviewForConceptApproval','Review for Concept Approval','SERVICE','reviewForConceptApproval',2),(3,0,'conceptApproved','Concept Approved','SERVICE','conceptApproved',3),(4,0,'design','Design','SERVICE','design',4),(5,0,'reviewOfDesign','Review of Design','SERVICE','reviewOfDesign',5),(6,0,'designApproved','Design Approved','SERVICE','designApproved',6),(7,0,'Sales Review Request','Sales Review Request','SERVICE','salesReviewRequest',7),(8,0,'Sales Approval','Sales Approval','SERVICE','salesApproval',8),(9,0,'Request to publish','Request to publish','SERVICE','requestForPublished',9),(10,0,'Published','Published','SERVICE','published',10),(11,0,'Request to remove','Request to remove','SERVICE','requestToRemove',21),(12,0,'Removed','Removed','SERVICE','removed',22);
+INSERT INTO `staging` VALUES (1,1,'SERVICE',1,'init','Initialization','Create service and assign product manager to define core requirements of service','NA',_binary ''),(2,2,'SERVICE',10,'concept','Conceptualization','<ul> <li> Add requirement data for service </li> <li> Then send request to review requirements for concept </li> </ul>','NA',_binary ''),(3,2,'SERVICE',11,'conceptreview','Concept Review','Review requirement data and approve if valid','SERVICE',_binary ''),(4,2,'SERVICE',12,'conceptapproved','Concept Approved','Concept is Approved, now assign service designer to define detailed activities and estimate time required','ADMIN',_binary ''),(5,2,'SERVICE',20,'design','Design','<ul> <li>Define detailed service activities and roles required for each activity </li> <li> Define estimate time and role required for each activity </li> <li> After design is done, send it for review request to product manager </li> </ul>','NA',_binary ''),(6,2,'SERVICE',21,'designreview','Design Review','Review design and approve if valid','SERVICE',_binary ''),(7,2,'SERVICE',22,'designapproved','Design Approved','Design is approved, now send Sale approval request','SERVICE',_binary ''),(8,2,'SERVICE',31,'salesreview','Sales Review','Review Sales related concern and approve if valid','SERVICE',_binary ''),(9,2,'SERVICE',32,'salesapproval','Sales Approval','Sales is approved so GEO admins will be notified to request to publish','LEGAL',_binary ''),(10,2,'SERVICE',41,'requestforpublished','Request to Publish','Request to Publish','SERVICE',_binary ''),(11,1,'SERVICE',42,'published','Published','Published','PORTFOLIO',_binary ''),(12,1,'SERVICE',43,'requesttoremove','Request to remove','Request to remove','SERVICE',_binary ''),(13,1,'SERVICE',100,'removed','Removed','Removed','PORTFOLIO',_binary ''),(14,1,'SERVICE',23,'inActive','Not Active','New Version of service is being upgraded','NA',_binary ''),(15,1,'SETUP',111,'welcome','Welcome','Welcome','NA',_binary ''),(16,1,'SETUP',112,'companyInfo','Company Information','Company Information','NA',_binary ''),(17,1,'SETUP',114,'addUsers','Add Users','Add Users','NA',_binary ''),(18,1,'SETUP',113,'geos','Create GEOs','Create GEOs','NA',_binary ''),(19,1,'SETUP',115,'deliveryRoles','Create DeliveryRoles','Create DeliveryRoles','NA',_binary ''),(20,1,'SETUP',116,'portfolios','Create Portfolios','Create Portfolios','NA',_binary ''),(21,1,'QUOTATION',1,'development','Development','In Development','NA',_binary ''),(22,1,'QUOTATION',2,'generated','Click to Generate','Click to Generate','NA',_binary ''),(23,1,'QUOTATION',3,'sent','Sent','Document Sent','NA',_binary ''),(24,1,'QUOTATION',4,'received','Customer Received','Customer Received','NA',_binary ''),(25,1,'QUOTATION',-1,'rejected','Rejected','Document Rejected','NA',_binary ''),(26,1,'QUOTATION',0,'closedAndNewOne','Closed And Created New One','Closed And Created New One','NA',_binary ''),(27,1,'QUOTATION',5,'Accepted','Accepted','Document Accepted','NA',_binary ''),(28,1,'LEAD',50,'uncontacted','Uncontacted','Create new Lead and add requirement fields.','NA',_binary ''),(29,1,'LEAD',51,'contactinprogress','Contact In Progress','Lead is contacted and in progress.','NA',_binary ''),(30,1,'LEAD',52,'converttoopportunity','Convert To Opportunity','Lead is converting to opportunity.','NA',_binary ''),(31,1,'LEAD',53,'converted','Converted','Lead is converted to opportunity.','NA',_binary ''),(32,1,'LEAD',54,'dead','Dead','Lead is dead.','NA',_binary ''),(33,1,'OPPORTUNITY',60,'prospecting','Prospecting','Prospecting Stage.','NA',_binary ''),(34,1,'OPPORTUNITY',61,'qualification','Qualification','Qualification Stage.','NA',_binary ''),(35,1,'OPPORTUNITY',62,'needAnalysis','Need Analysis','Need Analysis Stage.','NA',_binary ''),(36,6,'OPPORTUNITY',63,'valueProposition','Value Proposition','Value Proposition Stage.','NA',_binary '\0'),(37,6,'OPPORTUNITY',64,'decisionMakers','Decision Makers','Decision Makers Stage.','NA',_binary '\0'),(38,6,'OPPORTUNITY',65,'perceptionAnalysis','Perception Analysis','Perception Analysis Stage.','NA',_binary '\0'),(39,1,'OPPORTUNITY',66,'proposalPriceQuote','Proposal/Price Quote','Proposal/Price Quote Stage.','NA',_binary ''),(40,1,'OPPORTUNITY',67,'negotiationReview','Negotiation/Review','Negotiation/Review Stage.','NA',_binary ''),(41,1,'OPPORTUNITY',68,'closedWon','Closed Won','Closed Won Stage.','NA',_binary ''),(42,1,'OPPORTUNITY',69,'closedLost','Closed Lost','<ul> <li>Closed Lost Stage.</li> <li>Click To Break Opportunity.</li><ul>','NA',_binary ''),(43,1,'SERVICEQUOTATION',121,'new','New','New ServiceQuotation','NA',_binary ''),(44,1,'SERVICEQUOTATION',122,'active','Active','Active ServiceQuotation','NA',_binary ''),(45,1,'SERVICEQUOTATION',123,'edit','Edit','Edit ServiceQuotation','NA',_binary ''),(46,1,'SERVICEQUOTATION',124,'delete','Delete','Delete ServiceQuotation','NA',_binary '');
 /*!40000 ALTER TABLE `staging` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `staging_authorized_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `staging_authorized_role` (
+  `staging_id` bigint NOT NULL,
+  `role_id` bigint DEFAULT NULL,
+  KEY `FKgp0s250tb42kgg8b9ho65ajaa` (`role_id`),
+  KEY `FKc67b50b3vta83sbv9a757bn05` (`staging_id`),
+  CONSTRAINT `FKc67b50b3vta83sbv9a757bn05` FOREIGN KEY (`staging_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKgp0s250tb42kgg8b9ho65ajaa` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `staging_log`
---
-
+LOCK TABLES `staging_authorized_role` WRITE;
+/*!40000 ALTER TABLE `staging_authorized_role` DISABLE KEYS */;
+INSERT INTO `staging_authorized_role` VALUES (1,2),(2,3),(3,2),(4,3),(5,4),(6,3),(7,3),(8,2),(9,2),(12,3),(13,2);
+/*!40000 ALTER TABLE `staging_authorized_role` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `staging_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `staging_log` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
   `action` varchar(255) NOT NULL,
+  `from_stage_id` bigint DEFAULT NULL,
+  `to_stage_id` bigint DEFAULT NULL,
   `comment` varchar(255) NOT NULL,
-  `date_modified` datetime NOT NULL,
-  `from_stage` varchar(255) NOT NULL,
   `modified_by` varchar(255) NOT NULL,
-  `revision` int(11) NOT NULL,
-  `service_profile_id` bigint(20) NOT NULL,
-  `to_stage` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `FK186554038D9D89D` (`service_profile_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `staging_log`
---
+  `revision` int NOT NULL,
+  `service_profile_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK3u5kyackrjafb46ili6iyq9la` (`from_stage_id`),
+  KEY `FK2s4ftj6mq2pwvgybe9p4bttp4` (`to_stage_id`),
+  KEY `FKl19yyru5ayl45htxsss6r21pb` (`service_profile_id`),
+  CONSTRAINT `FK2s4ftj6mq2pwvgybe9p4bttp4` FOREIGN KEY (`to_stage_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FK3u5kyackrjafb46ili6iyq9la` FOREIGN KEY (`from_stage_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKl19yyru5ayl45htxsss6r21pb` FOREIGN KEY (`service_profile_id`) REFERENCES `service_profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `staging_log` WRITE;
 /*!40000 ALTER TABLE `staging_log` DISABLE KEYS */;
-INSERT INTO `staging_log` VALUES (1,0,'Upgrade','Hi Andy,\r\n\r\nBased on the customer deliverables I\'ve defined and the market opportunity, can you approve this service for concept approval so that I  can get an estimate on service development time from the service design team?','2011-05-04 17:18:28','Conceptulization','dlang',0,1,'Review for Concept Approval'),(2,0,'Upgrade','Deliverables look good, market opportunity looks compelling.  This concept is approved for the next step - getting a development time estimate and resource plan from the service design team.\r\n\r\nBest wishes on next steps, Dale...','2011-05-04 17:23:31','Review for Concept Approval','anot',0,1,'Concept Approved'),(3,0,'Upgrade','Approved for design estimate.','2011-05-04 17:26:10','Concept Approved','dlang',0,1,'Design'),(4,0,'Upgrade','Hi Dale,\r\n\r\nI\'ve fleshed out all of the key activities and think that the service engineering work can be completed in about 21 person days of effort.  Sounds good.  What\'s your budget?','2011-05-04 17:33:19','Design','jpodge',0,1,'Review of Design'),(5,0,'Upgrade','approved','2011-05-04 17:49:44','Review of Design','dlang',0,1,'Design Approved'),(6,0,'Upgrade','Andy - please review for sales readiness and approval.','2011-05-04 17:50:17','Design Approved','dlang',0,1,'Sales Review Request'),(7,0,'Upgrade','Approved for release to production sales catalog.','2011-05-04 17:51:37','Sales Review Request','anot',0,1,'Sales Approval'),(8,0,'Upgrade','Ben and Tracy - please publish this new Migration Planning Service.','2011-05-04 17:52:14','Sales Approval','anot',0,1,'Request to publish'),(9,0,'Upgrade','Released to the published production sales catalog and global distribution.','2011-05-04 17:54:12','Request to publish','anot',0,1,'Published'),(10,0,'Upgrade','Jennifer - I think we have all the right stuff now that I have the customer facing work products for this Nebulous Cloudstart offering figured out.  Don\'t you agree?\r\n','2011-05-04 18:55:04','Conceptulization','nronde',0,2,'Review for Concept Approval'),(11,0,'Upgrade','Nathaniel - looks compelling.  Please proceed with getting a design estimate.  Any early indication of ROI and TCO?','2011-05-04 18:58:22','Review for Concept Approval','jcubeline',0,2,'Concept Approved'),(12,0,'Upgrade','Hi John - thanks for the guestimate we discussed in our meeting.  Based on 60 days of effort and the size of the market opportunity and our ability to execute - please MOVE ON TO DESIGN :)','2011-05-04 19:01:32','Concept Approved','nronde',0,2,'Design'),(13,0,'Upgrade','Queensly - since you have been assigned as the new service design lead, can you please review the current state and send me any revisions for approval?  We need to get this out the door!','2011-05-04 19:07:50','Design','nronde',0,2,'Review of Design'),(14,0,'Upgrade','Great work, Queensly!  I\'m ready to ask jennifer for publication staging.','2011-05-04 19:46:58','Review of Design','nronde',0,2,'Design Approved'),(15,0,'Upgrade','Jennifer - after lots of hard work by Queensly, this service is ready to add to the catalog.  Can you please review for sales readiness?','2011-05-04 19:48:07','Design Approved','nronde',0,2,'Sales Review Request'),(16,0,'Upgrade','Approved for release to sales catalog.','2011-05-04 19:50:55','Sales Review Request','jcubeline',0,2,'Sales Approval'),(17,0,'Upgrade','Tracy - please approve for publication to the current sales catalog','2011-05-04 19:54:45','Sales Approval','jcubeline',0,2,'Request to publish'),(18,0,'Upgrade','Ready to sell per approval from Tracy Badmun.','2011-05-04 19:56:54','Request to publish','jcubeline',0,2,'Published');
 /*!40000 ALTER TABLE `staging_log` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `staging_reviewer_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `staging_reviewer_role` (
+  `staging_id` bigint NOT NULL,
+  `role_id` bigint DEFAULT NULL,
+  KEY `FKrnc3h2yqmuw9rn7gvocipp7u5` (`role_id`),
+  KEY `FKolfptg2quddkwe5tqa5vev6cn` (`staging_id`),
+  CONSTRAINT `FKolfptg2quddkwe5tqa5vev6cn` FOREIGN KEY (`staging_id`) REFERENCES `staging` (`id`),
+  CONSTRAINT `FKrnc3h2yqmuw9rn7gvocipp7u5` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `staging_types`
---
-
+LOCK TABLES `staging_reviewer_role` WRITE;
+/*!40000 ALTER TABLE `staging_reviewer_role` DISABLE KEYS */;
+INSERT INTO `staging_reviewer_role` VALUES (6,4);
+/*!40000 ALTER TABLE `staging_reviewer_role` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `staging_types`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `staging_types` (
-  `staging_id` bigint(20) NOT NULL,
-  `staging$staging_type` varchar(255) NOT NULL,
-  PRIMARY KEY  (`staging_id`,`staging$staging_type`),
-  KEY `FKB9BB7B756DC5CF6C` (`staging_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `staging_types`
---
+  `staging_id` bigint NOT NULL,
+  `staging$staging_type` varchar(255) DEFAULT NULL,
+  KEY `FKa0yhcxuce55d6vat5gvt6h80` (`staging_id`),
+  CONSTRAINT `FKa0yhcxuce55d6vat5gvt6h80` FOREIGN KEY (`staging_id`) REFERENCES `staging` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `staging_types` WRITE;
 /*!40000 ALTER TABLE `staging_types` DISABLE KEYS */;
-INSERT INTO `staging_types` VALUES (1,'BEGIN_NEW'),(1,'NEW_STAGE'),(2,'NEW_STAGE'),(2,'REVIEW_REQUEST'),(3,'APPROVAL'),(3,'NEW_STAGE'),(4,'BEGIN_EDIT'),(4,'EDIT_STAGE'),(4,'NEW_STAGE'),(5,'EDIT_STAGE'),(5,'NEW_STAGE'),(5,'REVIEW_REQUEST'),(6,'APPROVAL'),(6,'EDIT_STAGE'),(6,'NEW_STAGE'),(7,'EDIT_STAGE'),(7,'NEW_STAGE'),(7,'REVIEW_REQUEST'),(8,'APPROVAL'),(8,'EDIT_STAGE'),(8,'NEW_STAGE'),(9,'EDIT_STAGE'),(9,'NEW_STAGE'),(9,'REVIEW_REQUEST'),(10,'EDIT_STAGE'),(10,'END_EDIT'),(10,'END_NEW'),(10,'NEW_STAGE'),(11,'BEGIN_REMOVE'),(11,'REMOVE_STAGE'),(11,'REVIEW_REQUEST'),(12,'APPROVAL'),(12,'END_REMOVE'),(12,'REMOVE_STAGE');
+INSERT INTO `staging_types` VALUES (1,'BEGIN_NEW'),(1,'NEW_STAGE'),(2,'NEW_STAGE'),(3,'NEW_STAGE'),(3,'REVIEW_REQUEST'),(4,'NEW_STAGE'),(4,'APPROVAL'),(5,'NEW_STAGE'),(5,'BEGIN_EDIT'),(5,'EDIT_STAGE'),(6,'NEW_STAGE'),(6,'EDIT_STAGE'),(6,'REVIEW_REQUEST'),(7,'NEW_STAGE'),(7,'EDIT_STAGE'),(7,'APPROVAL'),(8,'REVIEW_REQUEST'),(8,'NEW_STAGE'),(8,'EDIT_STAGE'),(9,'NEW_STAGE'),(9,'EDIT_STAGE'),(9,'APPROVAL'),(10,'NEW_STAGE'),(10,'EDIT_STAGE'),(10,'REVIEW_REQUEST'),(11,'NEW_STAGE'),(11,'EDIT_STAGE'),(11,'END_NEW'),(11,'END_EDIT'),(12,'REMOVE_STAGE'),(12,'BEGIN_REMOVE'),(12,'REVIEW_REQUEST'),(13,'REMOVE_STAGE'),(13,'END_REMOVE'),(13,'APPROVAL'),(14,'INACTIVE'),(15,'NEW_STAGE'),(15,'BEGIN_NEW'),(16,'NEW_STAGE'),(16,'BEGIN_EDIT'),(16,'EDIT_STAGE'),(17,'NEW_STAGE'),(17,'BEGIN_EDIT'),(17,'EDIT_STAGE'),(18,'NEW_STAGE'),(18,'BEGIN_EDIT'),(18,'EDIT_STAGE'),(19,'NEW_STAGE'),(19,'BEGIN_EDIT'),(19,'EDIT_STAGE'),(20,'NEW_STAGE'),(20,'BEGIN_EDIT'),(20,'EDIT_STAGE'),(21,'EDIT_STAGE'),(21,'BEGIN_NEW'),(22,'EDIT_STAGE'),(23,'EDIT_STAGE'),(24,'EDIT_STAGE'),(25,'END_REMOVE'),(25,'REMOVE_STAGE'),(25,'EDIT_STAGE'),(26,'END_REMOVE'),(26,'REMOVE_STAGE'),(26,'EDIT_STAGE'),(27,'END_EDIT'),(27,'EDIT_STAGE'),(28,'NEW_STAGE'),(28,'BEGIN_NEW'),(29,'NEW_STAGE'),(29,'BEGIN_EDIT'),(29,'EDIT_STAGE'),(30,'NEW_STAGE'),(30,'BEGIN_EDIT'),(30,'EDIT_STAGE'),(31,'NEW_STAGE'),(31,'BEGIN_EDIT'),(31,'EDIT_STAGE'),(32,'NEW_STAGE'),(32,'REMOVE_STAGE'),(32,'END_REMOVE'),(33,'NEW_STAGE'),(33,'BEGIN_NEW'),(34,'NEW_STAGE'),(34,'BEGIN_EDIT'),(34,'EDIT_STAGE'),(35,'NEW_STAGE'),(35,'BEGIN_EDIT'),(35,'EDIT_STAGE'),(36,'NEW_STAGE'),(36,'BEGIN_EDIT'),(36,'EDIT_STAGE'),(37,'NEW_STAGE'),(37,'BEGIN_EDIT'),(37,'EDIT_STAGE'),(38,'NEW_STAGE'),(38,'BEGIN_EDIT'),(38,'EDIT_STAGE'),(39,'NEW_STAGE'),(39,'BEGIN_EDIT'),(39,'EDIT_STAGE'),(40,'NEW_STAGE'),(40,'BEGIN_EDIT'),(40,'EDIT_STAGE'),(41,'NEW_STAGE'),(41,'REMOVE_STAGE'),(41,'END_REMOVE'),(42,'NEW_STAGE'),(42,'REMOVE_STAGE'),(42,'END_REMOVE'),(43,'NEW_STAGE'),(43,'BEGIN_NEW'),(44,'NEW_STAGE'),(44,'BEGIN_EDIT'),(44,'EDIT_STAGE'),(45,'NEW_STAGE'),(45,'BEGIN_EDIT'),(45,'EDIT_STAGE'),(46,'NEW_STAGE'),(46,'END_REMOVE'),(46,'REMOVE_STAGE'),(46,'EDIT_STAGE');
 /*!40000 ALTER TABLE `staging_types` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `sub_stages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sub_stages` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `sequence_number` int DEFAULT NULL,
+  `display_name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `staging_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKf19t82g83ndwly02fhqpymcu8` (`staging_id`),
+  CONSTRAINT `FKf19t82g83ndwly02fhqpymcu8` FOREIGN KEY (`staging_id`) REFERENCES `staging` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `url`
---
+LOCK TABLES `sub_stages` WRITE;
+/*!40000 ALTER TABLE `sub_stages` DISABLE KEYS */;
+INSERT INTO `sub_stages` VALUES (1,0,1,'Review Service Info','showDetailedInfo',10),(2,0,2,'Approve publishing','approveRequest',10),(3,0,1,'Request Publish','request',9),(4,0,2,'Approve/Reject Sale','approveRequest',8),(5,0,1,'Review Service Info','showDetailedInfo',8),(6,0,1,'Request Sales Review','request',7),(7,0,3,'Approve/Reject Design','approveRequest',6),(8,0,2,'Edit SOW Language','editDefinition',6),(9,0,1,'Review Design','showDetailedInfo',6),(10,0,3,'Define Products','addProducts',5),(11,0,4,'Add Pre-requisites','addPrerequisites',5),(12,0,1,'Review Requirements','showInfo',5),(13,0,2,'Add Activities and Roles','addActivities',5),(14,0,7,'Request Design Review','request',5),(15,0,5,'Add Out of Scope','addOutOfScope',5),(16,0,6,'Preview','showDetailedInfo',5),(17,0,1,'Assign Designer','assignDesigner',4),(18,0,2,'Approve/Reject Concept','approveRequest',3),(19,0,1,'Review Requirements','showInfo',3),(20,0,2,'Add Service Deliverables','editDeliverables',2),(21,0,3,'Add SOW Language','editDefinition',2),(22,0,4,'Preview','showInfo',2),(23,0,1,'Add requirement data','edit',2),(24,0,5,'Request concept review','request',2);
+/*!40000 ALTER TABLE `sub_stages` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `test`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `test` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `url`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `url` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `version` bigint(20) NOT NULL,
-  `alt_text` varchar(255) default NULL,
-  `description` varchar(255) default NULL,
-  `location` varchar(255) NOT NULL,
-  `name` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+LOCK TABLES `test` WRITE;
+/*!40000 ALTER TABLE `test` DISABLE KEYS */;
+/*!40000 ALTER TABLE `test` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `text_template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `text_template` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `text` varchar(255) NOT NULL,
+  `date_created` datetime(6) NOT NULL,
+  `date_modified` datetime(6) NOT NULL,
+  `geo_id` bigint DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK4ohijwwu70svwuyx4fbttmtqg` (`geo_id`),
+  CONSTRAINT `FK4ohijwwu70svwuyx4fbttmtqg` FOREIGN KEY (`geo_id`) REFERENCES `geo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `url`
---
+LOCK TABLES `text_template` WRITE;
+/*!40000 ALTER TABLE `text_template` DISABLE KEYS */;
+/*!40000 ALTER TABLE `text_template` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `ticket_planner`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket_planner` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `portfolio_id` bigint DEFAULT NULL,
+  `task_name` varchar(255) DEFAULT NULL,
+  `task_desc` varchar(255) DEFAULT NULL,
+  `parent_task_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK8a0ce9pwk1ua0snwfaahao37w` (`portfolio_id`),
+  KEY `FKb6ing7trfldc1nqy4nnuoe4ar` (`parent_task_id`),
+  CONSTRAINT `FK8a0ce9pwk1ua0snwfaahao37w` FOREIGN KEY (`portfolio_id`) REFERENCES `portfolio` (`id`),
+  CONSTRAINT `FKb6ing7trfldc1nqy4nnuoe4ar` FOREIGN KEY (`parent_task_id`) REFERENCES `ticket_planner` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-LOCK TABLES `url` WRITE;
-/*!40000 ALTER TABLE `url` DISABLE KEYS */;
-/*!40000 ALTER TABLE `url` ENABLE KEYS */;
+LOCK TABLES `ticket_planner` WRITE;
+/*!40000 ALTER TABLE `ticket_planner` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ticket_planner` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `time_stamp_saver_object`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `time_stamp_saver_object` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `from_date` datetime(6) DEFAULT NULL,
+  `to_date` datetime(6) DEFAULT NULL,
+  `object_name` varchar(255) DEFAULT NULL,
+  `modified_by_id` bigint DEFAULT NULL,
+  `modified_date` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtqvqgu3n8w48baivpyifdtdty` (`modified_by_id`),
+  CONSTRAINT `FKtqvqgu3n8w48baivpyifdtdty` FOREIGN KEY (`modified_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `time_stamp_saver_object` WRITE;
+/*!40000 ALTER TABLE `time_stamp_saver_object` DISABLE KEYS */;
+/*!40000 ALTER TABLE `time_stamp_saver_object` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `update_record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `update_record` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `record_type` varchar(255) DEFAULT NULL,
+  `begin_update_date` datetime(6) DEFAULT NULL,
+  `last_update_date` datetime(6) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `updated_by_id` bigint DEFAULT NULL,
+  `date_created` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK5ons5yr0icdg55ygbuh2pqnlx` (`updated_by_id`),
+  CONSTRAINT `FK5ons5yr0icdg55ygbuh2pqnlx` FOREIGN KEY (`updated_by_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `update_record` WRITE;
+/*!40000 ALTER TABLE `update_record` DISABLE KEYS */;
+/*!40000 ALTER TABLE `update_record` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `upload_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `upload_file` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `version` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `upload_file` WRITE;
+/*!40000 ALTER TABLE `upload_file` DISABLE KEYS */;
+/*!40000 ALTER TABLE `upload_file` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_role` (
+  `user_id` bigint NOT NULL,
+  `role_id` bigint NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`),
+  KEY `FKa68196081fvovjhkek5m97n3y` (`role_id`),
+  CONSTRAINT `FKa68196081fvovjhkek5m97n3y` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
+  CONSTRAINT `FKniaqoclrvx138sjw9hsollqav` FOREIGN KEY (`user_id`) REFERENCES `_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+INSERT INTO `user_role` VALUES (1,1),(2,1),(3,1),(1,2),(2,2),(3,2),(1,3),(2,3),(3,3),(1,4),(2,4),(3,4),(1,5),(2,5),(3,5),(1,6),(2,6),(3,6),(1,7),(2,7),(3,7),(1,8),(2,8),(3,8),(1,9),(2,9),(3,9),(4,9),(5,9),(6,9);
+/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1310,4 +2087,3 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-07-26 21:18:35
