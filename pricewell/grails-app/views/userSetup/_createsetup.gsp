@@ -60,10 +60,16 @@
 					jQuery.ajax({
 						type: "POST",
 						url: "${baseurl}/userSetup/save",
+						dataType: "text",
 						data:jQuery("#userCreate").serialize(),
-						success: function(data)
+						success: function(rawData)
 						{
 							hideLoadingBox();
+							// Parse JSON if response is a JSON string (server returns mixed text/json)
+							var data = rawData;
+							if (typeof rawData === 'string') {
+								try { data = jQuery.parseJSON(rawData); } catch(e) { data = rawData; }
+							}
 							if(data == "username_Available")
 					      	{
 					        	jQuery("#usernameMsg").html('Error: This username is already registered with an existing user account.');
@@ -75,8 +81,8 @@
 					       	else if(data == "invalid_phone")
 					       	{
 					        	jQuery("#phoneMsg").html('Error: This phone number is not valid as per the selected country.');
-					       	} 
-							else if(data['result'] == "success")
+					       	}
+							else if(data && data['result'] == "success")
 							{
 								if("geoGroup" != "${sourceFrom}" && "geo" != "${sourceFrom}")
 								{
