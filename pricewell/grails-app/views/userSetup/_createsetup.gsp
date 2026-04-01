@@ -370,13 +370,13 @@
 		      			</tr>
 		      
 		      			<tr>
-					        <td class="name"><label for="phone"><g:message code="nimble.label.phone" default="Phone"/></label><em>*</em></td>
+					        <td class="name"><label for="phone"><g:message code="nimble.label.phone" default="Phone"/></label><g:if test="${sourceFrom != 'geo'}"><em>*</em></g:if></td>
 					        <td class="value">
-					          <input type="text" size="30" id="phone" name="phone" value="${user.profile?.phone?.encodeAsHTML()}" class="required phone easyinput"/><!--  <span class="icon icon_bullet_green">&nbsp;</span>-->
+					          <input type="text" size="30" id="phone" name="phone" value="${user.profile?.phone?.encodeAsHTML()}" class="${sourceFrom == 'geo' ? 'phone easyinput' : 'required phone easyinput'}"/><!--  <span class="icon icon_bullet_green">&nbsp;</span>-->
 					        </td>
 					    </tr>
 					    <tr>
-					        <td class="country"><label for="country"><g:message code="nimble.label.country" /></label><em>*</em></td>
+					        <td class="country"><label for="country"><g:message code="nimble.label.country" /></label><g:if test="${sourceFrom != 'geo'}"><em>*</em></g:if></td>
 					        <td>	
 		        				<g:countrySelect name="phoneCountry"
 					                 from="['afg','alb','dza','asm','and','ago','aia','ata','atg','arg','arm','abw','aus','aut','aze'
@@ -394,8 +394,8 @@
 											,'smr','stp','sau','sen','syc','sle','sgp','svk','svn','slb','som','zaf','kor','esp'
 											,'lka','sdn','sur','sjm','swz','swe','che','syr','twn','tjk','tza','tha','tls','tgo','tkl'
 											,'ton','tto','tun','tur','tkm','tca','tuv','uga','ukr','are','gbr','usa','ury','vir','uzb'
-											,'vut','ven','vnm','wlf','esh','yem','zmb','zwe']" class="required"
-					                 value="${user.profile?.country?.encodeAsHTML()}" noSelection="['':'-Select Country Please-']" class="required"/>
+											,'vut','ven','vnm','wlf','esh','yem','zmb','zwe']" class="${sourceFrom == 'geo' ? '' : 'required'}"
+					                 value="${user.profile?.country?.encodeAsHTML()}" noSelection="['':'-Select Country Please-']" class="${sourceFrom == 'geo' ? '' : 'required'}"/>
 		        				<br/><div id="phoneMsg" class="msg"></div>
 		        			</td>
 		      			</tr>
