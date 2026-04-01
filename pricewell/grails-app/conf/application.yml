@@ -147,7 +147,7 @@ environments:
 
     test:
         grails:
-            serverURL: 'http://localhost:8080/pricewell'
+            serverURL: 'http://localhost:8080'
         dataSource:
             dbCreate: create-drop
             driverClassName: org.h2.Driver
