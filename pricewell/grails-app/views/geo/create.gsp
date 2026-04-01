@@ -69,7 +69,7 @@
 		            <div class="message">${flash.message}</div>
 		            </g:if>
 		            
-		            <g:form action="save" name="geoCreate">
+		            <g:form action="save" name="geoCreate" onsubmit="jQuery('[name=salesManagerId],[name=salesPersons]', this).attr('disabled',true);" >
 		                <div class="dialog">
 		                    <table>
 		                        <tbody>

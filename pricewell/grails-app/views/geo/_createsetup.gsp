@@ -24,6 +24,7 @@
 				return jQuery(".geoCreate").serialize()
 					.replace(/&?salesManagerId=/g, '&_salesManagerId=')
 					.replace(/&?salesPersonId=/g, '&_salesPersonId=')
+					.replace(/&?salesPersons=/g, '&_salesPersons=')
 					.replace(/^&/, '');
 			}
 

@@ -18,8 +18,18 @@
 		</style>
 		
 		<script>
-			jQuery(function() 
-			 {				 
+			// Grails 7/GORM: association params cause "readonly property" errors.
+			// Rename them so GORM's auto-binder doesn't see them.
+			function serializeGeoForm() {
+				return jQuery("#geoUpdate").serialize()
+					.replace(/&?salesManagerId=/g, '&_salesManagerId=')
+					.replace(/&?salesPersonId=/g, '&_salesPersonId=')
+					.replace(/&?salesPersons=/g, '&_salesPersons=')
+					.replace(/^&/, '');
+			}
+
+			jQuery(function()
+			 {
 				    jQuery("#geoUpdate").validate();
 				    jQuery("#geoUpdate input:text")[0].focus();
 				    
@@ -34,7 +44,7 @@
 							jQuery.ajax({
 								type: "POST",
 								url: "${baseurl}/geo/update",
-								data:jQuery("#geoUpdate").serialize(),
+								data:serializeGeoForm(),
 								success: function(data)
 								{
 									hideLoadingBox();

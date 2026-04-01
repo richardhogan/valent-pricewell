@@ -75,7 +75,7 @@
 		                <g:renderErrors bean="${geoInstance}" as="list" />
 		            </div>
 		            </g:hasErrors>
-		            <g:form method="post" name="geoEdit" >
+		            <g:form method="post" name="geoEdit" onsubmit="jQuery('[name=salesManagerId],[name=salesPersons]', this).attr('disabled',true);" >
 		                <g:hiddenField name="id" value="${geoInstance?.id}" />
 		                <g:hiddenField name="version" value="${geoInstance?.version}" />
 		                <div class="dialog">
