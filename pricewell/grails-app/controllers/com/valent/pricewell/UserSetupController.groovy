@@ -271,7 +271,13 @@ class UserSetupController {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def territoryList = new ArrayList()
 		territoryList = salesCatalogService.findUserTerritories(user)
-		
+
+		// If no territories exist, redirect to setup so the user can create one first
+		if (!territoryList) {
+			redirect(controller: "setup", action: "firstsetup")
+			return
+		}
+
 		render(view: "addTerritory", model: [territoryList: territoryList, userInstance: user])
 	}
 	
