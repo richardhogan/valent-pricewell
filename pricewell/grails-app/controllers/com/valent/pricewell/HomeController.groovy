@@ -62,7 +62,7 @@ class HomeController {
 		//println g.render(template:"/home/test")
 		/*if(CompanyInformation.list().size() == 0 || GeoGroup.list().size() == 0 || DeliveryRole.list().size() == 0 || Portfolio.list().size() == 0)
 		{
-			redirect(controller: "setup", action: "setup")
+			redirect(controller: "setup", action: "firstsetup")
 			return
 		}
 		else
@@ -71,7 +71,7 @@ class HomeController {
 			{
 				if(role?.users.size() == 0)
 				{
-					redirect(controller: "setup", action: "setup")
+					redirect(controller: "setup", action: "firstsetup")
 					return
 				}
 			}
@@ -135,7 +135,7 @@ class HomeController {
 					user.lastLoginRole = RoleEnum.SYSTEM_ADMINISTRATOR.value()
 					user.save()
 					
-					redirect(controller: "setup", action: "setup")
+					redirect(controller: "setup", action: "firstsetup")
 					return
 				}
 			}
@@ -562,7 +562,7 @@ class HomeController {
 			{
 				session.setAttribute(DEFAULTUSERROLE,RoleEnum.SYSTEM_ADMINISTRATOR);
 				
-				redirect(controller: "setup", action: "setup")
+				redirect(controller: "setup", action: "firstsetup")
 				return
 			}
 		}

@@ -42,6 +42,7 @@ class SetupController {
 	private static int c_default_entities = 0
 	
 	private static int c_sow_discounts = 0
+	private static int c_assign_geos = 0
 	//Ankit Start
 	private static int c_sow_introduction = 0
 	//Ankit End
@@ -125,6 +126,10 @@ class SetupController {
 						
 		c_sow_discounts = SowDiscount?.list()?.size()
 
+		def gmRoleForCount = grails.plugins.nimble.core.Role.findByAuthority('ROLE_GENERAL_MANAGER')
+		c_assign_geos = gmRoleForCount ? com.valent.pricewell.UserRole.findAllByRole(gmRoleForCount)
+			.findAll { it.user.username != 'superadmin' && it.user.username != 'user' }.size() : 0
+
 	}
 
 	public int countUser()
@@ -184,6 +189,13 @@ class SetupController {
 				counts: displayCounts(c_users, displayUsersCount),
 				link: "link_users",
 				isVisible: isVisible("users")
+			],
+			[
+				title: "Assign GEOs",
+				image: displayImage(c_assign_geos),
+				counts: displayCounts(c_assign_geos, false),
+				link: "link_assign_geos",
+				isVisible: isVisible("assignGeos")
 			],
 			[
 				title: "GEOs",
@@ -310,6 +322,10 @@ class SetupController {
 		{
 			if(PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole('PORTFOLIO MANAGER') || PricewellSecurity.hasRole('PRODUCT MANAGER') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || PricewellSecurity.hasRole('SALES MANAGER')){return true}else {return false}
 		}
+		else if(string == "assignGeos")
+		{
+			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT')){return true}else {return false}
+		}
 		else if(string == "geos")
 		{
 			if(PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER')){return true}else {return false}
@@ -395,6 +411,9 @@ class SetupController {
 				params.source = "setup";
 				redirect(controller: "companyInformation", action: "showsetup", params: [source: "firstsetup"])
 			}
+		}
+		else if(params.id == 'link_assign_geos'){
+			redirect(controller: "userSetup", action: "geoassignmentsetup")
 		}
 		else if(params.id == 'link_geos'){
 			redirect(controller: "geoGroup", action: "listsetup", params: [source: "firstsetup"])

@@ -643,6 +643,24 @@ class UserSetupController {
 		])
 	}
 
+	def geoassignmentsetup() {
+		def geoGroups = GeoGroup.list(sort: "name")
+		def gmRole = grails.plugins.nimble.core.Role.findByAuthority('ROLE_GENERAL_MANAGER')
+		def smRole = grails.plugins.nimble.core.Role.findByAuthority('ROLE_SALES_MANAGER')
+		def spRole = grails.plugins.nimble.core.Role.findByAuthority('ROLE_SALES_PERSON')
+		def unassignedGMs = UserRole.findAllByRole(gmRole)*.user
+			.findAll { it.geoGroup == null && it.username != 'superadmin' && it.username != 'user' }
+		def unassignedGeos = Geo.list().findAll { it.geoGroup == null }
+		render(template: "geoassignmentsetup", model: [
+			geoGroups: geoGroups,
+			gmRole: gmRole,
+			smRole: smRole,
+			spRole: spRole,
+			unassignedGMs: unassignedGMs,
+			unassignedGeos: unassignedGeos
+		])
+	}
+
 	def listsetup() {
 		/*int index = params.roleindex.toInteger(); 
 		def users = usersByRoleList[index]["users"]

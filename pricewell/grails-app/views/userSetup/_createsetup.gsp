@@ -77,9 +77,13 @@
 					        	jQuery("#phoneMsg").html('Error: This phone number is not valid as per the selected country.');
 					       	} 
 							else if(data['result'] == "success")
-							{								
+							{
 								if("geoGroup" != "${sourceFrom}" && "geo" != "${sourceFrom}")
 								{
+									if("firstsetup" == "${source}") {
+										refreshGeoGroupList();
+										return;
+									}
 									jQuery(".resultDialog").html('Loading .....');
 									jQuery(".resultDialog").dialog( "open" ); jQuery(".resultDialog").dialog( "option", "title", "Success" );
 									jQuery(".resultDialog").html('User created successfully and added into ${roleInstance?.description} role.'); jQuery( ".resultDialog" ).dialog("open");
@@ -117,6 +121,10 @@
 								jQuery( xdialogDiv ).dialog( "close" );
 								
 							} else{
+								if("firstsetup" == "${source}") {
+									alert("Failed to save user. Please check the form and try again.");
+									return;
+								}
 								jQuery( xdialogDiv ).dialog( "close" );
 								//jQuery('#userErrors').html(data);
 								jQuery(".resultDialog").html('Loading .....');

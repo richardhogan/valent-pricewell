@@ -71,6 +71,7 @@ class BootStrap {
 		changeAdminProtectedField()
 		
 		createDefaultGeoGroups()
+		createDefaultGeoManagers()
 		//1) Adding staging for service
 		addServiceStages();
 
@@ -1947,6 +1948,35 @@ class BootStrap {
 		['AMER', 'EMEA', 'APAC'].each { geoName ->
 			if (!GeoGroup.findByName(geoName)) {
 				new GeoGroup(name: geoName).save(flush: true)
+			}
+		}
+	}
+
+	void createDefaultGeoManagers() {
+		Role gmRole = Role.findByAuthority('ROLE_GENERAL_MANAGER')
+		if (!gmRole) return
+
+		[
+			[username: 'gm.amer', fullName: 'GM Americas',    email: 'gm.amer@example.com',  geo: 'AMER'],
+			[username: 'gm.emea', fullName: 'GM Europe',      email: 'gm.emea@example.com',  geo: 'EMEA'],
+			[username: 'gm.apac', fullName: 'GM Asia Pacific', email: 'gm.apac@example.com', geo: 'APAC'],
+		].each { ud ->
+			GeoGroup geoGroup = GeoGroup.findByName(ud.geo)
+			if (!geoGroup) return
+
+			User u = User.findByUsername(ud.username)
+			if (!u) {
+				u = userManagementService.createUser(ud.username, 'admiN123!', ud.fullName, ud.email)
+				if (u.hasErrors()) {
+					u.errors.each { log.error(it) }
+					return
+				}
+				userManagementService.assignRole(u, gmRole)
+			}
+
+			if (u.geoGroup == null) {
+				u.geoGroup = geoGroup
+				u.save(flush: true)
 			}
 		}
 	}

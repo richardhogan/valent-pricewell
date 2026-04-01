@@ -206,7 +206,8 @@
                         </g:if>
                         
                     </g:each>
-                    <g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR')}"> 
+                    <% def listRolesCurrentRole = session.getAttribute('DEFAULTUSERROLE')?.value() ?: "" %>
+                    <g:if test="${listRolesCurrentRole == 'SYSTEM ADMINISTRATOR'}"> 
 						<tr>
 							<td>
 								<a class="hyperlink" href="${baseurl}/administration/users/list"> Advanced Administration </a>
