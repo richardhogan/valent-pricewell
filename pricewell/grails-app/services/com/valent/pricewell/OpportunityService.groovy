@@ -406,9 +406,12 @@ class OpportunityService {
 	   }
 	   else
 	   {
-		   CompanyInformation companyInformationInstance = CompanyInformation.list().get(0);
-		   currencySymbol = companyInformationInstance?.baseCurrencySymbol//territoryInstance?.currencySymbol
-		   currency = companyInformationInstance?.baseCurrency
+		   def ciList = CompanyInformation.list()
+		   if (ciList) {
+			   CompanyInformation companyInformationInstance = ciList.get(0)
+			   currencySymbol = companyInformationInstance?.baseCurrencySymbol
+			   currency = companyInformationInstance?.baseCurrency
+		   }
 	   }
 	   return [currency: currency, currencySymbol: currencySymbol]
    }
