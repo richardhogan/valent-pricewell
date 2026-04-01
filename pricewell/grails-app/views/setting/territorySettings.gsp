@@ -7,7 +7,6 @@
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
     	<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
-		<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     	<script> 
 
         	jQuery(document).ready(function()

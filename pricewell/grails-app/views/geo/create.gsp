@@ -10,7 +10,6 @@
         <g:set var="entityName" value="${message(code: 'default.geo.label', default: 'Geo')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     	
-    	<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 		<script>
 			jQuery(document).ready(function()
 			{

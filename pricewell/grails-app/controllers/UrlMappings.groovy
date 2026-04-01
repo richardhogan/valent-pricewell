@@ -1,6 +1,13 @@
 class UrlMappings {
 
 	static mappings = {
+		// Administration URLs (ported from NimbleUrlMappings.groovy)
+		// Must be before the generic pattern so they match first.
+		"/administration/users/$action?/$id?"(controller: "user")
+		"/administration/adminstrators/$action?/$id?"(controller: "admins")
+		"/administration/groups/$action?/$id?"(controller: "group")
+		"/administration/roles/$action?/$id?"(controller: "role")
+
 		"/$controller/$action?/$id?"{
 			constraints {
 				// apply constraints here

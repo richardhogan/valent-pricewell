@@ -88,6 +88,7 @@ grails:
                 - { pattern: '/static/**',                access: 'permitAll' }
                 # Admin user-management UI requires SYSTEM ADMINISTRATOR
                 - { pattern: '/userAdmin/**',             access: 'ROLE_SYSTEM_ADMINISTRATOR' }
+                - { pattern: '/administration/**',        access: 'ROLE_SYSTEM_ADMINISTRATOR' }
                 # Service create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
                 - { pattern: '/service/create',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 - { pattern: '/service/save',             access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }

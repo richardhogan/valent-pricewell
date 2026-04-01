@@ -26,6 +26,7 @@ class Application extends GrailsAutoConfiguration {
     Collection<Class> classes() {
         def allClasses = super.classes()
         try { allClasses << Class.forName('BootStrap') } catch (ClassNotFoundException ignored) { }
+        try { allClasses << Class.forName('UrlMappings') } catch (ClassNotFoundException ignored) { }
         return allClasses
     }
 

@@ -62,7 +62,7 @@
                                 </td>
                                 
                                 <td>
-                                	<input id="btnCalculate" onclick="new Ajax.Updater('dvSearchServices','${baseurl}/serviceQuotation/displayCalculatedPrice',{asynchronous:true,evalScripts:true,parameters:Form.serialize(this.form)});return false" type="button" value="Refresh" class="button"></input>
+                                	<input id="btnCalculate" onclick="jQuery.ajax({url:'${baseurl}/serviceQuotation/displayCalculatedPrice',type:'POST',data:jQuery(this.form).serialize(),success:function(html){jQuery('#dvSearchServices').html(html);}});return false" type="button" value="Refresh" class="button"></input>
                                 </td>
                             </tr>
                      		

@@ -38,7 +38,7 @@
                                     <label for="geo"><g:message code="serviceQuotation.geo.label" default="Geo" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: serviceQuotationInstance, field: 'geo', 'errors')}">
-                                    <g:select name="geo.id" from="${com.valent.pricewell.Geo.list()}" optionKey="id" value="${serviceQuotationInstance?.geo?.id}" onchange="alert(document.getElementById('btnCalculate')); document.getElementById('btnCalculate').click();"/>
+                                    <g:select name="geo.id" from="${com.valent.pricewell.Geo.list()}" optionKey="id" value="${serviceQuotationInstance?.geo?.id}" onchange="document.getElementById('btnCalculate').click();"/>
                                 </td>
                                 
                                 <td valign="top" class="name">
@@ -62,7 +62,7 @@
                                 </td>
                                 
                                 <td>
-                                	<input id="btnCalculate" onclick="new Ajax.Updater('dvQutationServices','${baseurl}/serviceQuotation/displayCalculatedPriceInEdit',{asynchronous:true,evalScripts:true,parameters:Form.serialize(this.form)});return false" type="button" value="Refresh" class="button"></input>
+                                	<input id="btnCalculate" onclick="jQuery.ajax({url:'${baseurl}/serviceQuotation/displayCalculatedPriceInEdit',type:'POST',data:jQuery(this.form).serialize(),success:function(html){jQuery('#dvQutationServices').html(html);}});return false" type="button" value="Refresh" class="button"></input>
                                 </td>
                             </tr>
                      		

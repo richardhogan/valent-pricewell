@@ -89,7 +89,7 @@
 			jQuery(".userEdit").click(function(){
 				jQuery("#contents").html('Loading, please wait.....');
 				//jQuery("#userDialog").dialog( "open" );
-				//jQuery("#userDialog").dialog( "option", "title", "Edit ${roleInstance.name}" );
+				//jQuery("#userDialog").dialog( "option", "title", "Edit ${roleInstance.description}" );
 				/*jQuery("#userDialog").dialog( "option", "zIndex", 1500 );
 				jQuery("#userDialog").dialog( "option", "width", 600);
 				jQuery("#userDialog").dialog( "option", "maxHeight", 500);*/
