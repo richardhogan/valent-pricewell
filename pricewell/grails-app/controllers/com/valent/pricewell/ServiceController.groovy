@@ -1862,8 +1862,8 @@ class ServiceController {
 				break;
 			case "designreview"	:
 			case "concept":
-			
-				def serviceProfileInstance = ServiceProfile.get(params.id)
+
+				def serviceProfileInstance = ServiceProfile.get(params.serviceProfileId ?: params.id)
 				String stepName = ""
 				def stepNumber = params.step_number.toInteger()
 				
