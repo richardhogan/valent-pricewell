@@ -32,7 +32,7 @@ class Profile {
     static constraints = {
         fullName   nullable: true
         nickName   nullable: true
-        email      nullable: true, email: true, unique: true
+        email      nullable: true, unique: true
         phone      nullable: true
         country    nullable: true
         dateCreated nullable: true
