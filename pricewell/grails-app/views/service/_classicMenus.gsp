@@ -313,8 +313,9 @@
 						
 							<span>
 								<div id="stagingDialog" title="Service Stage Assignment" style="display:none;"></div>
+								<g:set var="changeStagingUrl" value="${g.createLink(controller:'staging', action:'changeStaging')}" />
 								<input type="button" class="buttons.button button"
-									onclick="var dlg=jQuery('#stagingDialog'); dlg.load('<g:createLink controller=\"staging\" action=\"changeStaging\"/>' + '?stageId=${serviceProfileInstance?.stagingStatus?.id}&serviceProfileId=${serviceProfileInstance?.id}&nextStageDisabled=true', function(){ dlg.dialog({modal:true,width:700,height:500}); }); return false;"
+									onclick="var dlg=jQuery('#stagingDialog'); dlg.load('${changeStagingUrl}' + '?stageId=${serviceProfileInstance?.stagingStatus?.id}&serviceProfileId=${serviceProfileInstance?.id}&nextStageDisabled=true', function(){ dlg.dialog({modal:true,width:700,height:500}); }); return false;"
 									value="Request ${nextStage?.name == 'requestforpublished'? 'Publish' :nextStage?.displayName}" />
 							</span>
 						
