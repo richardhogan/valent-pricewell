@@ -299,7 +299,8 @@ class QuotaController {
 		}*/
 		else
 		{
-			def quotaInstance = new Quota(params)
+			def quotaInstance = new Quota()
+			bindData(quotaInstance, params, [exclude: ['source', 'timespan', 'territoryId']])
 			Map dates = dateService.getTimespanForQuota(params.timespan)
 			//quotaInstance.territory = Geo.get(params.territoryId.toLong())
 			quotaInstance.fromDate = dates["fromDate"]
