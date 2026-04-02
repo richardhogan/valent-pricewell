@@ -27,7 +27,7 @@ class ProductController {
 
 	def save() {
 		if(params.datePublished){
-			params.datePublished = new Date().parse("mm/dd/yyyy", params.datePublished)
+			params.datePublished = new java.text.SimpleDateFormat("MM/dd/yyyy").parse(params.datePublished)
 		}
 		def productInstance = new Product(params)
 		productInstance.dateModified = new Date()
@@ -68,7 +68,7 @@ class ProductController {
 
 	def update() {
 		if(params.datePublished){
-			params.datePublished = new Date().parse("mm/dd/yyyy", params.datePublished)
+			params.datePublished = new java.text.SimpleDateFormat("MM/dd/yyyy").parse(params.datePublished)
 		}
 		def productInstance = Product.get(params.id)
 		if (productInstance) {
