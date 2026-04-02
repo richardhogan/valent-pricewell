@@ -260,7 +260,7 @@ class ServiceProfile {
 
 	String toString()
 	{
-		"${this.service.serviceName} [revision ${this.revision}]"
+		"${this.service?.serviceName ?: 'New Service'} [revision ${this.revision}]"
 	}
 
 	public void createNewServiceDeliverableDescription(ServiceDeliverable sDeliverable, String description)

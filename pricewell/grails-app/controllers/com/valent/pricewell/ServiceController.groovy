@@ -499,7 +499,6 @@ class ServiceController {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
 
-		serviceInstance.properties = params
 		serviceInstance.serviceProfile = new ServiceProfile()
 		def productManagerList = serviceCatalogService.findProductManagers()
 		
@@ -631,7 +630,6 @@ class ServiceController {
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
 
-		serviceInstance.properties = params
 		serviceInstance.serviceProfile = new ServiceProfile()
 		def productManagerList = serviceCatalogService.findProductManagers()
 		
