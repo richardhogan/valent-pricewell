@@ -539,8 +539,10 @@ class ServiceCatalogService {
 	
 	
 	private List findUsersByRole(String roleName)
-	{println roleName
-		List roles = Role.findAll("FROM Role role WHERE role.code=:roleCode", [roleCode: roleName])
+	{
+		// Accept both ROLE_-prefixed authority ("ROLE_PORTFOLIO_MANAGER") and human-readable code ("PORTFOLIO MANAGER")
+		String roleCode = roleName.startsWith('ROLE_') ? roleName.substring(5).replace('_', ' ') : roleName
+		List roles = Role.findAll("FROM Role role WHERE role.code=:roleCode OR role.authority=:authority", [roleCode: roleCode, authority: roleName.startsWith('ROLE_') ? roleName : 'ROLE_' + roleName.replace(' ', '_')])
 		List tmpList = new ArrayList()
 		for(Role role : roles)
 		{
