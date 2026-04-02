@@ -85,13 +85,7 @@ class UserController {
     }
 
     def changepassword() {
-        def user = User.get(params.id)
-        if (!user) {
-            flash.message = "User not found"
-            redirect action: 'list'
-            return
-        }
-        [user: user]
+        redirect(controller: 'userSetup', action: 'changepassword', id: params.id)
     }
 
     def savepassword() {
