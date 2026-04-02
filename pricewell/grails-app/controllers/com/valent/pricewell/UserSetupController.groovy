@@ -386,12 +386,13 @@ class UserSetupController {
 						 if(params.primaryTerritory != null && params.primaryTerritory != "")
 						 {
 							 primaryTerritory = Geo.get(params.primaryTerritory.toLong())
-							 user.primaryTerritory = primaryTerritory
-							 
-							 if(primaryTerritory?.country == null || primaryTerritory?.country == "NULL" || primaryTerritory?.country == "")
-							 {
-								 primaryTerritory.country = params.country
-								 primaryTerritory.save()
+							 if (primaryTerritory) {
+								 user.primaryTerritory = primaryTerritory
+								 if(primaryTerritory.country == null || primaryTerritory.country == "NULL" || primaryTerritory.country == "")
+								 {
+									 primaryTerritory.country = params.country
+									 primaryTerritory.save()
+								 }
 							 }
 						 }
 					 
@@ -478,11 +479,12 @@ class UserSetupController {
 					// ROLE_SYSTEM_ADMINISTRATOR has full access via Spring Security interceptUrlMap — no Shiro permission needed.
 
 					// Save again to persist profile and territory/geoGroup assignments
+					user.clearErrors()
 					user.save(flush: true)
 					def savedUser = user
 					if (savedUser.hasErrors())
 					{
-						log.info("Failed to save new user")
+						log.error("Failed to save new user: ${savedUser.errors}")
 						if(params.source == "setup" || params.source == "firstsetup")
 						{
 							render "Failed to save new user: " + savedUser.errors
@@ -506,9 +508,10 @@ class UserSetupController {
 							for(Object i : territoriesList)
 							{
 								def geoInstance = Geo.get(i.toInteger())
-								def map1 = new NotificationGenerator(g).sendAssignedToSalesManagerNotification(geoInstance)
-								sendMailService.sendEmailNotification(map1["message"], map1["subject"], map1["receiverList"], request.siteUrl+"/geo/show/"+geoInstance.id)
-								map1 = new HashMap()
+								if (geoInstance) {
+									def map1 = new NotificationGenerator(g).sendAssignedToSalesManagerNotification(geoInstance)
+									sendMailService.sendEmailNotification(map1["message"], map1["subject"], map1["receiverList"], request.siteUrl+"/geo/show/"+geoInstance.id)
+								}
 							}
 						}
 						loadRoleUserCache();
