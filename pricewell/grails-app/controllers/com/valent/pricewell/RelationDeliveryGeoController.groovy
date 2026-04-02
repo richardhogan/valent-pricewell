@@ -187,7 +187,12 @@ class RelationDeliveryGeoController {
 		
 		for(int i=0; i<entries; i++)
 		{	
-			def relationDeliveryGeoInstance = new RelationDeliveryGeo(params.relations[i.toString()])
+			def p = params.relations[i.toString()]
+			def relationDeliveryGeoInstance = new RelationDeliveryGeo()
+			if (p['deliveryRole.id']) relationDeliveryGeoInstance.deliveryRole = DeliveryRole.get(p['deliveryRole.id'] as Long)
+			if (p['geo.id']) relationDeliveryGeoInstance.geo = Geo.get(p['geo.id'] as Long)
+			if (p['costPerDay']) relationDeliveryGeoInstance.costPerDay = new BigDecimal(p['costPerDay'])
+			if (p['ratePerDay']) relationDeliveryGeoInstance.ratePerDay = new BigDecimal(p['ratePerDay'])
 			deliveryRoleId = relationDeliveryGeoInstance?.deliveryRole?.id
 			relationDeliveryGeoInstance.save(flush: true)
 			
