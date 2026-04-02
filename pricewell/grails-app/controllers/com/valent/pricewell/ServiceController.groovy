@@ -1107,6 +1107,9 @@ class ServiceController {
 			def serviceInstance = Service.get(params.id)
 			serviceProfile = serviceInstance?.serviceProfile
 		}
+		def user = PricewellSecurity.currentUser
+		def portfolioList = serviceCatalogService.findUserPortfolios(user, params)
+		def productManagerList = serviceCatalogService.findProductManagers()
 
 		if(serviceProfile)
 		{
@@ -1120,7 +1123,7 @@ class ServiceController {
 				}
 				
 				//render(view: "importService", model: [serviceProfileInstance: serviceProfile, importServiceStages: importServiceStages, importServiceStageSteps: importServiceStageSteps]);
-				render(view: "serviceImport", model: [serviceProfileInstance: serviceProfile, importServiceStages: importServiceStages, importServiceStageSteps: importServiceStageSteps]);
+				render(view: "serviceImport", model: [serviceProfileInstance: serviceProfile, importServiceStages: importServiceStages, importServiceStageSteps: importServiceStageSteps, portfolioList: portfolioList, productManagerList: productManagerList]);
 			}
 			else
 			{
@@ -1152,12 +1155,12 @@ class ServiceController {
 
 					 
 					 				 
-					 render(view: "shortcutMain", model: [serviceProfileInstance: serviceProfile, importServiceStages: importServiceStages, importServiceStageSteps: importServiceStageStep, stagingInstanceList: stagingInstanceList, reviewRequestInstanceId: ServiceProfile.findCurrentReviewRequest(serviceProfile)?.id]);
+					 render(view: "shortcutMain", model: [serviceProfileInstance: serviceProfile, importServiceStages: importServiceStages, importServiceStageSteps: importServiceStageStep, stagingInstanceList: stagingInstanceList, reviewRequestInstanceId: ServiceProfile.findCurrentReviewRequest(serviceProfile)?.id, portfolioList: portfolioList, productManagerList: productManagerList]);
 				}
 				else
 				{					
 					stagingInstanceList = Staging.listServiceStages ("NEW_STAGE")
-					render(view: "main", model: [serviceProfileInstance: serviceProfile, stagingInstanceList: stagingInstanceList, reviewRequestInstanceId: ServiceProfile.findCurrentReviewRequest(serviceProfile)?.id]);
+					render(view: "main", model: [serviceProfileInstance: serviceProfile, stagingInstanceList: stagingInstanceList, reviewRequestInstanceId: ServiceProfile.findCurrentReviewRequest(serviceProfile)?.id, portfolioList: portfolioList, productManagerList: productManagerList]);
 				}	
 			}	
 		}
