@@ -29,6 +29,18 @@ springBoot {
     mainClass = 'com.valent.pricewell.Application'
 }
 
+// JVM flags required for JAXB (docx4j 3.0.0) on Java 17+
+bootRun {
+    jvmArgs = [
+        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.text=ALL-UNNAMED',
+        '--add-opens', 'java.desktop/java.awt.font=ALL-UNNAMED',
+    ]
+}
+
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -105,8 +117,12 @@ dependencies {
     implementation "net.sourceforge.nekohtml:nekohtml:1.9.22"
     // Classpath scanning (used in SowJsonConverterUtil)
     implementation "org.reflections:reflections:0.10.2"
-    // JAXB API — removed from JDK in Java 9; required by docx4j and Word utilities
+    // JAXB API + implementation — removed from JDK in Java 9; required by docx4j 3.0.0
+    // docx4j 3.0.0 uses javax.xml.bind (JAXB 2.x). Spring Boot 3 uses jakarta.xml.bind (JAXB 3.x).
+    // Both must coexist: javax.xml.bind for docx4j, jakarta.xml.bind for Spring/Hibernate.
     implementation "javax.xml.bind:jaxb-api:2.3.1"
+    implementation "com.sun.xml.bind:jaxb-impl:2.3.9"
+    implementation "javax.activation:javax.activation-api:1.2.0"
     // Groovy XML module (XmlSlurper etc.) — ensure it's on the compile classpath
     implementation "org.apache.groovy:groovy-xml"
     // ConnectWise v1 JARs also needed for src/groovy/com/valent/pricewell/cw15/*
