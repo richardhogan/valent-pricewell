@@ -565,7 +565,7 @@ class ServiceController {
 					if(stepName.equals("edit"))
 					{
 						println"In concept-Edit"
-						List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale != null ORDER BY sp.unitOfSale ASC" )
+						List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale is not null ORDER BY UPPER(sp.unitOfSale) ASC" )
 						render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, isLightWorkflow: true, serviceUnitOfSaleList: serviceUnitOfSaleList])
 					}
 					else if(stepName.equals("editDeliverables"))
@@ -1255,7 +1255,7 @@ class ServiceController {
 			
 					if(stepName.equals("edit"))
 					{
-						List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale != null ORDER BY sp.unitOfSale ASC" )
+						List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale is not null ORDER BY UPPER(sp.unitOfSale) ASC" )
 						render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, isLightWorkflow: false, serviceUnitOfSaleList: serviceUnitOfSaleList])
 					}
 					else if(stepName.equals("editDeliverables"))
@@ -1387,7 +1387,7 @@ class ServiceController {
 
 				if(stepName.equals("edit"))
 				{
-					List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale != null ORDER BY sp.unitOfSale ASC" )
+					List<String> serviceUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale is not null ORDER BY UPPER(sp.unitOfSale) ASC" )
 					render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, isLightWorkflow: false, serviceUnitOfSaleList: serviceUnitOfSaleList])
 				}
 				else if(stepName.equals("showInfo"))
