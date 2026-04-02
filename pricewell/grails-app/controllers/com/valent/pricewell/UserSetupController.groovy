@@ -352,9 +352,10 @@ class UserSetupController {
 					user.passConfirm = "$randomPassword"
 					user.dateCreated = new Date()
 					user.enabled = true
-					// Grails 7/Hibernate 5: save User first so Profile can reference a persistent instance
 					user.password = passwordEncoder.encode(user.pass ?: randomPassword)
-					user.save(flush: true)
+					// Grails 7/Hibernate 5: save User first (skip validation since profile is null)
+					// so Profile can reference a persistent instance via belongsTo=[owner: User]
+					user.save(flush: true, validate: false)
 
 					Profile profile = new Profile(owner: user)
 					user.profile = profile
