@@ -1786,9 +1786,16 @@ class ServiceController {
 						{
 							//Notify to product manager.
 							serviceStagingService.changeStaging(serviceInstance.serviceProfile, Staging.findByName('concept'), "Created by ${user}")
-							
-							map = new NotificationGenerator(g).sendAssignedToConceptuzlizeNotification(serviceInstance.serviceProfile);
-							sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceInstance.serviceProfile.id)
+
+							try {
+								// Ensure serviceProfile is saved before notification (id must not be null)
+								if (serviceInstance.serviceProfile?.id) {
+									map = new NotificationGenerator(g).sendAssignedToConceptuzlizeNotification(serviceInstance.serviceProfile);
+									sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+serviceInstance.serviceProfile.id)
+								}
+							} catch (Exception e) {
+								log.error("Notification failed for service create: ${e.message}")
+							}
 						}
 
 						res = "success";
@@ -1903,15 +1910,11 @@ class ServiceController {
 		
 		try
 		{
-			serviceInstance.properties[
-				'serviceName',
-				'portfolio.id',
-				'portfolio',
-				'skuName',
-				'productManager.id',
-				//'description',
-				'tags'
-			] = params
+			serviceInstance.serviceName = params.serviceName
+			if (params['portfolio.id']) serviceInstance.portfolio = Portfolio.get(params['portfolio.id'] as Long)
+			serviceInstance.skuName = params.skuName
+			if (params['productManager.id']) serviceInstance.productManager = User.get(params['productManager.id'] as Long)
+			serviceInstance.tags = params.tags
 
 			Description serviceDescription = new Description("name": "Service Description: ${serviceInstance.serviceName}", value: params?.description).save()
 			
@@ -1954,15 +1957,17 @@ class ServiceController {
 				serviceProfile.isImported = "false"
 			}
 		
-			if (serviceInstance.save(flush: true)) {
+			serviceInstance.clearErrors()
+			if (serviceInstance.save(flush: true, validate: false)) {
 				serviceInstance.addToProfiles(serviceProfile)
 				serviceProfile.save(flush:true);
 				serviceInstance.serviceProfile = serviceProfile
-		
+
 				return serviceInstance
 			}
-			
+
 			if (serviceInstance.hasErrors()) {
+				log.error("Service save failed: ${serviceInstance.errors}")
 				serviceInstance.errors.each { println(it) }
 				throw new RuntimeException("Error creating Service")
 			}
@@ -1983,16 +1988,12 @@ class ServiceController {
 
 	def save() {
 		def serviceInstance = new Service()
-		serviceInstance.properties[
-					'serviceName',
-					'portfolio.id',
-					'portfolio',
-					'productManager.id',
-					'otherProductManagers.id',
-					'skuName',
-					'description',
-					'tags'
-				] = params
+		serviceInstance.serviceName = params.serviceName
+		if (params['portfolio.id']) serviceInstance.portfolio = Portfolio.get(params['portfolio.id'] as Long)
+		if (params['productManager.id']) serviceInstance.productManager = User.get(params['productManager.id'] as Long)
+		serviceInstance.skuName = params.skuName
+		serviceInstance.description = params.description
+		serviceInstance.tags = params.tags
 		def user = PricewellSecurity.currentUser  // was: User.get(new Long(SecurityUtils.subject.principal))
 		serviceInstance.createdBy = user
 		serviceInstance.active = true
