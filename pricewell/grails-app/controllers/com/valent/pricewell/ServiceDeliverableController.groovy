@@ -172,15 +172,23 @@ class ServiceDeliverableController {
 		}
 		
 		def serviceDeliverableInstance = new ServiceDeliverable()
-		serviceDeliverableInstance.properties['sequenceOrder','name','type', 'phase'] = params
-		
+		serviceDeliverableInstance.name = params.name
+		serviceDeliverableInstance.type = params.type
+		serviceDeliverableInstance.phase = params.phase
+
 		def result = ServiceDeliverable.executeQuery("select max(del.sequenceOrder) from ServiceDeliverable del where del.serviceProfile.id = :spid", [spid: serviceProfile?.id])
 		int order = (result[0]?result[0]+1:1)
-				
-		serviceDeliverableInstance.sequenceOrder = order 
-		
-		serviceProfile = serviceProfile.addToCustomerDeliverables(serviceDeliverableInstance)
-		serviceProfile.save(flush:true)
+
+		serviceDeliverableInstance.sequenceOrder = order
+		serviceDeliverableInstance.serviceProfile = serviceProfile
+
+		// Use explicit transaction to ensure persistence before render
+		ServiceDeliverable.withTransaction {
+			serviceDeliverableInstance.save(flush: true, failOnError: true)
+			serviceProfile.addToCustomerDeliverables(serviceDeliverableInstance)
+			serviceProfile.clearErrors()
+			serviceProfile.save(flush: true, validate: false)
+		}
 		if (serviceProfile) 
 		{
 			serviceCatalogService.createNewServiceDeliverableDescription(serviceDeliverableInstance, params.description)
