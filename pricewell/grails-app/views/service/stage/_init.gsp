@@ -135,7 +135,7 @@
                                      <em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: serviceInstance, field: 'portfolio', 'errors')}">
-                                    <g:select name="portfolio.id" from="${portfolioList?.sort {it.portfolioName}}" optionKey="id" value="" class="required" noSelection="['': 'Select any one']"/>
+                                    <g:select name="portfolio.id" from="${portfolioList?.sort {it.portfolioName}}" optionKey="id" value="${serviceInstance?.portfolio?.id}" class="required" noSelection="['': 'Select any one']"/>
                                 </td>
                             </tr>
                         
@@ -174,7 +174,7 @@
                                      <em>*</em>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: serviceInstance, field: 'productManager', 'errors')}">
-                                    <g:select name="productManager.id" noSelection="${['':'Select any one']}" from="${productManagerList?.sort {it.profile.fullName}}" optionKey="id" value=""  class="required"/>
+                                    <g:select name="productManager.id" noSelection="${['':'Select any one']}" from="${productManagerList?.sort {it.profile.fullName}}" optionKey="id" value="${serviceInstance?.productManager?.id}"  class="required"/>
                                 </td>
                             </tr>
                         	                            
