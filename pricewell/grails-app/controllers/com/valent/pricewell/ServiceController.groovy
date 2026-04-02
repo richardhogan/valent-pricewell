@@ -1730,7 +1730,15 @@ class ServiceController {
 		{
 			String serviceName = params.serviceName
 			Service service = Service.findByServiceName(params.serviceName)
-			
+
+			// When updating an existing service, exclude it from the duplicate check
+			if (service != null && params.serviceProfileId) {
+				def currentProfile = ServiceProfile.get(params.serviceProfileId as Long)
+				if (currentProfile?.service?.id == service.id) {
+					service = null  // Same service — not a conflict
+				}
+			}
+
 			if(service != null)
 			{
 				if(service?.serviceProfile?.type == ServiceProfileType.DEVELOP)

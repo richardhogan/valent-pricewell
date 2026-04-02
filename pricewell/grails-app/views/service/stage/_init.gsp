@@ -64,7 +64,7 @@
 					 if(jQuery("#serviceCreate").validate().form())
 					 {
 						 showLoadingBox();
-						 jQuery.post('${baseurl}/service/isServiceAvailable', {serviceName: jQuery("#serviceName").val()},
+						 jQuery.post('${baseurl}/service/isServiceAvailable', {serviceName: jQuery("#serviceName").val(), serviceProfileId: jQuery("[name=serviceProfileId]").val() || ''},
 								function(data)
 								{
 							 		hideLoadingBox();
