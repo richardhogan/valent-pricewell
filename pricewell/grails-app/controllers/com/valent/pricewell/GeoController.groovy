@@ -397,15 +397,10 @@ class GeoController {
 	def edit() {
         def geoInstance = Geo.get(params.id)
 		def salesManagerList = serviceCatalogService.findUsersByRole("SALES MANAGER")
-		
+
+		// Show all sales persons (not just unassigned) so users can be reassigned between territories
 		def salesPersonList = new ArrayList()
-		/*serviceCatalogService.findUsersByRole("SALES PERSON")*/
-		salesPersonList = salesCatalogService.findUnassignedSalesPersonList()
-		
-		for(User salesPerson : geoInstance?.salesPersons)
-		{
-			salesPersonList.add(salesPerson)
-		}
+		salesPersonList = serviceCatalogService.findUsersByRole("SALES PERSON")
         if (!geoInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'geo.label', default: 'Geo'), params.id])}"
             redirect(action: "list")
