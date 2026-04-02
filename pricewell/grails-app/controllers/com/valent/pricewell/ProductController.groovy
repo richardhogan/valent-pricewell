@@ -29,7 +29,8 @@ class ProductController {
 		if(params.datePublished){
 			params.datePublished = new java.text.SimpleDateFormat("MM/dd/yyyy").parse(params.datePublished)
 		}
-		def productInstance = new Product(params)
+		def productInstance = new Product()
+		bindData(productInstance, params, [exclude: ['source']])
 		productInstance.dateModified = new Date()
 		if (productInstance.save(flush: true)) {
 			flash.message = "${message(code: 'default.created.message', args: [message(code: 'product.label', default: 'Product'), productInstance.id])}"
@@ -83,7 +84,7 @@ class ProductController {
 					return
 				}
 			}
-			productInstance.properties = params
+			bindData(productInstance, params, [exclude: ['source']])
 			productInstance.dateModified = new Date()
 			if (!productInstance.hasErrors() && productInstance.save(flush: true)) {
 				flash.message = "${message(code: 'default.updated.message', args: [message(code: 'product.label', default: 'Product'), productInstance.id])}"
