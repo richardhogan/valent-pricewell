@@ -491,37 +491,26 @@ class GeoController {
 					geoInstance.salesManager = User.get((params._salesManagerId ?: params.salesManagerId).toLong())
 				}
 				
-				//*******adding removing territories*********
-					 
-					/* def salesPersonsList = []
-					 if(params.salesPersons != null)
-					 {
-						 for(Long remainingId : oldSalesPersonsId)
-						 {
-							 geoInstance.removeFromSalesPersons(User.get(remainingId.toLong()))
-						 }
-						 
-						 for(Object i in params.salesPersons.toList())
-						 {
-							 if(i != ",")
-								 {salesPersonsList.add(i.toLong())}
-						 }
-						 
-						 for(Long selectedId : salesPersonsList){
-						   /*if(oldSalesPersonsId.contains(selectedId)){
-							  oldSalesPersonsId.remove(selectedId)
-						   }
-						   else
-							 {*/
-							 // geoInstance.addToSalesPersons(User.get(selectedId.toLong()))
-						   //}
-						 //}
-						 
-						
-					 //}
-				 //**************************************
-					 def map = [:]
-	            if (!geoInstance.hasErrors() && geoInstance.save(flush: true)) 
+				//*******adding/removing sales persons*********
+				def spParam = params._salesPersons ?: params.salesPersons
+				if (spParam != null) {
+					// Remove all existing sales persons
+					for (Long remainingId : oldSalesPersonsId) {
+						geoInstance.removeFromSalesPersons(User.get(remainingId.toLong()))
+					}
+					// Add newly selected ones
+					def spList = (spParam instanceof String) ? [spParam] : spParam.toList()
+					for (Object i in spList) {
+						if (i && i != "" && i != ",") {
+							def sp = User.get(i.toLong())
+							if (sp) { geoInstance.addToSalesPersons(sp) }
+						}
+					}
+				}
+				//**************************************
+				def map = [:]
+				geoInstance.clearErrors()
+	            if (geoInstance.save(flush: true)) 
 				{
 					if((params._salesManagerId ?: params.salesManagerId) != null && (params._salesManagerId ?: params.salesManagerId) != "")
 					{
