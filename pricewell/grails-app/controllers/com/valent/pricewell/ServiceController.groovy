@@ -1959,9 +1959,12 @@ class ServiceController {
 		
 			serviceInstance.clearErrors()
 			if (serviceInstance.save(flush: true, validate: false)) {
+				serviceProfile.service = serviceInstance
+				serviceProfile.clearErrors()
+				serviceProfile.save(flush: true, validate: false)
 				serviceInstance.addToProfiles(serviceProfile)
-				serviceProfile.save(flush:true);
 				serviceInstance.serviceProfile = serviceProfile
+				serviceInstance.save(flush: true, validate: false)
 
 				return serviceInstance
 			}
