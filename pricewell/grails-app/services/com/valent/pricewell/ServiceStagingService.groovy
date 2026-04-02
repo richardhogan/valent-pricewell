@@ -38,7 +38,8 @@ class ServiceStagingService {
 			serviceProfile.type = ServiceProfileType.DEVELOP
 		}
 		
-		if (serviceProfile.save(flush:true)) {
+		serviceProfile.clearErrors()
+		if (serviceProfile.save(flush:true, validate: false)) {
 			if(serviceProfile.type == ServiceProfileType.PUBLISHED)
 			{
 				serviceCatalogService.updateServiceToPricelist(serviceProfile)
