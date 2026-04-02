@@ -77,7 +77,7 @@ class ExtraUnitController {
 		test = serviceProfileId.toLong();
 		def serviceProfileInstance=ServiceProfile.get(test);
 		def serviceProfile=new ServiceProfile();
-		def serviceExtraUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale != null ORDER BY sp.unitOfSale ASC" )
+		def serviceExtraUnitOfSaleList = ServiceProfile.executeQuery("SELECT DISTINCT UPPER(sp.unitOfSale) from ServiceProfile sp WHERE sp.unitOfSale is not null ORDER BY UPPER(sp.unitOfSale) ASC" )
 		def extraUnitInstanceList = ExtraUnit.findAll("From ExtraUnit eu Where eu.serviceProfile.id = :serviceProfileId",[serviceProfileId:test]);
 		println 'Test List is: ' + extraUnitInstanceList
 		//System.out.println("Last value is : " + extraUnitInstanceList.last())

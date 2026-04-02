@@ -37,7 +37,7 @@ class ServiceDeliverableController {
         def serviceDeliverableInstance = new ServiceDeliverable()
         serviceDeliverableInstance.properties = params
 		
-		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
         return [serviceDeliverableInstance: serviceDeliverableInstance, deliverableTypes: deliverableTypes]
     }
 	
@@ -55,7 +55,7 @@ class ServiceDeliverableController {
 		
         serviceDeliverableInstance.properties = params
 		
-		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 		
         render(template: "newCustomerDeliverable", 
 					model:[deliverableTypes: deliverableTypes, serviceDeliverableInstance: serviceDeliverableInstance, serviceProfileInstance: serviceProfileInstance, serviceProfileId: params.serviceProfileId, deliverablesList: deliverablesList])
@@ -240,7 +240,7 @@ class ServiceDeliverableController {
 			//redirect(action: "list")
 		}
 		else {
-			List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+			List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 			render(template: "editCustomerDeliverable", model: [deliverableTypes: deliverableTypes, serviceDeliverableInstance: serviceDeliverableInstance])
 		}
 	}

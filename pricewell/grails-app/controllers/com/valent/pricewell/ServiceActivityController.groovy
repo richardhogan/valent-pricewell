@@ -50,7 +50,7 @@ class ServiceActivityController {
 				
 			}*/
 			
-			List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category != null ORDER BY sa.category ASC")
+			List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category is not null ORDER BY UPPER(sa.category) ASC")
 			
 			render(template: "deliverableActivities", model: [del: del,activitiesList: activitiesList, isImported: isImported, serviceActivityCategories: serviceActivityCategories])
 		}
@@ -158,7 +158,7 @@ class ServiceActivityController {
 		{
 			def del = ServiceDeliverable.get(params.id)
 			def serviceActivityInstance = new ServiceActivity()
-			List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category != null ORDER BY sa.category ASC")
+			List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category is not null ORDER BY UPPER(sa.category) ASC")
 			
 			render(template: "createDeliverableActivity", 
 					model:[serviceActivityInstance: serviceActivityInstance, 
@@ -271,7 +271,7 @@ class ServiceActivityController {
 	
 	def editInfo() {
 		def serviceActivityInstance = ServiceActivity.get(params.id)
-		List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category != null ORDER BY sa.category ASC")
+		List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category is not null ORDER BY UPPER(sa.category) ASC")
 
 		boolean edit = true
 		render(template: "editActivity", model: [serviceActivityInstance: serviceActivityInstance, edit: edit, serviceActivityCategories: serviceActivityCategories])

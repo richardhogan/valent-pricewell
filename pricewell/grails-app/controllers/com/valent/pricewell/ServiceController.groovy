@@ -479,7 +479,7 @@ class ServiceController {
 	def addDeliverable() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
 		def deliverablesList = serviceProfileInstance.listCustomerDeliverables(params)
-		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+		List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 		
 		render(template: "/serviceDeliverable/newCustomerDeliverable", model: [serviceProfileId: serviceProfileInstance.id, deliverablesList: deliverablesList, deliverableTypes: deliverableTypes]);
 	}
@@ -488,7 +488,7 @@ class ServiceController {
 		def del = ServiceDeliverable.get(params.deliverableId.toInteger())
 		println del
 		
-		List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category != null ORDER BY sa.category ASC")
+		List<String> serviceActivityCategories = ServiceActivity.executeQuery("SELECT DISTINCT UPPER(sa.category) from ServiceActivity sa WHERE sa.category is not null ORDER BY UPPER(sa.category) ASC")
 		render(template: "/serviceActivity/createDeliverableActivity", model: [serviceDeliverableId: del.id, deliverable: del, serviceActivityCategories: serviceActivityCategories]);
 	}
 
@@ -571,7 +571,7 @@ class ServiceController {
 					else if(stepName.equals("editDeliverables"))
 					{
 						def deliverablesList = serviceProfileInstance.listCustomerDeliverables(params)
-						List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+						List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 						render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, 'deliverablesList': deliverablesList, deliverableTypes: deliverableTypes])
 					}
 					break;
@@ -1261,7 +1261,7 @@ class ServiceController {
 					else if(stepName.equals("editDeliverables"))
 					{
 						def deliverablesList = serviceProfileInstance.listCustomerDeliverables(params)
-						List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+						List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 						render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, 'deliverablesList': deliverablesList, deliverableTypes: deliverableTypes])
 					}
 					else if(stepName == "showInfo")
@@ -1398,7 +1398,7 @@ class ServiceController {
 				else if(stepName.equals("editDeliverables"))
 				{
 					def deliverablesList = serviceProfileInstance.listCustomerDeliverables(params)
-					List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd ORDER BY sd.type ASC")
+					List<String> deliverableTypes = ServiceDeliverable.executeQuery("SELECT DISTINCT UPPER(sd.type) from ServiceDeliverable sd WHERE sd.type is not null ORDER BY UPPER(sd.type) ASC")
 					render(template: "stage/concept-${stepName}", model: [serviceProfileInstance: serviceProfileInstance, 'deliverablesList': deliverablesList, deliverableTypes: deliverableTypes])
 				}
 
