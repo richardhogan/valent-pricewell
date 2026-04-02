@@ -352,6 +352,9 @@ class UserSetupController {
 					user.passConfirm = "$randomPassword"
 					user.dateCreated = new Date()
 					user.enabled = true
+					// Grails 7/Hibernate 5: save User first so Profile can reference a persistent instance
+					user.password = passwordEncoder.encode(user.pass ?: randomPassword)
+					user.save(flush: true)
 
 					Profile profile = new Profile(owner: user)
 					user.profile = profile
@@ -472,9 +475,8 @@ class UserSetupController {
 					}
 					
 					// ROLE_SYSTEM_ADMINISTRATOR has full access via Spring Security interceptUrlMap — no Shiro permission needed.
-					
-					//session.save(profile)
-					user.password = passwordEncoder.encode(user.pass ?: randomPassword)
+
+					// Save again to persist profile and territory/geoGroup assignments
 					user.save(flush: true)
 					def savedUser = user
 					if (savedUser.hasErrors())
