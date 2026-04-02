@@ -82,7 +82,8 @@ class FileUploadService {
 				  DocumentTemplate sowDocumentTemplate = new DocumentTemplate(documentName: documentName, documentFile: sowFile, isDefault: new Boolean(false)).save() 
 				
 				  territory.addToSowDocumentTemplates(sowDocumentTemplate)
-				  territory.save()
+				  territory.clearErrors()
+				  territory.save(flush: true, validate: false)
 			  }
 			  
 			  
