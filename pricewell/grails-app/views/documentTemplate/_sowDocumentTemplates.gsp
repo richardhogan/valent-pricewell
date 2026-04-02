@@ -65,8 +65,12 @@
         	});
 
         	function refreshSideNevAndContentList(id){
-        		jQuery( "#importSOWSuccessDialog" ).data('id', id).dialog("open");
 				refreshNavigation();
+				// Reload the SOW templates page to show the updated template list
+				jQuery.ajax({type:'POST',data: {territoryId: id, source: 'firstsetup'},
+					url:'${baseurl}/documentTemplate/sowDocumentTemplates',
+					success:function(data,textStatus){jQuery('#contents').html(data);},
+					error:function(XMLHttpRequest,textStatus,errorThrown){}});
 				return true;
 			}
         	
