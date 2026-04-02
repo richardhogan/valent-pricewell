@@ -125,7 +125,10 @@
 			<p><g:message code="service.create.message.failure.dialog" default=""/></p>
 		</div>
             <g:form name="serviceCreate" action="saveStage" controller="service">
-            	<g:hiddenField name="source" value="init"></g:hiddenField>
+            	<g:hiddenField name="source" value="init"/>
+            	<g:if test="${serviceProfileInstance?.id}">
+            		<g:hiddenField name="serviceProfileId" value="${serviceProfileInstance.id}"/>
+            	</g:if>
                 <div class="dialog">
                     <table>
                         <tbody>
@@ -182,7 +185,12 @@
                     </table>
                 </div>
                 <div class="buttons">
-                    <span class="button"><g:submitButton name="create" class="save" title="New Service" value="Create" /></span>
+                    <g:if test="${serviceProfileInstance?.id}">
+                    	<span class="button"><g:submitButton name="update" class="save" title="Update Service" value="Update" /></span>
+                    </g:if>
+                    <g:else>
+                    	<span class="button"><g:submitButton name="create" class="save" title="New Service" value="Create" /></span>
+                    </g:else>
                     <span class="button"> <input type="button" id = "cancelBtn" class="cancelBtn" name="cancel" title="Cancel" value="Cancel"/>  </span>
                 </div>
             </g:form>

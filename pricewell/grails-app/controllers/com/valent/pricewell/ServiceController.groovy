@@ -1778,7 +1778,25 @@ class ServiceController {
 		switch(source)
 		{
 			case "init":
-				Service serviceInstance = createNewService(params);
+				Service serviceInstance
+				if (params.serviceProfileId) {
+					// Update existing service
+					def existingProfile = ServiceProfile.get(params.serviceProfileId)
+					serviceInstance = existingProfile?.service
+					if (serviceInstance) {
+						serviceInstance.serviceName = params.serviceName
+						if (params['portfolio.id']) serviceInstance.portfolio = Portfolio.get(params['portfolio.id'] as Long)
+						if (params['productManager.id']) serviceInstance.productManager = User.get(params['productManager.id'] as Long)
+						serviceInstance.skuName = params.skuName
+						serviceInstance.description = params.description
+						serviceInstance.tags = params.tags
+						serviceInstance.dateModified = new Date()
+						serviceInstance.clearErrors()
+						serviceInstance.save(flush: true, validate: false)
+					}
+				} else {
+					serviceInstance = createNewService(params)
+				}
 
 				if(serviceInstance?.serviceProfile)
 				{
