@@ -742,14 +742,9 @@ class UserSetupController {
 	}
 
 	def edit() {
-		def userInstance = User.get(params.id)
-        if (!userInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])}"
-            redirect(action: "list")
-        }
-        else {
-            return [userInstance: userInstance]
-        }
+		// Delegate to editsetup which renders the _editsetup template.
+		// The standalone edit.gsp view does not exist (Grails 2 artifact).
+		redirect(action: "editsetup", params: params)
 	}
 
 	def editsetup() {
