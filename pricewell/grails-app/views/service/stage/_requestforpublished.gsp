@@ -3,7 +3,7 @@
 	def baseurl = request.siteUrl
 %>
 
-<asset:script>
+<script>
    
     jQuery(document).ready(function(){
         	
@@ -35,30 +35,36 @@
 
 		function onApprove()
         {
-        	jQuery('#status').val('${com.valent.pricewell.ReviewRequest.Status.APPROVED}');
-        	
-        	jQuery( "#rewiewCommentCreate" ).dialog( "open" );
+			if (jQuery('#changeStage').length) {
+				jQuery('#changeStage').submit();
+			} else {
+				showLoadingBox();
+				jQuery.post('${baseurl}/staging/reviewRequestFromStaging',
+					{serviceProfileId: ${serviceProfileInstance?.id}, nextStageId: ${serviceProfileInstance?.stagingStatus ? com.valent.pricewell.Staging.getNextServiceStage("NEW_STAGE", serviceProfileInstance.stagingStatus)?.id : ''}, comment: 'Approved for publishing'},
+					function(data) { hideLoadingBox(); window.location.href = '${baseurl}/service/catalog'; });
+			}
 			return false;
         }
-        
+
         function onReject()
         {
-        	jQuery('#status').val('${com.valent.pricewell.ReviewRequest.Status.REJECTED}');
-        	
-        	jQuery( "#rewiewCommentCreate" ).dialog( "open" );
+			alert('Publication rejected.');
+			showLoadingBox();
+			jQuery.post('${baseurl}/staging/reviewRequestFromStaging',
+				{serviceProfileId: ${serviceProfileInstance?.id}, nextStageId: ${serviceProfileInstance?.stagingStatus?.id}, comment: 'Publication rejected'},
+				function(data) { hideLoadingBox(); window.location.href = '${baseurl}/service/inStaging'; });
 			return false;
         }
-        
+
     	function onFinishCallback()
     	{
-    		jQuery( "#rewiewCommentCreate" ).dialog( "open" );
+			onApprove();
 			return false;
-    			//jQuery('#approveForm').submit();
       	}
           
      
 	});
-</asset:script>
+</script>
 
 <div id="wizard" class="swMain">
   			<ul>
