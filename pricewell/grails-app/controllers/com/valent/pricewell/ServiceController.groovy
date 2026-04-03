@@ -2677,7 +2677,7 @@ class ServiceController {
 		}
 		else if(action == "update")
 		{
-			if(PricewellSecurity.hasRole('PRODUCT MANAGER'))
+			if(PricewellSecurity.hasRole('PRODUCT MANAGER') || PricewellSecurity.hasRole('SERVICE DESIGNER'))
 				permit = true
 		}
 		
