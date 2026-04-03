@@ -152,13 +152,16 @@ class QuotationController {
 			def opp = Opportunity.get(params.opportunityId);
 			
 			def closeDate = opp.closeDate;
-			closeDate.clearTime()
-			
-			//converting Timestamp to Date object
-			def closeDateWithoutTime = new Date(closeDate.getTime())
-			
-			def currentDateWitoutTime = new Date();
-			currentDateWitoutTime.clearTime()
+
+			// Groovy 4: clearTime() removed. Use Calendar to strip time.
+			def calClose = Calendar.getInstance()
+			calClose.setTime(new Date(closeDate.getTime()))
+			calClose.set(Calendar.HOUR_OF_DAY, 0); calClose.set(Calendar.MINUTE, 0); calClose.set(Calendar.SECOND, 0); calClose.set(Calendar.MILLISECOND, 0)
+			def closeDateWithoutTime = calClose.getTime()
+
+			def calNow = Calendar.getInstance()
+			calNow.set(Calendar.HOUR_OF_DAY, 0); calNow.set(Calendar.MINUTE, 0); calNow.set(Calendar.SECOND, 0); calNow.set(Calendar.MILLISECOND, 0)
+			def currentDateWitoutTime = calNow.getTime()
 			
 			//println "date diff "+closeDateWithoutTime.compareTo(currentDateWitoutTime)+" ===="
 			
