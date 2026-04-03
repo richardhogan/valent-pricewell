@@ -121,7 +121,7 @@ class QuotationController {
 		def results = []
 
 		for(Quotation q in quotationList){
-			def days = new Date() - (q.statusChangeDate?:q.createdDate)
+			def days = (int) ((new Date().getTime() - (q.statusChangeDate?:q.createdDate).getTime()) / (1000 * 60 * 60 * 24))
 			results.add([
 						cell: [
 							q.id,
@@ -171,7 +171,7 @@ class QuotationController {
 			}
 			else{
 				//TODO need to discuss this with Snehal Mistry and Rich before finalizing it
-				validityDays = closeDateWithoutTime - currentDateWitoutTime //Removed -1 from here
+				validityDays = (int) ((closeDateWithoutTime.getTime() - currentDateWitoutTime.getTime()) / (1000 * 60 * 60 * 24))
 			}
 			
 			quotationInstance.opportunity = opp;
