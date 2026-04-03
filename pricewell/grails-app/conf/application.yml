@@ -89,9 +89,9 @@ grails:
                 # Admin user-management UI requires SYSTEM ADMINISTRATOR
                 - { pattern: '/userAdmin/**',             access: 'ROLE_SYSTEM_ADMINISTRATOR' }
                 - { pattern: '/administration/**',        access: 'ROLE_SYSTEM_ADMINISTRATOR' }
-                # Service create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
+                # Service management — PM and SD also need save access for design work
                 - { pattern: '/service/create',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
-                - { pattern: '/service/save',             access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
+                - { pattern: '/service/save',             access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR','ROLE_PRODUCT_MANAGER','ROLE_SERVICE_DESIGNER')" }
                 - { pattern: '/service/delete',           access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
                 # Portfolio create/delete requires PORTFOLIO MANAGER or SYSTEM ADMINISTRATOR
                 - { pattern: '/portfolio/create',         access: "hasAnyRole('ROLE_PORTFOLIO_MANAGER','ROLE_SYSTEM_ADMINISTRATOR')" }
