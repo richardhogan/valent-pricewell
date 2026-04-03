@@ -1356,7 +1356,14 @@ class ServiceController {
 			return;
 		}
 		else if(stepName == "approveRequest"){
-			redirect(controller: "reviewRequest", action: "showFromWizard", params: [id: ServiceProfile.findCurrentReviewRequest(serviceProfileInstance)?.id, serviceProfileId: serviceProfileInstance?.id]);
+			def reviewRequest = ServiceProfile.findCurrentReviewRequest(serviceProfileInstance)
+			if (reviewRequest?.id) {
+				redirect(controller: "reviewRequest", action: "showFromWizard", params: [id: reviewRequest.id, serviceProfileId: serviceProfileInstance?.id])
+			} else {
+				// No review request exists — render the staging change form directly
+				render(template: "/staging/changeStaging", model: buildStageChangeRequestMap(serviceProfileInstance))
+			}
+			return
 		}
 		else if(stepName == "showInfo")
 		{
