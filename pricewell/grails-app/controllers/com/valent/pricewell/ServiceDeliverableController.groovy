@@ -264,9 +264,16 @@ class ServiceDeliverableController {
 					return
 				}
 			}
-			serviceDeliverableInstance.properties['sequenceOrder','name','type', 'phase'] = params
-			serviceDeliverableInstance.newDescription.value = params.description 
-			if (!serviceDeliverableInstance.hasErrors() && serviceDeliverableInstance.save(flush: true)) {
+			serviceDeliverableInstance.name = params.name
+			serviceDeliverableInstance.type = params.type
+			serviceDeliverableInstance.phase = params.phase
+			if (serviceDeliverableInstance.newDescription) {
+				serviceDeliverableInstance.newDescription.value = params.description
+			} else if (params.description) {
+				serviceCatalogService.createNewServiceDeliverableDescription(serviceDeliverableInstance, params.description)
+			}
+			serviceDeliverableInstance.clearErrors()
+			if (serviceDeliverableInstance.save(flush: true, validate: false)) {
 				flash.message = "${message(code: 'default.updated.message', args: [message(code: 'serviceDeliverable.label', default: 'ServiceDeliverable'), serviceDeliverableInstance.name])}"
 				render(template: "listCustomerDeliverables", model: [serviceProfileInstance: serviceDeliverableInstance?.serviceProfile])
 				//render(view: "/service/show", model: [serviceProfileInstance: serviceDeliverableInstance?.serviceProfile, selectedTab: 'deliverables'])
