@@ -32,7 +32,6 @@ class ActivityRoleTimeController {
 	
 	def create() {
 		def activityRoleTimeInstance = new ActivityRoleTime()
-        activityRoleTimeInstance.properties = params
 		def serviceActivityInstance = ServiceActivity.get(params.id)
 		def roleList = []
 		for(DeliveryRole role : DeliveryRole.list())
@@ -59,8 +58,10 @@ class ActivityRoleTimeController {
 		}
 		
         def activityRoleTimeInstance = new ActivityRoleTime()
-		activityRoleTimeInstance.properties = params
-		
+		if (params['role.id']) activityRoleTimeInstance.role = DeliveryRole.get(params['role.id'] as Long)
+		activityRoleTimeInstance.estimatedTimeInHoursFlat = params.estimatedTimeInHoursFlat ? new BigDecimal(params.estimatedTimeInHoursFlat) : BigDecimal.ZERO
+		activityRoleTimeInstance.estimatedTimeInHoursPerBaseUnits = params.estimatedTimeInHoursPerBaseUnits ? new BigDecimal(params.estimatedTimeInHoursPerBaseUnits) : BigDecimal.ZERO
+
         if (activity.addToRolesEstimatedTime(activityRoleTimeInstance)) {
 			/*activity.save(flush:true)
 			activity.estimatedTimeInHoursFlat+=new BigDecimal(params?.estimatedTimeInHoursFlat)

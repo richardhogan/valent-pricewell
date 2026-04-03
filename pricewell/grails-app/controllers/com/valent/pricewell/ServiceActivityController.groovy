@@ -172,10 +172,10 @@ class ServiceActivityController {
 			def del = ServiceDeliverable.get(params.serviceDeliverableId)
 			
 			def serviceActivityInstance = new ServiceActivity()
-			
-			serviceActivityInstance.properties['name','description',
-											'estimatedTimeInHoursFlat', 'estimatedTimeInHoursPerBaseUnits', 'category',
-											'sequenceOrder', 'results'] = params
+			serviceActivityInstance.name = params.name
+			serviceActivityInstance.description = params.description
+			serviceActivityInstance.category = params.category
+			serviceActivityInstance.results = params.results
 	
 			def result = ServiceActivity.executeQuery("select max(act.sequenceOrder) from ServiceActivity act where act.serviceDeliverable.id = :delid", [delid: del?.id])
 			int order = (result[0]?result[0]+1:1)
