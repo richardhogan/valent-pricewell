@@ -145,10 +145,18 @@
             }
 
     	function onFinishCallback(){
-    	       if(jQuery('#changeStage').validate().form()){
-    	    	   jQuery("#changeStage").submit();
-    	       }
-    	      }
+			showLoadingBox();
+			jQuery.post('${baseurl}/service/saveStage',
+				{source: 'design', step_number: 'finish', id: ${serviceProfileInstance?.id}},
+				function(data) {
+					hideLoadingBox();
+					if (data == 'success') {
+						window.location.href = '${baseurl}/service/inStaging';
+					} else {
+						alert('Failed to advance stage');
+					}
+				});
+    	}
           
      
 		});

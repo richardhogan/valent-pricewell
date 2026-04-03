@@ -1865,6 +1865,17 @@ class ServiceController {
 				}
 				
 				break;
+			case "design":
+				if (params.step_number == 'finish') {
+					def sp = ServiceProfile.get(params.serviceProfileId ?: params.id)
+					if (sp) {
+						serviceStagingService.changeStaging(sp, Staging.findByName('designreview'), "Design review requested by ${user}")
+						res = "success"
+					}
+					render res
+					break
+				}
+				// fall through for non-finish steps
 			case "designreview"	:
 			case "concept":
 
