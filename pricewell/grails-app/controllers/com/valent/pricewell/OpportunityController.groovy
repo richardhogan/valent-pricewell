@@ -302,7 +302,7 @@ class OpportunityController {
         def opportunityInstance = new Opportunity()
 		opportunityInstance.name = params.name
 		if (params.probability) opportunityInstance.probability = params.probability as int
-		if (params.amount) opportunityInstance.amount = params.amount as double
+		if (params.amount) opportunityInstance.amount = Double.parseDouble(params.amount.toString().replaceAll(',', ''))
 		if (params.discount) opportunityInstance.discount = params.discount as int
 		if (params['assignTo.id']) opportunityInstance.assignTo = User.get(params['assignTo.id'] as Long)
 		if (params['account.id']) opportunityInstance.account = Account.get(params['account.id'] as Long)
