@@ -837,7 +837,8 @@ class UserSetupController {
 				}
 			}
 			
-			def source = (params.source == "firstsetup")?"firstsetup":"setup"
+			def source = params.source ?: "setup"
+			if (source != "firstsetup" && source != "geoassignment") source = "setup"
 			render(template: "editsetup", model: [user: userInstance, source: source, roleInstance: roleInstance, geoGroupList: geoGroupList.toList().sort {it?.name}, primaryTerritoriesList: primaryTerritoriesList.toList().sort {it?.name}, territoriesList: territoriesList.toList()?.sort {it?.name}, secondaryTerritories: secondaryTerritories.toList()]);
 		}
 	}
