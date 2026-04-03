@@ -2264,11 +2264,15 @@ class ServiceController {
 			serviceInstance.save(flush:true, validate: false)
 
 			if (params.unitOfSale != null) serviceProfileInstance.unitOfSale = params.unitOfSale
+			if (params.newUnitOfSale != null) serviceProfileInstance.unitOfSale = params.newUnitOfSale
 			if (params.baseUnits != null) serviceProfileInstance.baseUnits = params.baseUnits as int
 			if (params.currentStep != null) serviceProfileInstance.currentStep = params.currentStep as int
 			if (params.definition != null) serviceProfileInstance.definition = params.definition
-			if (params.premiumPercent != null) serviceProfileInstance.premiumPercent = params.premiumPercent as BigDecimal
+			if (params.premiumPercent != null && params.premiumPercent != '') serviceProfileInstance.premiumPercent = new BigDecimal(params.premiumPercent)
+			if (params.totalEstimateInHoursFlat != null && params.totalEstimateInHoursFlat != '') serviceProfileInstance.totalEstimateInHoursFlat = new BigDecimal(params.totalEstimateInHoursFlat)
+			if (params.totalEstimateInHoursPerBaseUnits != null && params.totalEstimateInHoursPerBaseUnits != '') serviceProfileInstance.totalEstimateInHoursPerBaseUnits = new BigDecimal(params.totalEstimateInHoursPerBaseUnits)
 			if (params['serviceDesignerLead.id']) serviceProfileInstance.serviceDesignerLead = User.get(params['serviceDesignerLead.id'] as Long)
+			if (params['productManager.id']) serviceInstance.productManager = User.get(params['productManager.id'] as Long)
 
 				/*ServiceProfileSOWDef deff = new ServiceProfileSOWDef()
 				deff.part = "a"
