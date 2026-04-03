@@ -125,7 +125,7 @@
 	<div class="body">
 	    <h1>Add ${entityName }</h1>
 	    
-	     <g:form action="save" name="createMetaphorsFrm_${metaphorType}">
+	     <g:form controller="serviceProfileMetaphors" action="saveFromService" name="createMetaphorsFrm_${metaphorType}" onsubmit="return false;">
 	    	<g:hiddenField name="serviceProfileId" value="${serviceProfileId}"/>
 	    	<g:hiddenField name="metaphorType" value="${metaphorType}"/>
 	    	<g:hiddenField name="entityName" value="${entityName }"/>
