@@ -2111,12 +2111,15 @@ class ServiceController {
 		
 		flash.dialogMessage = "${newProfile} has been created and assigned to ${responsiblePeople}"
 
-		Map map = new NotificationGenerator(g).sendAssignedToConceptuzlizeNotification(newProfile);
-
-		System.out.println(map);
-		//println(map)
-		if(map["receiverList"] &&  map["receiverList"]?.size() > 0)
-			{sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+newProfile.id)}
+		try {
+			if (newProfile?.id) {
+				Map map = new NotificationGenerator(g).sendAssignedToConceptuzlizeNotification(newProfile);
+				if(map["receiverList"] &&  map["receiverList"]?.size() > 0)
+					{sendMailService.sendEmailNotification(map["message"], map["subject"], map["receiverList"], request.siteUrl+"/service/show?serviceProfileId="+newProfile.id)}
+			}
+		} catch (Exception e) {
+			log.error("Notification failed for createNewVersion: ${e.message}")
+		}
 
 		redirect(action: "show", params: [serviceProfileId: newProfile.id])
 
