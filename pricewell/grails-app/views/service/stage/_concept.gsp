@@ -164,10 +164,18 @@
     }
 
     	function onFinishCallback(){
-    	       if(jQuery('#changeStage').validate().form()){
-    	    	   jQuery("#changeStage").submit();
-    	       }
-    	      }
+			showLoadingBox();
+			jQuery.post('${baseurl}/service/saveStage',
+				{source: 'concept', step_number: 'finish', id: ${serviceProfileInstance?.id}},
+				function(data) {
+					hideLoadingBox();
+					if (data == 'success') {
+						jQuery( "#successDialog" ).length ? jQuery( "#successDialog" ).dialog("open") : window.location.href = '${baseurl}/service/inStaging';
+					} else {
+						jQuery( "#failureDialog" ).length ? jQuery( "#failureDialog" ).dialog("open") : alert('Failed to advance stage');
+					}
+				});
+    	}
           
      
 		});
@@ -199,4 +207,9 @@
         		</div>
   			</g:each>
  </div>
+
+<g:form name="changeStage" controller="staging" action="changeStaging" style="display:none;">
+	<g:hiddenField name="stageId" value="${serviceProfileInstance?.stagingStatus?.id}"/>
+	<g:hiddenField name="serviceProfileId" value="${serviceProfileInstance?.id}"/>
+</g:form>
 

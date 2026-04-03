@@ -875,10 +875,15 @@ class ServiceController {
 	
 	def hasSOWDefinition() {
 		def serviceProfileInstance = ServiceProfile.get(params.id)
-		
+
 		boolean hasDefaultSOWDefinition = false;
 
-		if(serviceProfileInstance?.defs &&  serviceProfileInstance?.defs?.size() > 0)
+		// Check the direct definition field
+		if (serviceProfileInstance?.definition) {
+			hasDefaultSOWDefinition = true
+		}
+		// Also check the defs collection (ServiceProfileSOWDef)
+		else if(serviceProfileInstance?.defs &&  serviceProfileInstance?.defs?.size() > 0)
 		{
 			for(ServiceProfileSOWDef sowDef : serviceProfileInstance?.defs)
 			{
@@ -887,7 +892,7 @@ class ServiceController {
 					hasDefaultSOWDefinition = true
 				}
 			}
-			
+
 		}
 
 		render hasDefaultSOWDefinition
@@ -1865,18 +1870,21 @@ class ServiceController {
 
 				def serviceProfileInstance = ServiceProfile.get(params.serviceProfileId ?: params.id)
 				String stepName = ""
-				def stepNumber = params.step_number.toInteger()
-				
-				if(serviceProfileInstance.isImported  == "false" && serviceProfileInstance.workflowMode != "customized")
-				{
-					stepName = ServiceStageFlow.findStepName(source, stepNumber);
-				}
+				if (params.step_number == 'finish') {
+					stepName = "requestConcept"
+				} else {
+					def stepNumber = params.step_number.toInteger()
+					if(serviceProfileInstance.isImported  == "false" && serviceProfileInstance.workflowMode != "customized")
+					{
+						stepName = ServiceStageFlow.findStepName(source, stepNumber);
+					}
 				else
 				{
 					//def importStep = importServiceStageSteps[source]
 					//stepName = importStep[stepNumber-1][0]
 					stepName = ServiceStageFlow.findImportServiceStepName(source, stepNumber);
 				}
+				} // end else (not finish)
 
 				if(stepName.equals("edit") || stepName.equals("editDefinition"))
 				{
@@ -1905,9 +1913,13 @@ class ServiceController {
 					//render(view: "main", model: [serviceProfileInstance: serviceProfileInstance, serviceInstance: serviceProfileInstance?.service, stagingInstanceList: stagingInstanceList]);
 					
 				}
-				else if(stepName.equals("requestConcept"))
+				else if(stepName.equals("requestConcept") || params.step_number == 'finish')
 				{
-
+					def sp = ServiceProfile.get(params.serviceProfileId ?: params.id)
+					if (sp) {
+						serviceStagingService.changeStaging(sp, Staging.findByName('conceptreview'), "Concept review requested by ${user}")
+						res = "success"
+					}
 				}
 
 				render res;
@@ -2219,31 +2231,23 @@ class ServiceController {
 			}
 
 			//serviceProfileInstance?.currentStep = params.step_number.toInteger()
-			serviceInstance.properties[
-						'serviceName',
-						'skuName',
-						//'description',
-						'tags',
-						'productManager'
-					]=params
-				
-			serviceInstance.serviceDescription.value = params?.description
-			serviceInstance.serviceDescription.name = "Service Description: ${serviceInstance?.serviceName}"
+			if (params.serviceName) serviceInstance.serviceName = params.serviceName
+			if (params.skuName != null) serviceInstance.skuName = params.skuName
+			if (params.tags != null) serviceInstance.tags = params.tags
+			if (params.description != null && serviceInstance.serviceDescription) {
+				serviceInstance.serviceDescription.value = params.description
+				serviceInstance.serviceDescription.name = "Service Description: ${serviceInstance?.serviceName}"
+			}
 			serviceInstance.dateModified = new Date()
+			serviceInstance.clearErrors()
+			serviceInstance.save(flush:true, validate: false)
 
-			serviceInstance.save(flush:true)
-
-			serviceProfileInstance.properties[
-						'unitOfSale',
-						'baseUnits',
-						'currentStep',
-						'totalEstimateInHoursPerBaseUnits',
-						'productManager.id',
-						'totalEstimateInHoursFlat',
-						'serviceDesignerLead',
-						'premiumPercent',
-						'definition'
-					] = params
+			if (params.unitOfSale != null) serviceProfileInstance.unitOfSale = params.unitOfSale
+			if (params.baseUnits != null) serviceProfileInstance.baseUnits = params.baseUnits as int
+			if (params.currentStep != null) serviceProfileInstance.currentStep = params.currentStep as int
+			if (params.definition != null) serviceProfileInstance.definition = params.definition
+			if (params.premiumPercent != null) serviceProfileInstance.premiumPercent = params.premiumPercent as BigDecimal
+			if (params['serviceDesignerLead.id']) serviceProfileInstance.serviceDesignerLead = User.get(params['serviceDesignerLead.id'] as Long)
 
 				/*ServiceProfileSOWDef deff = new ServiceProfileSOWDef()
 				deff.part = "a"
@@ -2257,7 +2261,8 @@ class ServiceController {
 				
 				serviceProfileInstance.dateModified = new Date()
 
-			if (!serviceProfileInstance.hasErrors() && serviceProfileInstance.save(flush: true)) {
+			serviceProfileInstance.clearErrors()
+			if (serviceProfileInstance.save(flush: true, validate: false)) {
 				return serviceProfileInstance;
 			}
 		}
