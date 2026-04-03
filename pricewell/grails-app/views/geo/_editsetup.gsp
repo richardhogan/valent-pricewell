@@ -216,7 +216,7 @@
 											
 											<g:if test="${source!='setup'}">
 												<tr>
-												  	<g:if test="${!PricewellSecurity.hasRole('SALES MANAGER')}">
+												  	<g:if test="${PricewellSecurity.hasRole('SYSTEM ADMINISTRATOR') || PricewellSecurity.hasRole('SALES PRESIDENT') || PricewellSecurity.hasRole('GENERAL MANAGER') || !PricewellSecurity.hasRole('SALES MANAGER')}">
 											          
 												          <td valign="top" class="name"><label for="salesManager">Assign Sales Manager</label></td>
 												          <td valign="top">
