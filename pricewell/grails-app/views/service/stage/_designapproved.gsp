@@ -3,44 +3,48 @@
 <%
 	def baseurl = request.siteUrl
 %>
-<asset:script>
-   
+<script>
+
     jQuery(document).ready(function(){
-    		
+
   		jQuery('#wizard').smartWizard({contentURL:'${baseurl}/service/showStage?source=designapproved&id=' + <%=serviceProfileInstance?.id%> ,contentCache:false, onLeaveStep:leaveAStepCallback, onShowStep: showStepCallback, selected:  <%=serviceProfileInstance?.currentStep - 1%>, labelFinish:'Send Request', onFinish:onFinishCallback });
-  		
+
 
     	function leaveAStepCallback(obj){
-            var step_num= obj.attr('rel'); // get the current step number
-            return validateSteps(step_num); // return false to stay on step and true to continue navigation 
+            var step_num= obj.attr('rel');
+            return validateSteps(step_num);
           }
 
         function showStepCallback(obj){
         		var elements = jQuery('.swMain ul.anchor li a:lt(' + <%=serviceProfileInstance?.currentStep - 1%> + ')')
-        		
+
         		for(var i=0; i<elements.length; i++){
 					if(jQuery(elements[i]).hasClass('disabled')){
 							jQuery(elements[i]).removeClass("disabled").addClass("done")
 								.attr("isDone",1);
-						}	
+						}
             	}
-        		
+
             }
 
     	function validateSteps(stepnumber){
             	return true;
-            	 
             }
 
     	function onFinishCallback(){
-    		if(jQuery('#changeStage').validate().form()){
- 	    	   jQuery("#changeStage").submit();
- 	       }
-    	 }
-          
-     
+			if (jQuery('#changeStage').length) {
+				jQuery('#changeStage').submit();
+			} else {
+				showLoadingBox();
+				jQuery.post('${baseurl}/staging/reviewRequestFromStaging',
+					{serviceProfileId: ${serviceProfileInstance?.id}, nextStageId: ${serviceProfileInstance?.stagingStatus ? com.valent.pricewell.Staging.getNextServiceStage("NEW_STAGE", serviceProfileInstance.stagingStatus)?.id : ''}, comment: 'Requesting sales review'},
+					function(data) { hideLoadingBox(); window.location.href = '${baseurl}/service/inStaging'; });
+			}
+    	}
+
+
 		});
-</asset:script>
+</script>
 
 	<g:if test="${serviceProfileInstance?.id != null}">
 		<g:each in="${stagingInstanceList}" status="i" var="stage">
