@@ -309,27 +309,35 @@ class ServiceProfile {
 		newProfile.currentStep = 1
 		newProfile.workflowMode = workflowMode
 
-		newProfile.save(flush:true)
+		newProfile.clearErrors()
+		newProfile.save(flush:true, validate: false)
 
 		sp.newProfile = newProfile
-		sp.save(flush:true)
+		sp.clearErrors()
+		sp.save(flush:true, validate: false)
 
 		//Copy Customer Deliverables
 		for(ServiceDeliverable del in sp.customerDeliverables)
 		{
 			def newDel = new ServiceDeliverable()
-			newDel.properties['sequenceOrder','name','type', 'phase'] = del.properties
+			newDel.sequenceOrder = del.sequenceOrder
+			newDel.name = del.name
+			newDel.type = del.type
+			newDel.phase = del.phase
 			newDel.serviceActivities = new ArrayList()
 
 			newProfile.addToCustomerDeliverables(newDel)
-			newDel.save()
-			
+			newDel.clearErrors()
+			newDel.save(validate: false)
+
 			createNewServiceDeliverableDescription(newDel, del?.newDescription?.value)
 
 			for(activity in del?.serviceActivities)
 			{
 				def newAct = new ServiceActivity()
-				newAct.properties = activity.properties
+				newAct.name = activity.name
+				newAct.category = activity.category
+				newAct.sequenceOrder = activity.sequenceOrder
 
 				newAct.rolesEstimatedTime = new ArrayList()
 				newAct.rolesRequired = new ArrayList()
