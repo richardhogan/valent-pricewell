@@ -69,8 +69,8 @@
 				    	jQuery.ajax(
 						{
 							type: "POST",
-							url: "${baseurl}/serviceActivity/saveFromDeliverable?activityTasks="+JSON.stringify(activityTasks),
-							data: jQuery("#addActivity").serialize(),
+							url: "${baseurl}/serviceActivity/saveFromDeliverable",
+							data: jQuery("#addActivity").serialize() + "&activityTasks=" + encodeURIComponent(JSON.stringify(activityTasks)),
 							success: function(data)
 							{
 								hideLoadingBox();
