@@ -82,7 +82,9 @@ class ServiceActivityTaskController {
 			serviceActivity = ServiceActivity.get(params.activityId.toLong())
 		}
 		
-        def serviceActivityTaskInstance = new ServiceActivityTask(params)
+        def serviceActivityTaskInstance = new ServiceActivityTask()
+        serviceActivityTaskInstance.task = params.task
+        if (params.sequenceOrder) serviceActivityTaskInstance.sequenceOrder = params.sequenceOrder as Integer
         if (serviceActivityTaskInstance.save(flush: true)) {
             //flash.message = "${message(code: 'default.created.message', args: [message(code: 'serviceActivityTask.label', default: 'ServiceActivityTask'), serviceActivityTaskInstance.id])}"
             //redirect(action: "show", id: serviceActivityTaskInstance.id)
