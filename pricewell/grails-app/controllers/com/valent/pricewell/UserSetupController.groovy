@@ -792,11 +792,18 @@ class UserSetupController {
 			}
 			else if(roleInstance.authority == "ROLE_SALES_MANAGER")
 			{
-				def map = [:]
-				map = salesCatalogService.findUnassignedTerritoriesForSalesManager(null)
-				geoGroupList = map['geoGroupList']
-				territoriesList = map['territoriesList']
-				primaryTerritoriesList = map['territoriesList']
+				// Show all territories (not just unassigned) so admin can reassign
+				if (PricewellSecurity.hasRole("SYSTEM ADMINISTRATOR") || PricewellSecurity.hasRole("SALES PRESIDENT")) {
+					territoriesList = Geo.list() as Set
+					primaryTerritoriesList = Geo.list() as Set
+					geoGroupList = GeoGroup.list() as Set
+				} else {
+					def map = [:]
+					map = salesCatalogService.findUnassignedTerritoriesForSalesManager(null)
+					geoGroupList = map['geoGroupList']
+					territoriesList = map['territoriesList']
+					primaryTerritoriesList = map['territoriesList']
+				}
 				println "primary : "+userInstance?.primaryTerritory
 				for(Geo terri : userInstance?.territories)
 				{
